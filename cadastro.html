@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar cadastro - Sem Barreiras Pet</title>
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="cadastro.css">
+</head>
+<body>
+
+  <a href="#conteudo-principal" class="skip-link">Pular para o formulário de cadastro</a>
+
+  <main id="conteudo-principal" class="cadastro-container">
+    
+    <section class="cadastro-card" aria-labelledby="titulo-cadastro">
+      
+      <header class="card-header">
+        <div class="brand-icon" aria-hidden="true">
+          <span>♥</span>
+        </div>
+        <p class="brand-title">SEM BARREIRAS PET</p>
+      </header>
+
+      <h1 id="titulo-cadastro">Criar sua conta</h1>
+      <p class="subtitulo">Preencha seus dados para começar a adotar.</p>
+
+      <form action="/cadastro" method="POST" class="form-acessivel" novalidate>
+        
+        <article class="form-section">
+          <p class="form-group">
+            <label for="nome">Nome Completo <span class="campo-obrigatorio" aria-hidden="true">*</span></label>
+            <input 
+              type="text" 
+              id="nome" 
+              name="nome" 
+              required 
+              aria-required="true"
+              aria-describedby="dica-nome"
+              autocomplete="name"
+            >
+            <span id="dica-nome" class="form-help">Digite seu nome e sobrenome.</span>
+          </p>
+
+          <p class="form-group">
+            <label for="email">E-mail <span class="campo-obrigatorio" aria-hidden="true">*</span></label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              required 
+              aria-required="true"
+              aria-describedby="dica-email"
+              autocomplete="email"
+            >
+            <span id="dica-email" class="form-help">Exemplo: nome@exemplo.com</span>
+          </p>
+
+          <p class="form-group">
+            <label for="telefone">Telefone <span class="campo-obrigatorio" aria-hidden="true">*</span></label>
+            <input 
+              type="tel" 
+              id="telefone" 
+              name="telefone" 
+              required 
+              aria-required="true"
+              aria-describedby="dica-telefone"
+              placeholder="(00) 00000-0000"
+              autocomplete="tel"
+            >
+            <span id="dica-telefone" class="form-help">Usado para o contato da adoção.</span>
+          </p>
+
+          <p class="form-group">
+            <label for="senha">Senha <span class="campo-obrigatorio" aria-hidden="true">*</span></label>
+            <input 
+              type="password" 
+              id="senha" 
+              name="senha" 
+              required 
+              aria-required="true"
+              aria-describedby="dica-senha"
+              autocomplete="new-password"
+            >
+            <span id="dica-senha" class="form-help">Crie uma senha segura com no mínimo 8 caracteres.</span>
+          </p>
+        </article>
+
+        <article class="form-section">
+          <fieldset class="form-fieldset">
+            <legend>Tipo de moradia <span class="campo-obrigatorio" aria-hidden="true">*</span></legend>
+            <span id="dica-moradia" class="form-help">Onde o pet vai morar?</span>
+
+            <ul class="radio-list">
+              <li>
+                <input type="radio" id="casa" name="tipo_moradia" value="casa" required aria-describedby="dica-moradia">
+                <label for="casa">Casa</label>
+              </li>
+
+              <li>
+                <input type="radio" id="apartamento" name="tipo_moradia" value="apartamento" required aria-describedby="dica-moradia">
+                <label for="apartamento">Apartamento</label>
+              </li>
+            </ul>
+          </fieldset>
+        </article>
+
+        <p class="legenda-obrigatorio">* Campos Obrigatórios</p>
+
+        <button type="submit" class="btn-primary">Criar Cadastro</button>
+
+      </form>
+
+      <footer class="cadastro-footer">
+        <p>Já tem uma conta? <a href="login.html">Entrar na conta</a></p>
+      </footer>
+
+    </section>
+  </main>
+
+</body>
+</html>
