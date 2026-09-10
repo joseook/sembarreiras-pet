@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Crie seu cadastro para iniciar uma adoção responsável.">
+  <title>Criar cadastro | Sem Barreiras Pet</title>
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="cadastro.css">
+</head>
+<body class="auth-page">
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo principal</a>
+  <header class="auth-header container">
+    <a class="brand" href="index.html" aria-label="Sem Barreiras Pet, página inicial"><span class="brand-mark" aria-hidden="true">♥</span> Sem Barreiras Pet</a>
+  </header>
+  <main id="conteudo" class="auth-layout signup-layout container">
+    <aside class="auth-intro" aria-labelledby="intro-title">
+      <p class="eyebrow">Primeiro passo</p>
+      <h1 id="intro-title">Prepare o espaço para uma nova amizade.</h1>
+      <p>Seu cadastro ajuda a ONG a entender sua rotina e indicar um companheiro que combine com você.</p>
+      <p class="auth-note"><strong>Privacidade em primeiro lugar.</strong> Usaremos seus dados somente para a jornada de adoção.</p>
+    </aside>
+    <section class="auth-card" aria-labelledby="signup-title">
+      <p class="eyebrow">Cadastro do adotante</p>
+      <h2 id="signup-title">Crie sua conta</h2>
+      <p id="signup-help" class="form-intro">Preencha seus dados para começar. Os campos marcados com asterisco são obrigatórios.</p>
+      <form action="login.html" method="get">
+        <fieldset>
+          <legend>Dados pessoais</legend>
+          <div class="field">
+            <label for="nome">Nome completo <span aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
+            <input id="nome" name="nome" type="text" autocomplete="name" required aria-describedby="nome-help">
+            <small id="nome-help">Informe seu nome como aparece em um documento.</small>
+          </div>
+          <div class="field">
+            <label for="email">E-mail <span aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
+            <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="cadastro-email-help">
+            <small id="cadastro-email-help">Será usado para acompanhar sua pré-adoção.</small>
+          </div>
+          <div class="field">
+            <label for="telefone">Telefone <span aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
+            <input id="telefone" name="telefone" type="tel" autocomplete="tel" inputmode="tel" required aria-describedby="telefone-help">
+            <small id="telefone-help">Digite um número com DDD para contato da ONG.</small>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Sobre sua moradia</legend>
+          <p id="moradia-help" class="fieldset-help">Escolha a opção que melhor descreve onde o pet vai morar.</p>
+          <div class="radio-group" aria-describedby="moradia-help">
+            <label><input type="radio" name="moradia" value="casa" required> Casa</label>
+            <label><input type="radio" name="moradia" value="apartamento"> Apartamento</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Segurança da conta</legend>
+          <div class="field">
+            <label for="senha">Senha <span aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
+            <input id="senha" name="senha" type="password" autocomplete="new-password" minlength="8" required aria-describedby="senha-help">
+            <small id="senha-help">Use pelo menos 8 caracteres.</small>
+          </div>
+        </fieldset>
+        <p class="form-required"><span aria-hidden="true">*</span> Campos obrigatórios</p>
+        <button class="button" type="submit">Criar cadastro</button>
+      </form>
+      <p class="auth-switch">Já possui uma conta? <a href="login.html">Entrar</a></p>
+    </section>
+  </main>
+  <footer class="auth-footer"><p>&copy; 2026 Sem Barreiras Pet. Projeto acadêmico de IHC.</p></footer>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Acesse sua conta do Sem Barreiras Pet.">
+  <title>Entrar | Sem Barreiras Pet</title>
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="login.css">
+</head>
+<body class="auth-page">
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo principal</a>
+  <header class="auth-header container">
+    <a class="brand" href="index.html" aria-label="Sem Barreiras Pet, página inicial"><span class="brand-mark" aria-hidden="true">♥</span> Sem Barreiras Pet</a>
+  </header>
+  <main id="conteudo" class="auth-layout container">
+    <aside class="auth-intro" aria-labelledby="intro-title">
+      <p class="eyebrow">Adoção responsável</p>
+      <h1 id="intro-title">Toda história de amor começa com um encontro.</h1>
+      <p>Entre para acompanhar seus favoritos, enviar sua pré-adoção e receber orientação para cada etapa.</p>
+      <p class="auth-note"><strong>Feito para acolher.</strong> Informações claras para pessoas e animais.</p>
+    </aside>
+    <section class="auth-card" aria-labelledby="login-title">
+      <p class="eyebrow">Boas-vindas de volta</p>
+      <h2 id="login-title">Entrar na sua conta</h2>
+      <p id="login-help" class="form-intro">Use o e-mail cadastrado para continuar sua jornada.</p>
+      <form action="index.html" method="get">
+        <div class="field">
+          <label for="email">E-mail <span aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
+          <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-help">
+          <small id="email-help">Exemplo: nome@exemplo.com</small>
+        </div>
+        <div class="field">
+          <label for="senha">Senha <span aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
+          <input id="senha" name="senha" type="password" autocomplete="current-password" required aria-describedby="senha-help">
+          <small id="senha-help">A senha deve ser a mesma usada no cadastro.</small>
+        </div>
+        <p class="form-required"><span aria-hidden="true">*</span> Campos obrigatórios</p>
+        <button class="button" type="submit">Entrar</button>
+      </form>
+      <p class="auth-switch">Ainda não tem uma conta? <a href="cadastro.html">Criar cadastro</a></p>
+    </section>
+  </main>
+  <footer class="auth-footer"><p>&copy; 2026 Sem Barreiras Pet. Projeto acadêmico de IHC.</p></footer>
+</body>
+</html>

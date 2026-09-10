@@ -1,0 +1,10 @@
+.signup-layout { align-items: start; }
+.signup-layout .auth-intro { position: sticky; top: 2rem; }
+.auth-card fieldset { margin: 0 0 1.5rem; padding: 0; border: 0; }
+.auth-card legend { margin-bottom: 0.75rem; font-size: 1.15rem; font-weight: 800; }
+.fieldset-help { margin: -0.4rem 0 0.8rem; color: var(--color-muted); font-size: 0.9rem; }
+.radio-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+.radio-group label { display: flex; align-items: center; gap: 0.6rem; min-height: 3rem; padding: 0.65rem 0.75rem; border: 2px solid var(--color-border); border-radius: var(--radius-sm); font-weight: 700; cursor: pointer; }
+.radio-group label:has(input:checked) { border-color: var(--color-brand); background: var(--color-brand-soft); }
+.radio-group input { width: 1.15rem; height: 1.15rem; accent-color: var(--color-brand); }
+@media (max-width: 48rem) { .signup-layout .auth-intro { position: static; } .radio-group { grid-template-columns: 1fr; } }
