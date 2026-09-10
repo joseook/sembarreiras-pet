@@ -1,11 +1,34 @@
-.auth-page { background: var(--color-surface-alt); }
-.auth-header { padding-block: 1.25rem; }
-.auth-layout { display: grid; align-items: center; grid-template-columns: 1fr minmax(20rem, 28rem); gap: clamp(2rem, 8vw, 7rem); min-height: calc(100vh - 8rem); padding-block: 3rem; }
-.auth-intro { max-width: 34rem; }
+.auth-page { background: #f5c930; }
+.auth-page--login { background: linear-gradient(125deg, #132957 0%, #1d5fd0 48%, #f5c930 100%); }
+.auth-header { padding-block: 1.25rem; color: var(--color-white); }
+.auth-page--login .brand-mark { background: var(--color-white); color: #1d5fd0; }
+.auth-layout { display: grid; align-items: center; grid-template-columns: minmax(18rem, 1fr) minmax(20rem, 28rem); gap: clamp(2rem, 8vw, 7rem); min-height: calc(100vh - 8rem); padding-block: 3rem; }
+.auth-intro { max-width: 34rem; color: var(--color-white); }
+.auth-illustration { position: relative; min-height: 19rem; margin-bottom: 1.5rem; overflow: hidden; }
+.sun-shape { position: absolute; top: 2rem; left: 15%; width: 14rem; height: 14rem; border: 0.4rem solid #102554; border-radius: 50%; background: #ffd436; box-shadow: 0 0 0 0.85rem rgba(255, 212, 54, 0.22); }
+.sun-shape::before, .sun-shape::after { position: absolute; content: ""; width: 4rem; height: 0.55rem; border-radius: 999px; background: #102554; transform: rotate(45deg); }
+.sun-shape::before { top: 4.1rem; left: 4.1rem; }
+.sun-shape::after { right: 3rem; bottom: 4.1rem; transform: rotate(-45deg); }
+.dot-shape { position: absolute; display: block; border-radius: 50%; background: #ffd436; }
+.dot-shape--one { top: 1.5rem; right: 14%; width: 1.25rem; height: 1.25rem; }
+.dot-shape--two { bottom: 2rem; left: 4%; width: 0.75rem; height: 0.75rem; background: #fff5bd; }
+.spark { position: absolute; color: #fff5bd; font-size: 1.5rem; }
+.spark--one { top: 5rem; right: 9%; }
+.spark--two { bottom: 3rem; right: 25%; }
+.pet-bubble { position: absolute; bottom: 0.8rem; left: 36%; width: 8rem; height: 7rem; border: 0.35rem solid #102554; border-radius: 45% 45% 50% 50%; background: #f5f0dc; transform: rotate(-6deg); }
+.pet-ear { position: absolute; top: -1.7rem; width: 2.6rem; height: 3.2rem; border: 0.3rem solid #102554; border-radius: 70% 30% 60% 40%; background: #f5f0dc; }
+.pet-ear--left { left: 0.3rem; transform: rotate(-28deg); }
+.pet-ear--right { right: 0.3rem; transform: scaleX(-1) rotate(-28deg); }
+.pet-face { position: absolute; inset: 1.7rem 1.2rem 1rem; }
+.pet-eye { position: absolute; top: 0.3rem; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: #102554; }
+.pet-eye--left { left: 0.5rem; }.pet-eye--right { right: 0.5rem; }
+.pet-nose { position: absolute; bottom: 0.8rem; left: calc(50% - 0.55rem); width: 1.1rem; height: 0.8rem; border-radius: 50% 50% 45% 45%; background: #bd5a35; }
+.heart-shape { position: absolute; right: 20%; bottom: 0.5rem; color: #fff5bd; font-size: 2.2rem; transform: rotate(12deg); }
+.auth-intro-copy { max-width: 30rem; }
 .eyebrow { margin: 0 0 0.75rem; color: var(--color-accent-dark); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.78rem; }
 .auth-intro h1 { margin: 0 0 1rem; font-family: var(--font-display); font-size: clamp(2.4rem, 6vw, 4.5rem); line-height: 1.05; }
-.auth-intro > p:not(.eyebrow) { max-width: 30rem; color: var(--color-muted); font-size: 1.1rem; }
-.auth-note { margin-top: 2.5rem; padding: 1rem 1.2rem; border-left: 0.3rem solid var(--color-accent); background: var(--color-white); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.auth-intro > p:not(.eyebrow) { max-width: 30rem; color: #f5f0dc; font-size: 1.1rem; }
+.auth-note { margin-top: 2.5rem; padding: 1rem 1.2rem; border-left: 0.3rem solid #ffd436; background: rgba(255,255,255,0.94); color: var(--color-ink); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
 .auth-card { padding: clamp(1.5rem, 5vw, 3rem); background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); }
 .auth-card h2 { margin: 0 0 0.4rem; font-size: 1.8rem; line-height: 1.2; }
 .form-intro { margin: 0 0 1.5rem; color: var(--color-muted); }
@@ -19,6 +42,6 @@
 .auth-card .button { width: 100%; }
 .auth-switch { margin: 1.5rem 0 0; text-align: center; color: var(--color-muted); }
 .auth-switch a { font-weight: 800; }
-.auth-footer { padding: 1rem; border-top: 1px solid var(--color-border); color: var(--color-muted); text-align: center; font-size: 0.875rem; }
+.auth-footer { padding: 1rem; border-top: 1px solid rgba(255,255,255,0.35); background: rgba(16,37,84,0.55); color: var(--color-white); text-align: center; font-size: 0.875rem; }
 .auth-footer p { margin: 0; }
-@media (max-width: 48rem) { .auth-layout { grid-template-columns: 1fr; min-height: auto; padding-block: 2rem 3rem; } .auth-intro h1 { font-size: clamp(2.2rem, 12vw, 3.5rem); } }
+@media (max-width: 48rem) { .auth-layout { grid-template-columns: 1fr; min-height: auto; padding-block: 2rem 3rem; } .auth-intro h1 { font-size: clamp(2.2rem, 12vw, 3.5rem); } .auth-illustration { min-height: 14rem; max-width: 24rem; margin-inline: auto; } .sun-shape { width: 10rem; height: 10rem; } .pet-bubble { left: 34%; transform: scale(0.82) rotate(-6deg); transform-origin: bottom left; } }
