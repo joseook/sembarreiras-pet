@@ -18,11 +18,12 @@ O projeto trabalha com personas de alto apelo emocional: o adotante de primeira 
 - Perfis de animais com informações de saúde, vacinas, comportamento e histórico.
 - Orientação para adaptação e suporte pós-adoção.
 
-Nesta entrega foram implementadas as três telas estáticas da etapa atual:
+Nesta entrega de José Paulo foram implementados somente os alicerces compartilhados e a tela de login:
 
-- `index.html`: landing page institucional e vitrine de pets.
-- `login.html`: página de acesso.
-- `cadastro.html`: página de cadastro do adotante.
+- `global.css`: design system base para todo o time.
+- `login.html` / `login.css`: página de acesso acessível.
+
+As telas `cadastro.html` / `cadastro.css` e `index.html` / `landing.css` pertencem, respectivamente, à Ana Clara e ao Lucas, conforme a divisão do trabalho. Elas serão integradas pelos responsáveis nas próximas entregas.
 
 ## Acessibilidade
 
@@ -48,15 +49,15 @@ Como o escopo exige HTML e CSS puro, não há JavaScript, lógica fullstack, aut
 | Arquivo | Responsabilidade |
 | --- | --- |
 | `global.css` | Variáveis, tokens WCAG, tipografia, foco e utilitários globais |
-| `login.html` / `login.css` | Tela de login acessível |
-| `cadastro.html` / `cadastro.css` | Tela de cadastro e triagem inicial |
-| `index.html` / `landing.css` | Landing page, conteúdo institucional e pets em destaque |
+| `login.html` / `login.css` | Tela de login acessível de José Paulo |
+| `cadastro.html` / `cadastro.css` | Entrega da Ana Clara, prevista para integração |
+| `index.html` / `landing.css` | Entrega do Lucas, prevista para integração |
 | `IHC/` | Persona, jornada, pesquisa documental e materiais da primeira etapa |
 | `inspirações/` | Referências visuais de login, cadastro e landing page |
 
 ## Executar localmente
 
-Não há dependências de instalação. Basta abrir `index.html` no navegador ou iniciar um servidor estático na raiz do projeto:
+Não há dependências de instalação. Para validar a entrega de José Paulo, abra `login.html` no navegador ou inicie um servidor estático na raiz do projeto:
 
 ```bash
 python3 -m http.server 8000
