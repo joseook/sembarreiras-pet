@@ -1,0 +1,512 @@
+/* =========================================================
+   Sem Barreiras Pet — index.css
+   Estilos da página inicial. Segue os mesmos princípios de
+   acessibilidade (WCAG 2) da página de cadastro: foco visível,
+   contraste adequado, respeito a preferências de movimento e
+   layout responsivo mobile-first.
+   ========================================================= */
+
+/* ---------- Reset básico (caso global.css não esteja presente) ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1F2A24;
+  background-color: #FBF8F3;
+  line-height: 1.5;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3 {
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  line-height: 1.2;
+  margin: 0 0 0.5em;
+}
+
+/* ---------- Foco visível (obrigatório para navegação por teclado) ---------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid #1F2A24;
+  outline-offset: 3px;
+}
+
+/* ---------- Movimento reduzido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Link de pular navegação ---------- */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: #1F2A24;
+  color: #FFFFFF;
+  padding: 0.75rem 1.25rem;
+  z-index: 100;
+  border-radius: 0 0 6px 0;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* ---------- Cabeçalho ---------- */
+.site-header {
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #E4DFD5;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0.9rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #2F6F63;
+}
+
+.brand-icon {
+  color: #E8A33D;
+  font-size: 1.4rem;
+}
+
+.brand-title {
+  font-size: 1rem;
+}
+
+.menu-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 2px solid #2F6F63;
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  color: #2F6F63;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.menu-toggle-icone {
+  width: 18px;
+  height: 2px;
+  background: #2F6F63;
+  position: relative;
+}
+
+.menu-toggle-icone::before,
+.menu-toggle-icone::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 2px;
+  background: #2F6F63;
+}
+
+.menu-toggle-icone::before {
+  top: -6px;
+}
+
+.menu-toggle-icone::after {
+  top: 6px;
+}
+
+.nav-principal ul {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.nav-principal a {
+  text-decoration: none;
+  color: #1F2A24;
+  font-weight: 500;
+}
+
+.nav-principal a:hover,
+.nav-principal a[aria-current="page"] {
+  color: #2F6F63;
+  text-decoration: underline;
+}
+
+.btn-nav {
+  color: #FFFFFF !important;
+  text-decoration: none !important;
+}
+
+/* ---------- Botões ---------- */
+.btn-primary,
+.btn-secundario,
+.btn-terciario {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #2F6F63;
+  color: #FFFFFF;
+}
+
+.btn-primary:hover {
+  background-color: #255a50;
+}
+
+.btn-secundario {
+  background-color: transparent;
+  color: #2F6F63;
+  border-color: #2F6F63;
+}
+
+.btn-secundario:hover {
+  background-color: #EAF2EF;
+}
+
+.btn-terciario {
+  background-color: #E8A33D;
+  color: #1F2A24;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.95rem;
+}
+
+.btn-terciario:hover {
+  background-color: #d8912c;
+}
+
+/* ---------- Menu mobile ---------- */
+@media (max-width: 55rem) {
+  .menu-toggle {
+    display: flex;
+  }
+
+  .nav-principal {
+    display: none;
+    width: 100%;
+  }
+
+  .nav-principal.menu-aberto {
+    display: block;
+  }
+
+  .header-inner {
+    flex-wrap: wrap;
+  }
+
+  .nav-principal ul {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 1rem 0;
+  }
+}
+
+@media (min-width: 55.01rem) {
+  .menu-toggle {
+    display: none;
+  }
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  background-color: #2F6F63;
+  color: #FFFFFF;
+  padding: 4rem 1.25rem;
+}
+
+.hero-conteudo {
+  max-width: 40rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  color: #FFFFFF;
+}
+
+.hero-texto {
+  font-size: 1.1rem;
+  color: #E7F0EC;
+  margin-bottom: 1.75rem;
+}
+
+.hero-acoes {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero .btn-secundario {
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+}
+
+.hero .btn-secundario:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ---------- Seções gerais ---------- */
+main section {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 3.5rem 1.25rem;
+}
+
+main section h2 {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: #2F6F63;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* ---------- Como funciona ---------- */
+.passos-lista {
+  display: grid;
+  gap: 1.75rem;
+  grid-template-columns: 1fr;
+  counter-reset: none;
+}
+
+.passo {
+  background-color: #FFFFFF;
+  border: 1px solid #E4DFD5;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.passo-numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: #E8A33D;
+  color: #1F2A24;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.passo h3 {
+  font-size: 1.1rem;
+  color: #1F2A24;
+}
+
+.passo p {
+  color: #55645C;
+  margin: 0;
+}
+
+@media (min-width: 45rem) {
+  .passos-lista {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ---------- Pets em destaque ---------- */
+.pets-grade {
+  display: grid;
+  gap: 1.75rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 35rem) {
+  .pets-grade {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 65rem) {
+  .pets-grade {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.pet-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E4DFD5;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.pet-thumb {
+  height: 11rem;
+  overflow: hidden;
+}
+
+.pet-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pet-thumb--1 { background-color: #DDEAE6; border-bottom: 4px solid #2F6F63; }
+.pet-thumb--2 { background-color: #F6E4C6; border-bottom: 4px solid #E8A33D; }
+.pet-thumb--3 { background-color: #E3DCEE; border-bottom: 4px solid #6F5B96; }
+.pet-thumb--4 { background-color: #F1D4D4; border-bottom: 4px solid #C4636B; }
+
+.pet-info {
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex-grow: 1;
+}
+
+.pet-info h3 {
+  font-size: 1.15rem;
+  color: #1F2A24;
+}
+
+.pet-detalhes {
+  font-size: 0.9rem;
+  color: #55645C;
+  margin: 0;
+}
+
+.pet-info p:not(.pet-detalhes) {
+  margin: 0 0 0.75rem;
+  flex-grow: 1;
+}
+
+.pet-info .btn-terciario {
+  align-self: flex-start;
+}
+
+/* ---------- Acessibilidade ---------- */
+.acessibilidade {
+  background-color: #EAF2EF;
+  border-radius: 8px;
+  max-width: 72rem;
+}
+
+.acessibilidade p {
+  max-width: 42rem;
+  margin: 0 auto 1.25rem;
+  text-align: center;
+  color: #34433C;
+}
+
+.lista-acessibilidade {
+  max-width: 32rem;
+  margin: 0 auto;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.lista-acessibilidade li {
+  position: relative;
+  padding-left: 1.5rem;
+  color: #1F2A24;
+}
+
+.lista-acessibilidade li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #2F6F63;
+  font-weight: 700;
+}
+
+/* ---------- Rodapé ---------- */
+.site-footer {
+  background-color: #1F2A24;
+  color: #E7F0EC;
+  padding: 2.5rem 1.25rem;
+}
+
+.footer-inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.footer-marca {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.footer-inner nav ul {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-inner nav a {
+  text-decoration: none;
+  color: #E7F0EC;
+}
+
+.footer-inner nav a:hover {
+  text-decoration: underline;
+}
+
+.footer-copy {
+  font-size: 0.85rem;
+  color: #B9C6C0;
+  margin: 0;
+}
