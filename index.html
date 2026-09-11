@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sem Barreiras Pet - Adoção acessível para todos</title>
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <a href="#conteudo-principal" class="skip-link">Pular para o conteúdo principal</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand" aria-label="Sem Barreiras Pet, página inicial">
+        <span class="brand-icon" aria-hidden="true">♥</span>
+        <span class="brand-title">SEM BARREIRAS PET</span>
+      </a>
+
+      <button type="button" class="menu-toggle" id="botao-menu" aria-expanded="false" aria-controls="menu-principal">
+        <span class="menu-toggle-texto">Menu</span>
+        <span class="menu-toggle-icone" aria-hidden="true"></span>
+      </button>
+
+      <nav class="nav-principal" id="menu-principal" aria-label="Navegação principal">
+        <ul>
+          <li><a href="index.html" aria-current="page">Início</a></li>
+          <li><a href="#pets-destaque">Pets para adoção</a></li>
+          <li><a href="#como-funciona">Como funciona</a></li>
+          <li><a href="login.html">Entrar</a></li>
+          <li><a href="cadastro.html" class="btn-primary btn-nav">Criar conta</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo-principal">
+
+    <section class="hero" aria-labelledby="titulo-hero">
+      <div class="hero-conteudo">
+        <h1 id="titulo-hero">Adotar um pet não devia ter barreiras</h1>
+        <p class="hero-texto">
+          Conectamos pessoas e animais esperando por um lar, em um site pensado
+          para ser usado por qualquer pessoa: com leitor de tela, só com o
+          teclado, ou do jeito que for mais confortável para você.
+        </p>
+        <div class="hero-acoes">
+          <a href="#pets-destaque" class="btn-primary">Ver pets para adoção</a>
+          <a href="cadastro.html" class="btn-secundario">Criar minha conta</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="como-funciona" id="como-funciona" aria-labelledby="titulo-como-funciona">
+      <h2 id="titulo-como-funciona">Como funciona a adoção</h2>
+
+      <ol class="passos-lista">
+        <li class="passo">
+          <span class="passo-numero" aria-hidden="true">1</span>
+          <h3>Crie sua conta</h3>
+          <p>Preencha seus dados e conte um pouco sobre sua casa e sua rotina.</p>
+        </li>
+        <li class="passo">
+          <span class="passo-numero" aria-hidden="true">2</span>
+          <h3>Encontre um pet</h3>
+          <p>Veja os perfis com descrições claras de temperamento, porte e cuidados.</p>
+        </li>
+        <li class="passo">
+          <span class="passo-numero" aria-hidden="true">3</span>
+          <h3>Agende a visita</h3>
+          <p>Fale com o abrigo parceiro e combine um encontro para conhecer o pet.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="pets-destaque" id="pets-destaque" aria-labelledby="titulo-pets-destaque">
+      <h2 id="titulo-pets-destaque">Pets esperando por um lar</h2>
+
+      <ul class="pets-grade">
+        <li class="pet-card">
+          <div class="pet-thumb pet-thumb--1">
+            <img src="https://placedog.net/500/400?id=15" alt="Nina, cadela de porte médio, pelagem caramelo">
+          </div>
+          <div class="pet-info">
+            <h3>Nina</h3>
+            <p class="pet-detalhes">Cadela, 2 anos, porte médio</p>
+            <p>Calma, adora carinho e já é acostumada com crianças.</p>
+            <a href="#" class="btn-terciario">Quero conhecer a Nina</a>
+          </div>
+        </li>
+
+        <li class="pet-card">
+          <div class="pet-thumb pet-thumb--2">
+            <img src="https://imgs.search.brave.com/SKYfD6M4zAVZIzb8gU9Qkvzepdu2Vh8KaesljKTYlIQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zMi1v/Z2xvYm8uZ2xiaW1n/LmNvbS8zM1VlVDlu/akhVWnEyMXlaV3BC/UDlBaUdYQUE9LzB4/MDoxMjgweDg1NC85/ODR4MC9zbWFydC9m/aWx0ZXJzOnN0cmlw/X2ljYygpL2kuczMu/Z2xiaW1nLmNvbS92/MS9BVVRIX2RhMDI1/NDc0YzBjNDRlZGQ5/OTMzMmRkZGIwOWNh/YmU4L2ludGVybmFs/X3Bob3Rvcy9icy8y/MDI0L2ovUy9WMGVG/SWxSaHFEc0wxUmNs/bzQ0Zy9jYXQtNjcw/NjM5My0xMjgwLmpw/Zw" alt="Simba, gato jovem de pelagem laranja">
+          </div>
+          <div class="pet-info">
+            <h3>Simba</h3>
+            <p class="pet-detalhes">Gato, 1 ano, porte pequeno</p>
+            <p>Curioso e brincalhão, se dá bem com outros gatos.</p>
+            <a href="#" class="btn-terciario">Quero conhecer o Simba</a>
+          </div>
+        </li>
+
+        <li class="pet-card">
+          <div class="pet-thumb pet-thumb--3">
+            <img src="https://placedog.net/500/400?id=30" alt="Bento, cachorro idoso de porte grande, pelagem preta e branca">
+          </div>
+          <div class="pet-info">
+            <h3>Bento</h3>
+            <p class="pet-detalhes">Cachorro, 8 anos, porte grande</p>
+            <p>Tranquilo e companheiro, ideal para uma casa mais calma.</p>
+            <a href="#" class="btn-terciario">Quero conhecer o Bento</a>
+          </div>
+        </li>
+
+        <li class="pet-card">
+          <div class="pet-thumb pet-thumb--4">
+            <img src="https://imgs.search.brave.com/S91MfugFuGcn49yl7fwFwexy_V9f2isNDGCaTFLttsU/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/cGF0YXNkYWNhc2Eu/Y29tLmJyL3NpdGVz/L2RlZmF1bHQvZmls/ZXMvc3R5bGVzL2dh/bGxlcnlfY3JvcC9w/dWJsaWMvMjAyNS0w/NS9nYXRvLW11bmNo/a2luLWNpbnphLWZp/bGhvdGUuanBnLndl/YnA_aXRvaz1IbGhr/N3JMVQ" alt="Mel, gata filhote de pelagem cinza">
+          </div>
+          <div class="pet-info">
+            <h3>Mel</h3>
+            <p class="pet-detalhes">Gata, 4 meses, porte pequeno</p>
+            <p>Filhote cheia de energia, ainda aprendendo sobre o mundo.</p>
+            <a href="#" class="btn-terciario">Quero conhecer a Mel</a>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="acessibilidade" aria-labelledby="titulo-acessibilidade">
+      <h2 id="titulo-acessibilidade">Um site pensado para todos</h2>
+      <p>
+        Acreditamos que adotar um pet deve ser simples para qualquer pessoa.
+        Por isso, este site foi construído com:
+      </p>
+      <ul class="lista-acessibilidade">
+        <li>Navegação completa pelo teclado, sem precisar do mouse.</li>
+        <li>Compatibilidade com leitores de tela em todas as páginas.</li>
+        <li>Textos em linguagem simples e direta.</li>
+        <li>Contraste de cores adequado para baixa visão.</li>
+        <li>Formulários sem tempo limite e com instruções claras.</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-marca">
+        <span class="brand-icon" aria-hidden="true">♥</span>
+        SEM BARREIRAS PET
+      </p>
+      <nav aria-label="Links do rodapé">
+        <ul>
+          <li><a href="#">Sobre</a></li>
+          <li><a href="#">Contato</a></li>
+          <li><a href="#">Política de privacidade</a></li>
+        </ul>
+      </nav>
+      <p class="footer-copy">© 2026 Sem Barreiras Pet. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    const botaoMenu = document.getElementById('botao-menu');
+    const menuPrincipal = document.getElementById('menu-principal');
+
+    botaoMenu.addEventListener('click', () => {
+      const aberto = botaoMenu.getAttribute('aria-expanded') === 'true';
+      botaoMenu.setAttribute('aria-expanded', String(!aberto));
+      menuPrincipal.classList.toggle('menu-aberto');
+    });
+  </script>
+
+</body>
+</html>
