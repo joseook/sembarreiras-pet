@@ -41,10 +41,26 @@ a:hover { color: var(--color-accent-dark); }
 button, input, select, textarea { font: inherit; }
 button, a, input, select { min-height: 2.75rem; }
 
+/* Anel duplo (claro + escuro) garante pelo menos 3:1 de contraste
+   em qualquer fundo do site (claro, escuro ou colorido) - WCAG 1.4.11 */
 :focus-visible {
-  outline: 0.2rem solid #f0a51a;
-  outline-offset: 0.2rem;
+  outline: 0.2rem solid #ffffff;
+  outline-offset: 0.15rem;
+  box-shadow: 0 0 0 0.35rem var(--color-brand-dark);
 }
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  color: var(--color-brand-dark);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.back-link:hover { color: var(--color-accent-dark); text-decoration: underline; }
+.back-link .back-link-seta { font-size: 1.1em; }
 
 .skip-link {
   position: absolute;

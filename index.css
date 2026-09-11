@@ -47,13 +47,7 @@ h1, h2, h3 {
   margin: 0 0 0.5em;
 }
 
-/* ---------- Foco visível (obrigatório para navegação por teclado) ---------- */
-a:focus-visible,
-button:focus-visible,
-input:focus-visible {
-  outline: 3px solid #1F2A24;
-  outline-offset: 3px;
-}
+/* Foco visível: definido em global.css (anel duplo, visível em qualquer fundo) */
 
 /* ---------- Movimento reduzido ---------- */
 @media (prefers-reduced-motion: reduce) {
