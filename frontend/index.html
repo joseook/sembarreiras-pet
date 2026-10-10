@@ -4,8 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sem Barreiras Pet - Adoção acessível para todos</title>
-  <link rel="stylesheet" href="global.css">
-  <link rel="stylesheet" href="index.css">
+  <!-- Marca que o JavaScript está ativo (menu mobile usa aprimoramento progressivo) -->
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="assets/css/global.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/home.css">
+  <script type="module" src="assets/js/main.js"></script>
 </head>
 <body>
 
@@ -27,9 +31,9 @@
         <ul>
           <li><a href="index.html" aria-current="page">Início</a></li>
           <li><a href="#pets-destaque">Pets para adoção</a></li>
-          <li><a href="#como-funciona">Como funciona</a></li>
-          <li><a href="login.html">Entrar</a></li>
-          <li><a href="cadastro.html" class="btn-primary btn-nav">Criar conta</a></li>
+          <li><a href="pages/como-funciona.html">Como funciona</a></li>
+          <li><a href="pages/login.html">Entrar</a></li>
+          <li><a href="pages/cadastro.html" class="btn-primary btn-nav">Criar conta</a></li>
         </ul>
       </nav>
     </div>
@@ -47,31 +51,41 @@
         </p>
         <div class="hero-acoes">
           <a href="#pets-destaque" class="btn-primary">Ver pets para adoção</a>
-          <a href="cadastro.html" class="btn-secundario">Criar minha conta</a>
+          <a href="pages/cadastro.html" class="btn-secundario">Criar minha conta</a>
         </div>
       </div>
     </section>
 
     <section class="como-funciona" id="como-funciona" aria-labelledby="titulo-como-funciona">
       <h2 id="titulo-como-funciona">Como funciona a adoção</h2>
+      <p class="como-funciona-intro">
+        Um caminho simples, sem pressa e com apoio do abrigo em cada etapa.
+      </p>
 
+      <!-- Resumo. O passo a passo completo fica em pages/como-funciona.html -->
       <ol class="passos-lista">
         <li class="passo">
           <span class="passo-numero" aria-hidden="true">1</span>
           <h3>Crie sua conta</h3>
-          <p>Preencha seus dados e conte um pouco sobre sua casa e sua rotina.</p>
+          <p>Conte um pouco sobre você, sua casa e sua rotina.</p>
         </li>
         <li class="passo">
           <span class="passo-numero" aria-hidden="true">2</span>
           <h3>Encontre um pet</h3>
-          <p>Veja os perfis com descrições claras de temperamento, porte e cuidados.</p>
+          <p>Compare temperamento, porte e cuidados com calma.</p>
         </li>
         <li class="passo">
           <span class="passo-numero" aria-hidden="true">3</span>
           <h3>Agende a visita</h3>
-          <p>Fale com o abrigo parceiro e combine um encontro para conhecer o pet.</p>
+          <p>Conheça o pet e converse com o abrigo responsável.</p>
         </li>
       </ol>
+
+      <p class="como-funciona-cta">
+        <a href="pages/como-funciona.html" class="btn-primary">
+          Veja o passo a passo completo <span aria-hidden="true">→</span>
+        </a>
+      </p>
     </section>
 
     <section class="pets-destaque" id="pets-destaque" aria-labelledby="titulo-pets-destaque">
@@ -161,17 +175,6 @@
       <p class="footer-copy">© 2026 Sem Barreiras Pet. Todos os direitos reservados.</p>
     </div>
   </footer>
-
-  <script>
-    const botaoMenu = document.getElementById('botao-menu');
-    const menuPrincipal = document.getElementById('menu-principal');
-
-    botaoMenu.addEventListener('click', () => {
-      const aberto = botaoMenu.getAttribute('aria-expanded') === 'true';
-      botaoMenu.setAttribute('aria-expanded', String(!aberto));
-      menuPrincipal.classList.toggle('menu-aberto');
-    });
-  </script>
 
 </body>
 </html>

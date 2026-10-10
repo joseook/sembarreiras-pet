@@ -1,0 +1,359 @@
+/* =========================================================
+   Sem Barreiras Pet — components.css
+   Componentes compartilhados pelas páginas públicas (home e
+   "Como funciona"): base tipográfica, skip link, cabeçalho,
+   menu responsivo, botões e rodapé.
+
+   Estes blocos vieram do antigo index.css (entrega da home) e
+   foram centralizados aqui para que todas as páginas públicas
+   tenham a mesma aparência. Os valores de cor são os mesmos,
+   agora expostos como variáveis para facilitar a manutenção.
+
+   Ordem de carregamento esperada:
+   global.css -> components.css -> <página>.css
+   ========================================================= */
+
+:root {
+  /* Paleta da home (contrastes verificados para WCAG AA) */
+  --sbp-verde: #2F6F63;          /* 5,9:1 sobre branco */
+  --sbp-verde-escuro: #255a50;
+  --sbp-verde-claro: #EAF2EF;
+  --sbp-verde-texto-claro: #E7F0EC;
+  --sbp-ambar: #E8A33D;          /* usar só como fundo, com texto --sbp-tinta */
+  --sbp-ambar-escuro: #d8912c;
+  --sbp-ambar-claro: #FDF1DE;
+  --sbp-tinta: #1F2A24;
+  --sbp-texto: #34433C;
+  --sbp-texto-suave: #55645C;    /* 5,9:1 sobre branco */
+  --sbp-borda: #E4DFD5;
+  --sbp-fundo: #FBF8F3;
+  --sbp-branco: #FFFFFF;
+  --sbp-fonte-titulo: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --sbp-fonte-texto: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --sbp-raio: 8px;
+  --sbp-raio-grande: 1rem;
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--sbp-fonte-texto);
+  color: var(--sbp-tinta);
+  background-color: var(--sbp-fundo);
+  line-height: 1.5;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--sbp-fonte-titulo);
+  line-height: 1.2;
+  margin: 0 0 0.5em;
+}
+
+/* Foco visível: definido em global.css (anel duplo, visível em qualquer fundo) */
+
+/* ---------- Movimento reduzido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Link de pular navegação ---------- */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  transform: none;
+  background: var(--sbp-tinta);
+  color: var(--sbp-branco);
+  padding: 0.75rem 1.25rem;
+  z-index: 100;
+  border-radius: 0 0 6px 0;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* ---------- Cabeçalho ---------- */
+.site-header {
+  background-color: var(--sbp-branco);
+  border-bottom: 1px solid var(--sbp-borda);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0.9rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--sbp-verde);
+}
+
+.brand-icon {
+  color: var(--sbp-ambar);
+  font-size: 1.4rem;
+}
+
+.brand-title {
+  font-size: 1rem;
+}
+
+.menu-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 2px solid var(--sbp-verde);
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  color: var(--sbp-verde);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.menu-toggle-icone {
+  width: 18px;
+  height: 2px;
+  background: var(--sbp-verde);
+  position: relative;
+}
+
+.menu-toggle-icone::before,
+.menu-toggle-icone::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 2px;
+  background: var(--sbp-verde);
+}
+
+.menu-toggle-icone::before {
+  top: -6px;
+}
+
+.menu-toggle-icone::after {
+  top: 6px;
+}
+
+.nav-principal ul {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.nav-principal a {
+  text-decoration: none;
+  color: var(--sbp-tinta);
+  font-weight: 500;
+}
+
+.nav-principal a:hover,
+.nav-principal a[aria-current="page"] {
+  color: var(--sbp-verde);
+  text-decoration: underline;
+}
+
+.btn-nav {
+  color: var(--sbp-branco) !important;
+  text-decoration: none !important;
+}
+
+/* ---------- Botões ---------- */
+.btn-primary,
+.btn-secundario,
+.btn-terciario {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: var(--sbp-verde);
+  color: var(--sbp-branco);
+}
+
+.btn-primary:hover {
+  background-color: var(--sbp-verde-escuro);
+  color: var(--sbp-branco);
+}
+
+.btn-secundario {
+  background-color: transparent;
+  color: var(--sbp-verde);
+  border-color: var(--sbp-verde);
+}
+
+.btn-secundario:hover {
+  background-color: var(--sbp-verde-claro);
+  color: var(--sbp-verde);
+}
+
+.btn-terciario {
+  background-color: var(--sbp-ambar);
+  color: var(--sbp-tinta);
+  padding: 0.6rem 1.1rem;
+  font-size: 0.95rem;
+}
+
+.btn-terciario:hover {
+  background-color: var(--sbp-ambar-escuro);
+  color: var(--sbp-tinta);
+}
+
+.btn-primary[disabled],
+.btn-primary[aria-disabled="true"] {
+  cursor: progress;
+  opacity: 0.8;
+}
+
+/* ---------- Menu mobile ----------
+   Aprimoramento progressivo: sem JavaScript, o menu fica sempre
+   visível e o botão "Menu" some. A classe .js é adicionada no
+   <html> por um script curto no <head> de cada página. */
+.menu-toggle {
+  display: none;
+}
+
+@media (max-width: 55rem) {
+  .js .menu-toggle {
+    display: flex;
+  }
+
+  .js .nav-principal {
+    display: none;
+  }
+
+  .nav-principal {
+    width: 100%;
+  }
+
+  .js .nav-principal.menu-aberto {
+    display: block;
+  }
+
+  .header-inner {
+    flex-wrap: wrap;
+  }
+
+  .nav-principal ul {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 1rem 0;
+  }
+}
+
+/* ---------- Rodapé ---------- */
+.site-footer {
+  background-color: var(--sbp-tinta);
+  color: var(--sbp-verde-texto-claro);
+  padding: 2.5rem 1.25rem;
+}
+
+.footer-inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.footer-marca {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.footer-inner nav ul {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-inner nav a {
+  text-decoration: none;
+  color: var(--sbp-verde-texto-claro);
+}
+
+.footer-inner nav a:hover {
+  text-decoration: underline;
+  color: var(--sbp-verde-texto-claro);
+}
+
+.footer-copy {
+  font-size: 0.85rem;
+  color: #B9C6C0;
+  margin: 0;
+}
+
+/* ---------- Utilitários compartilhados ---------- */
+.selo-demo {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border: 1px dashed var(--sbp-texto-suave);
+  border-radius: 999px;
+  background: var(--sbp-branco);
+  color: var(--sbp-texto-suave);
+  font-family: var(--sbp-fonte-texto);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
