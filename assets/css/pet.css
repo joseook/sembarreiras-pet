@@ -1,0 +1,173 @@
+/* =========================================================
+   Sem Barreiras Pet — pet.css
+   Ficha do animal (pages/pet.html). Prefixo .p- = exclusivo desta página.
+   Tokens vêm de tema.css. Mobile-first.
+   ========================================================= */
+
+.p-pagina { padding: 1.5rem 0 4rem; }
+
+.p-carregando { padding: 3rem 0; color: var(--t-suave); }
+
+/* ---------- Topo: galeria + identificação ---------- */
+.p-topo { display: grid; gap: 1.5rem; align-items: start; }
+
+.p-foto-principal {
+  aspect-ratio: 4 / 5;
+  max-height: 34rem;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: var(--t-terracota-claro);
+  box-shadow: var(--t-sombra);
+}
+.p-foto-principal img { width: 100%; height: 100%; object-fit: cover; }
+
+.p-miniaturas { display: flex; gap: 0.6rem; margin-top: 0.75rem; }
+.p-miniatura {
+  display: block;
+  width: 4.5rem;
+  height: 4.5rem;
+  padding: 0;
+  overflow: hidden;
+  border: 3px solid transparent;
+  border-radius: 0.9rem;
+  background: none;
+  cursor: pointer;
+  opacity: 0.75;
+}
+.p-miniatura img { width: 100%; height: 100%; object-fit: cover; }
+.p-miniatura[aria-pressed="true"] { border-color: var(--t-terracota); opacity: 1; }
+
+.p-cabecalho h1 { font-size: clamp(2.6rem, 8vw, 4.2rem); margin-bottom: 0.5rem; }
+.p-cabecalho-linha { font-size: 1.05rem; color: var(--t-texto); margin-bottom: 1rem; }
+
+.p-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+@media (min-width: 56rem) {
+  .p-topo { grid-template-columns: 0.9fr 1.1fr; gap: 3rem; align-items: center; }
+}
+
+/* ---------- Abas (âncoras) ---------- */
+.p-abas {
+  position: sticky;
+  top: 4.25rem;
+  z-index: 5;
+  margin: 2rem 0 0;
+  background: var(--t-creme);
+  border-bottom: 1px solid var(--t-borda);
+  overflow-x: auto;
+}
+.p-abas ul { display: flex; gap: 0.25rem; min-width: max-content; }
+.p-abas a {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 1rem;
+  border-bottom: 3px solid transparent;
+  color: var(--t-texto);
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.p-abas a:hover { color: var(--t-terracota-esc); border-bottom-color: var(--t-terracota); }
+
+/* Evita que o título da seção fique escondido atrás do cabeçalho fixo */
+.p-secao { scroll-margin-top: 8.5rem; }
+
+/* ---------- Corpo: conteúdo + cartão lateral ---------- */
+.p-corpo { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2rem; margin-top: 2rem; }
+
+/* No celular o cartão de ação vem primeiro, para a decisão ficar à mão */
+.p-lateral { order: -1; }
+.p-coluna { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.75rem; min-width: 0; }
+
+@media (min-width: 62rem) {
+  .p-corpo { grid-template-columns: minmax(0, 1fr) 20rem; gap: 3.5rem; align-items: start; }
+  .p-lateral { order: 0; position: sticky; top: 9rem; }
+}
+
+.p-cartao {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.5rem;
+  border: 1px solid var(--t-borda);
+  border-radius: var(--t-raio);
+  background: var(--t-papel);
+  box-shadow: var(--t-sombra);
+}
+.p-cartao-titulo { font-size: 1.4rem; }
+.p-cartao-resumo { display: grid; gap: 0.4rem; font-size: 0.92rem; }
+.p-cartao-resumo li { position: relative; padding-left: 1.4rem; }
+.p-cartao-resumo li::before { content: "✓"; position: absolute; left: 0; font-weight: 700; color: var(--t-verde); }
+.p-cartao-nota { font-size: 0.82rem; color: var(--t-suave); }
+
+/* ---------- Seções ---------- */
+.p-secao-titulo { font-size: clamp(1.6rem, 4vw, 2.1rem); margin-bottom: 1.25rem; }
+.p-sub { font-family: var(--t-fonte-texto); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--t-terracota-esc); margin: 1.5rem 0 0.6rem; }
+.p-secao > .p-sub:first-of-type { margin-top: 0; }
+.p-texto { max-width: 42rem; color: var(--t-texto); }
+.p-bloco + .p-bloco { margin-top: 0.5rem; }
+.p-lista { display: grid; gap: 0.4rem; color: var(--t-texto); }
+.p-lista li { position: relative; padding-left: 1.2rem; }
+.p-lista li::before { content: "•"; position: absolute; left: 0; color: var(--t-terracota); font-weight: 700; }
+
+/* Ficha rápida */
+.p-fatos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+}
+.p-fatos dd { overflow-wrap: anywhere; }
+.p-fatos div { padding: 0.9rem 1rem; border: 1px solid var(--t-borda); border-radius: var(--t-raio-pequeno); background: var(--t-papel); }
+.p-fatos dt { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--t-suave); }
+.p-fatos dd { margin: 0.15rem 0 0; font-weight: 700; }
+@media (min-width: 40rem) { .p-fatos { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+/* Convivência */
+.p-conv-grade { display: grid; gap: 0.75rem; margin-bottom: 1rem; }
+@media (min-width: 40rem) { .p-conv-grade { grid-template-columns: repeat(3, 1fr); } }
+.p-conv { display: grid; grid-template-columns: auto 1fr; gap: 0 0.75rem; align-items: center; padding: 0.9rem 1rem; border-radius: var(--t-raio-pequeno); border: 1px solid var(--t-borda); background: var(--t-papel); }
+.p-conv-simbolo { grid-row: span 2; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; font-weight: 700; color: #fff; }
+.p-conv-nome { font-weight: 700; }
+.p-conv-texto { font-size: 0.88rem; color: var(--t-suave); }
+.p-conv--sim .p-conv-simbolo { background: var(--t-verde); }
+.p-conv--nao .p-conv-simbolo { background: var(--t-erro); }
+.p-conv--talvez .p-conv-simbolo { background: #8A6A12; }
+
+/* Tabelas */
+.p-tabela-rolagem { overflow-x: auto; border: 1px solid var(--t-borda); border-radius: var(--t-raio-pequeno); background: var(--t-papel); }
+.p-tabela { width: 100%; border-collapse: collapse; font-size: 0.93rem; }
+.p-tabela th, .p-tabela td { padding: 0.8rem 1rem; text-align: left; vertical-align: middle; }
+.p-tabela thead th { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--t-suave); background: var(--t-creme-2); }
+.p-tabela tbody tr + tr > * { border-top: 1px solid var(--t-borda); }
+.p-tabela tbody th { font-weight: 700; font-family: var(--t-fonte-texto); }
+
+/* Selos de situação: cor + texto (nunca só cor) */
+.p-selo { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.15rem 0.7rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; white-space: nowrap; }
+.p-selo--ok { background: var(--t-verde-claro); color: #1F5A4E; }
+.p-selo--alerta { background: var(--t-ambar-claro); color: #6B4A00; }
+.p-selo--neutro { background: var(--t-creme-2); color: var(--t-texto); }
+
+/* Avisos */
+.p-aviso { padding: 1rem 1.25rem; border-radius: var(--t-raio-pequeno); border: 1px solid transparent; }
+.p-aviso + .p-aviso { margin-top: 0.75rem; }
+.p-aviso--ok { background: var(--t-verde-claro); color: #1F5A4E; }
+.p-aviso--info { background: var(--t-creme-2); color: var(--t-texto); }
+.p-aviso--alerta { background: var(--t-ambar-claro); color: #4F3700; border-color: #E9C98A; }
+.p-aviso--erro { background: var(--t-erro-claro); color: var(--t-erro); border-color: #E7B9B4; }
+.p-aviso-titulo { font-size: 1.15rem; margin-bottom: 0.5rem; }
+.p-aviso-lista { display: grid; gap: 0.35rem; margin: 0; }
+.p-aviso-lista dt { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.p-aviso-lista dd { margin: 0 0 0.35rem; }
+.p-aviso--erro a { color: inherit; }
+.p-aviso--erro .p-tags { margin-top: 1rem; }
+
+/* Histórico de doenças */
+.p-historico { display: grid; gap: 0.75rem; }
+.p-historico li { display: grid; gap: 0.1rem; padding: 0.9rem 1.1rem; border-left: 4px solid var(--t-terracota); border-radius: 0 var(--t-raio-pequeno) var(--t-raio-pequeno) 0; background: var(--t-papel); }
+.p-historico-quando { font-size: 0.82rem; color: var(--t-suave); }
+
+/* Tabelas em telas estreitas: rolagem horizontal já cobre, sem esconder colunas */
+@media (max-width: 34rem) {
+  .p-tabela th, .p-tabela td { padding: 0.65rem 0.75rem; }
+}

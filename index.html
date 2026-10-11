@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sem Barreiras Pet conecta pessoas a cães e gatos resgatados, com ficha completa de saúde e um site acessível para todos.">
   <title>Sem Barreiras Pet - Adoção acessível para todos</title>
   <!-- Marca que o JavaScript está ativo (menu mobile usa aprimoramento progressivo) -->
   <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="assets/css/global.css">
-  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/tema.css">
   <link rel="stylesheet" href="assets/css/home.css">
   <script type="module" src="assets/js/main.js"></script>
 </head>
@@ -15,25 +16,27 @@
 
   <a href="#conteudo-principal" class="skip-link">Pular para o conteúdo principal</a>
 
-  <header class="site-header">
-    <div class="header-inner">
-      <a href="index.html" class="brand" aria-label="Sem Barreiras Pet, página inicial">
-        <span class="brand-icon" aria-hidden="true">♥</span>
-        <span class="brand-title">SEM BARREIRAS PET</span>
+  <p class="t-aviso">Cada ficha mostra <strong>vacinas, saúde e história</strong> do animal antes da visita.</p>
+
+  <header class="t-header">
+    <div class="t-header-inner">
+      <a href="index.html" class="t-marca" aria-label="Sem Barreiras Pet, página inicial">
+        <span class="t-marca-icone" aria-hidden="true">♥</span>
+        Sem Barreiras Pet
       </a>
 
-      <button type="button" class="menu-toggle" id="botao-menu" aria-expanded="false" aria-controls="menu-principal">
+      <button type="button" class="t-menu-toggle" id="botao-menu" aria-expanded="false" aria-controls="menu-principal">
         <span class="menu-toggle-texto">Menu</span>
         <span class="menu-toggle-icone" aria-hidden="true"></span>
       </button>
 
-      <nav class="nav-principal" id="menu-principal" aria-label="Navegação principal">
+      <nav class="t-nav" id="menu-principal" aria-label="Navegação principal">
         <ul>
           <li><a href="index.html" aria-current="page">Início</a></li>
           <li><a href="#pets-destaque">Pets para adoção</a></li>
           <li><a href="pages/como-funciona.html">Como funciona</a></li>
-          <li><a href="pages/login.html">Entrar</a></li>
-          <li><a href="pages/cadastro.html" class="btn-primary btn-nav">Criar conta</a></li>
+          <li class="t-nav-entrar"><a href="pages/login.html">Entrar</a></li>
+          <li><a href="pages/cadastro.html" class="t-btn t-btn--escuro t-btn--pequeno">Criar conta</a></li>
         </ul>
       </nav>
     </div>
@@ -41,138 +44,248 @@
 
   <main id="conteudo-principal">
 
-    <section class="hero" aria-labelledby="titulo-hero">
-      <div class="hero-conteudo">
-        <h1 id="titulo-hero">Adotar um pet não devia ter barreiras</h1>
-        <p class="hero-texto">
-          Conectamos pessoas e animais esperando por um lar, em um site pensado
-          para ser usado por qualquer pessoa: com leitor de tela, só com o
-          teclado, ou do jeito que for mais confortável para você.
-        </p>
-        <div class="hero-acoes">
-          <a href="#pets-destaque" class="btn-primary">Ver pets para adoção</a>
-          <a href="pages/cadastro.html" class="btn-secundario">Criar minha conta</a>
+    <!-- ===================== Hero ===================== -->
+    <section class="h-hero" aria-labelledby="titulo-hero">
+      <div class="t-container h-hero-grade">
+        <div class="h-hero-texto">
+          <p class="h-selo">Adoção responsável e acessível</p>
+          <h1 id="titulo-hero">
+            Todo bicho merece um <span class="t-destaque">lar</span> sem barreiras.
+          </h1>
+          <p class="h-hero-apoio">
+            O Sem Barreiras Pet aproxima você de cães e gatos resgatados por ONGs e abrigos,
+            com todas as informações de saúde às claras e um site que qualquer pessoa consegue
+            usar: com leitor de tela, só com o teclado ou do jeito mais confortável para você.
+          </p>
+          <div class="h-hero-acoes">
+            <a href="#pets-destaque" class="t-btn t-btn--terracota">Conhecer os pets <span aria-hidden="true">→</span></a>
+            <a href="pages/como-funciona.html" class="t-btn t-btn--contorno">Como funciona</a>
+          </div>
+
+          <dl class="h-numeros">
+            <div>
+              <dt>Etapas até a adoção</dt>
+              <dd>4</dd>
+            </div>
+            <div>
+              <dt>Nível de acessibilidade (WCAG)</dt>
+              <dd>AA</dd>
+            </div>
+            <div>
+              <dt>Uso só com teclado</dt>
+              <dd>100%</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="h-hero-visual">
+          <div class="h-foto-principal">
+            <img src="assets/img/pets/hero-golden.jpg" width="1000" height="1250"
+                 alt="Cachorro golden retriever de perfil, com o pelo dourado iluminado pelo sol">
+          </div>
+          <div class="h-foto-inset">
+            <img src="assets/img/pets/hero-inset.jpg" width="420" height="420"
+                 alt="Um gato e um cachorro deitados juntos na grama">
+          </div>
+          <p class="h-selo-flutuante">
+            <span class="h-selo-icone" aria-hidden="true">♥</span>
+            <span><strong>Ficha completa</strong><br>vacinas, saúde e história</span>
+          </p>
         </div>
       </div>
     </section>
 
-    <section class="como-funciona" id="como-funciona" aria-labelledby="titulo-como-funciona">
-      <h2 id="titulo-como-funciona">Como funciona a adoção</h2>
-      <p class="como-funciona-intro">
-        Um caminho simples, sem pressa e com apoio do abrigo em cada etapa.
-      </p>
-
-      <!-- Resumo. O passo a passo completo fica em pages/como-funciona.html -->
-      <ol class="passos-lista">
-        <li class="passo">
-          <span class="passo-numero" aria-hidden="true">1</span>
-          <h3>Crie sua conta</h3>
-          <p>Conte um pouco sobre você, sua casa e sua rotina.</p>
-        </li>
-        <li class="passo">
-          <span class="passo-numero" aria-hidden="true">2</span>
-          <h3>Encontre um pet</h3>
-          <p>Compare temperamento, porte e cuidados com calma.</p>
-        </li>
-        <li class="passo">
-          <span class="passo-numero" aria-hidden="true">3</span>
-          <h3>Agende a visita</h3>
-          <p>Conheça o pet e converse com o abrigo responsável.</p>
-        </li>
-      </ol>
-
-      <p class="como-funciona-cta">
-        <a href="pages/como-funciona.html" class="btn-primary">
-          Veja o passo a passo completo <span aria-hidden="true">→</span>
-        </a>
-      </p>
-    </section>
-
-    <section class="pets-destaque" id="pets-destaque" aria-labelledby="titulo-pets-destaque">
-      <h2 id="titulo-pets-destaque">Pets esperando por um lar</h2>
-
-      <ul class="pets-grade">
-        <li class="pet-card">
-          <div class="pet-thumb pet-thumb--1">
-            <img src="https://placedog.net/500/400?id=15" alt="Nina, cadela de porte médio, pelagem caramelo">
-          </div>
-          <div class="pet-info">
-            <h3>Nina</h3>
-            <p class="pet-detalhes">Cadela, 2 anos, porte médio</p>
-            <p>Calma, adora carinho e já é acostumada com crianças.</p>
-            <a href="#" class="btn-terciario">Quero conhecer a Nina</a>
-          </div>
-        </li>
-
-        <li class="pet-card">
-          <div class="pet-thumb pet-thumb--2">
-            <img src="https://imgs.search.brave.com/SKYfD6M4zAVZIzb8gU9Qkvzepdu2Vh8KaesljKTYlIQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zMi1v/Z2xvYm8uZ2xiaW1n/LmNvbS8zM1VlVDlu/akhVWnEyMXlaV3BC/UDlBaUdYQUE9LzB4/MDoxMjgweDg1NC85/ODR4MC9zbWFydC9m/aWx0ZXJzOnN0cmlw/X2ljYygpL2kuczMu/Z2xiaW1nLmNvbS92/MS9BVVRIX2RhMDI1/NDc0YzBjNDRlZGQ5/OTMzMmRkZGIwOWNh/YmU4L2ludGVybmFs/X3Bob3Rvcy9icy8y/MDI0L2ovUy9WMGVG/SWxSaHFEc0wxUmNs/bzQ0Zy9jYXQtNjcw/NjM5My0xMjgwLmpw/Zw" alt="Simba, gato jovem de pelagem laranja">
-          </div>
-          <div class="pet-info">
-            <h3>Simba</h3>
-            <p class="pet-detalhes">Gato, 1 ano, porte pequeno</p>
-            <p>Curioso e brincalhão, se dá bem com outros gatos.</p>
-            <a href="#" class="btn-terciario">Quero conhecer o Simba</a>
-          </div>
-        </li>
-
-        <li class="pet-card">
-          <div class="pet-thumb pet-thumb--3">
-            <img src="https://placedog.net/500/400?id=30" alt="Bento, cachorro idoso de porte grande, pelagem preta e branca">
-          </div>
-          <div class="pet-info">
-            <h3>Bento</h3>
-            <p class="pet-detalhes">Cachorro, 8 anos, porte grande</p>
-            <p>Tranquilo e companheiro, ideal para uma casa mais calma.</p>
-            <a href="#" class="btn-terciario">Quero conhecer o Bento</a>
-          </div>
-        </li>
-
-        <li class="pet-card">
-          <div class="pet-thumb pet-thumb--4">
-            <img src="https://imgs.search.brave.com/S91MfugFuGcn49yl7fwFwexy_V9f2isNDGCaTFLttsU/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/cGF0YXNkYWNhc2Eu/Y29tLmJyL3NpdGVz/L2RlZmF1bHQvZmls/ZXMvc3R5bGVzL2dh/bGxlcnlfY3JvcC9w/dWJsaWMvMjAyNS0w/NS9nYXRvLW11bmNo/a2luLWNpbnphLWZp/bGhvdGUuanBnLndl/YnA_aXRvaz1IbGhr/N3JMVQ" alt="Mel, gata filhote de pelagem cinza">
-          </div>
-          <div class="pet-info">
-            <h3>Mel</h3>
-            <p class="pet-detalhes">Gata, 4 meses, porte pequeno</p>
-            <p>Filhote cheia de energia, ainda aprendendo sobre o mundo.</p>
-            <a href="#" class="btn-terciario">Quero conhecer a Mel</a>
-          </div>
-        </li>
+    <!-- ===================== Faixa de benefícios ===================== -->
+    <section class="h-faixa" aria-label="Diferenciais do Sem Barreiras Pet">
+      <ul class="h-faixa-trilho">
+        <li>Ficha de saúde completa</li>
+        <li>Carteira de vacinação visível</li>
+        <li>Visita agendada com o abrigo</li>
+        <li>Navegação pelo teclado</li>
+        <li>Compatível com leitor de tela</li>
+        <li>Linguagem simples</li>
+        <li>Acompanhamento após a adoção</li>
+        <!-- Repetição só para o efeito visual de rolagem; escondida de leitores de tela -->
+        <li aria-hidden="true">Ficha de saúde completa</li>
+        <li aria-hidden="true">Carteira de vacinação visível</li>
+        <li aria-hidden="true">Visita agendada com o abrigo</li>
+        <li aria-hidden="true">Navegação pelo teclado</li>
+        <li aria-hidden="true">Compatível com leitor de tela</li>
+        <li aria-hidden="true">Linguagem simples</li>
+        <li aria-hidden="true">Acompanhamento após a adoção</li>
       </ul>
     </section>
 
-    <section class="acessibilidade" aria-labelledby="titulo-acessibilidade">
-      <h2 id="titulo-acessibilidade">Um site pensado para todos</h2>
-      <p>
-        Acreditamos que adotar um pet deve ser simples para qualquer pessoa.
-        Por isso, este site foi construído com:
-      </p>
-      <ul class="lista-acessibilidade">
-        <li>Navegação completa pelo teclado, sem precisar do mouse.</li>
-        <li>Compatibilidade com leitores de tela em todas as páginas.</li>
-        <li>Textos em linguagem simples e direta.</li>
-        <li>Contraste de cores adequado para baixa visão.</li>
-        <li>Formulários sem tempo limite e com instruções claras.</li>
-      </ul>
+    <!-- ===================== Pets ===================== -->
+    <section class="h-pets" id="pets-destaque" aria-labelledby="titulo-pets-destaque">
+      <div class="t-container">
+        <div class="h-pets-topo">
+          <div>
+            <p class="t-sobretitulo">Conheça os companheiros</p>
+            <h2 id="titulo-pets-destaque">
+              Esperando por alguém <span class="t-destaque">como você.</span>
+            </h2>
+          </div>
+          <a href="pages/como-funciona.html#etapa-encontrar" class="t-link-seta">Como escolher um pet <span aria-hidden="true">→</span></a>
+        </div>
+
+        <ul class="h-pets-grade">
+          <li class="h-pet">
+            <a class="h-pet-link" href="pages/pet.html?id=nina" aria-label="Conhecer a Nina, cachorra cocker spaniel de 2 anos">
+              <div class="h-pet-foto">
+                <img src="assets/img/pets/nina.jpg" width="900" height="1125" loading="lazy"
+                     alt="Nina, cadela cocker spaniel de pelagem caramelo">
+                <span class="t-chip">Gentil</span>
+              </div>
+              <div class="h-pet-corpo">
+                <div class="h-pet-linha">
+                  <h3>Nina</h3>
+                  <span class="h-pet-idade">2 anos</span>
+                </div>
+                <p class="h-pet-raca">Cocker Spaniel</p>
+                <p class="h-pet-rodape"><span>Fêmea · Médio</span> <span class="h-pet-cta">Conhecer a Nina <span aria-hidden="true">→</span></span></p>
+              </div>
+            </a>
+          </li>
+
+          <li class="h-pet">
+            <a class="h-pet-link" href="pages/pet.html?id=simba" aria-label="Conhecer o Simba, gato de 1 ano">
+              <div class="h-pet-foto">
+                <img src="assets/img/pets/simba.jpg" width="900" height="1125" loading="lazy"
+                     alt="Simba, gato laranja e branco de olhos verdes">
+                <span class="t-chip">Brincalhão</span>
+              </div>
+              <div class="h-pet-corpo">
+                <div class="h-pet-linha">
+                  <h3>Simba</h3>
+                  <span class="h-pet-idade">1 ano</span>
+                </div>
+                <p class="h-pet-raca">Gato SRD</p>
+                <p class="h-pet-rodape"><span>Macho · Pequeno</span> <span class="h-pet-cta">Conhecer o Simba <span aria-hidden="true">→</span></span></p>
+              </div>
+            </a>
+          </li>
+
+          <li class="h-pet">
+            <a class="h-pet-link" href="pages/pet.html?id=bento" aria-label="Conhecer o Bento, cachorro golden retriever de 8 anos">
+              <div class="h-pet-foto">
+                <img src="assets/img/pets/bento.jpg" width="900" height="1125" loading="lazy"
+                     alt="Bento, golden retriever idoso, entre a vegetação">
+                <span class="t-chip">Leal</span>
+              </div>
+              <div class="h-pet-corpo">
+                <div class="h-pet-linha">
+                  <h3>Bento</h3>
+                  <span class="h-pet-idade">8 anos</span>
+                </div>
+                <p class="h-pet-raca">Golden Retriever</p>
+                <p class="h-pet-rodape"><span>Macho · Grande</span> <span class="h-pet-cta">Conhecer o Bento <span aria-hidden="true">→</span></span></p>
+              </div>
+            </a>
+          </li>
+
+          <li class="h-pet">
+            <a class="h-pet-link" href="pages/pet.html?id=mel" aria-label="Conhecer a Mel, gata filhote de 4 meses">
+              <div class="h-pet-foto">
+                <img src="assets/img/pets/mel.jpg" width="900" height="1125" loading="lazy"
+                     alt="Mel, gatinha filhote levantando a patinha">
+                <span class="t-chip">Filhote</span>
+              </div>
+              <div class="h-pet-corpo">
+                <div class="h-pet-linha">
+                  <h3>Mel</h3>
+                  <span class="h-pet-idade">4 meses</span>
+                </div>
+                <p class="h-pet-raca">Gata SRD</p>
+                <p class="h-pet-rodape"><span>Fêmea · Pequeno</span> <span class="h-pet-cta">Conhecer a Mel <span aria-hidden="true">→</span></span></p>
+              </div>
+            </a>
+          </li>
+        </ul>
+
+        <p class="h-demo-nota">
+          Os pets desta página são <strong>exemplos fictícios</strong> para demonstrar a ficha do animal.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== O caminho (escuro) ===================== -->
+    <section class="h-caminho" id="como-funciona" aria-labelledby="titulo-como-funciona">
+      <div class="t-container h-caminho-grade">
+        <div class="h-caminho-texto">
+          <p class="t-sobretitulo">O caminho</p>
+          <h2 id="titulo-como-funciona">
+            Adoção feita com <span class="t-destaque">cuidado de verdade.</span>
+          </h2>
+          <p>
+            Sem pressa e sem pegadinhas. Você decide no seu tempo e o abrigo acompanha
+            cada etapa, porque um lar é para a vida toda.
+          </p>
+          <a href="pages/como-funciona.html" class="t-btn t-btn--terracota">Ver o passo a passo completo <span aria-hidden="true">→</span></a>
+        </div>
+
+        <ol class="h-passos">
+          <li>
+            <span class="h-passo-num" aria-hidden="true">01</span>
+            <div>
+              <h3>Conte sobre a sua casa</h3>
+              <p>Crie sua conta e fale da sua rotina, do espaço e do tipo de companhia que você procura.</p>
+            </div>
+          </li>
+          <li>
+            <span class="h-passo-num" aria-hidden="true">02</span>
+            <div>
+              <h3>Conheça o seu par</h3>
+              <p>Veja a ficha completa de cada animal: temperamento, vacinas, doenças e cuidados.</p>
+            </div>
+          </li>
+          <li>
+            <span class="h-passo-num" aria-hidden="true">03</span>
+            <div>
+              <h3>Visite e decida com calma</h3>
+              <p>Agende uma visita ao abrigo, converse com a equipe e só então confirme a adoção.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== Acessibilidade ===================== -->
+    <section class="h-acesso" aria-labelledby="titulo-acessibilidade">
+      <div class="t-container h-acesso-caixa">
+        <div>
+          <p class="t-sobretitulo">Para todas as pessoas</p>
+          <h2 id="titulo-acessibilidade">Um site pensado <span class="t-destaque">para todos.</span></h2>
+          <p class="h-acesso-texto">
+            Acreditamos que adotar deve ser simples para qualquer pessoa. Por isso este site foi construído com:
+          </p>
+        </div>
+        <ul class="h-acesso-lista">
+          <li>Navegação completa pelo teclado, sem precisar do mouse.</li>
+          <li>Compatibilidade com leitores de tela em todas as páginas.</li>
+          <li>Textos em linguagem simples e direta.</li>
+          <li>Contraste de cores adequado para baixa visão.</li>
+          <li>Formulários sem tempo limite e com instruções claras.</li>
+        </ul>
+      </div>
     </section>
 
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <p class="footer-marca">
-        <span class="brand-icon" aria-hidden="true">♥</span>
-        SEM BARREIRAS PET
-      </p>
+  <footer class="t-footer">
+    <div class="t-footer-inner">
+      <a href="index.html" class="t-marca" aria-label="Sem Barreiras Pet, página inicial">
+        <span class="t-marca-icone" aria-hidden="true">♥</span>
+        Sem Barreiras Pet
+      </a>
       <nav aria-label="Links do rodapé">
         <ul>
-          <li><a href="#">Sobre</a></li>
-          <li><a href="#">Contato</a></li>
-          <li><a href="#">Política de privacidade</a></li>
+          <li><a href="pages/como-funciona.html">Como funciona</a></li>
+          <li><a href="pages/login.html">Entrar</a></li>
+          <li><a href="pages/cadastro.html">Criar conta</a></li>
         </ul>
       </nav>
-      <p class="footer-copy">© 2026 Sem Barreiras Pet. Todos os direitos reservados.</p>
+      <p class="t-footer-copy">© 2026 Sem Barreiras Pet. Fotos de Unsplash (créditos em assets/img/CREDITOS.md).</p>
     </div>
   </footer>
 

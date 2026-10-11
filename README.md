@@ -27,7 +27,8 @@ A página "Como funciona" responde diretamente à persona Camila Souza e à jorn
 
 | Área | Situação |
 | --- | --- |
-| Home (`frontend/index.html`) | Pronta (entrega de Lucas). Seção "Como funciona" virou resumo com link para a página completa |
+| Home (`index.html`) | Redesenhada (tema creme + terracota, `assets/css/tema.css`). Pets linkam para a ficha |
+| Ficha do pet (`pages/pet.html?id=nina`) | Nova. Raça, idade, vacinas, doenças atuais e passadas, exames, convivência e cuidados. Dados fictícios em `assets/js/data/pets.js` |
 | Login e cadastro (`frontend/pages/`) | Telas estáticas (José Paulo e Ana Clara). **Não autenticam nem salvam dados** |
 | Como funciona (`frontend/pages/como-funciona.html`) | Nova. Etapas, prévia de catálogo, agendamento, FAQ |
 | Mapa do abrigo | Funciona com chave do Google Maps; sem chave mostra endereço em texto (fallback) |
