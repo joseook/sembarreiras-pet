@@ -9,6 +9,7 @@
   <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="../assets/css/global.css">
   <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/tema.css">
   <link rel="stylesheet" href="../assets/css/como-funciona.css">
   <script type="module" src="../assets/js/main.js"></script>
 </head>
@@ -16,25 +17,25 @@
 
   <a href="#conteudo-principal" class="skip-link">Pular para o conteúdo principal</a>
 
-  <header class="site-header">
-    <div class="header-inner">
-      <a href="../index.html" class="brand" aria-label="Sem Barreiras Pet, página inicial">
-        <span class="brand-icon" aria-hidden="true">♥</span>
-        <span class="brand-title">SEM BARREIRAS PET</span>
+  <header class="t-header">
+    <div class="t-header-inner">
+      <a href="../index.html" class="t-marca" aria-label="Sem Barreiras Pet, página inicial">
+        <span class="t-marca-icone" aria-hidden="true">♥</span>
+        Sem Barreiras Pet
       </a>
 
-      <button type="button" class="menu-toggle" id="botao-menu" aria-expanded="false" aria-controls="menu-principal">
+      <button type="button" class="t-menu-toggle" id="botao-menu" aria-expanded="false" aria-controls="menu-principal">
         <span class="menu-toggle-texto">Menu</span>
         <span class="menu-toggle-icone" aria-hidden="true"></span>
       </button>
 
-      <nav class="nav-principal" id="menu-principal" aria-label="Navegação principal">
+      <nav class="t-nav" id="menu-principal" aria-label="Navegação principal">
         <ul>
           <li><a href="../index.html">Início</a></li>
           <li><a href="../index.html#pets-destaque">Pets para adoção</a></li>
           <li><a href="como-funciona.html" aria-current="page">Como funciona</a></li>
-          <li><a href="login.html">Entrar</a></li>
-          <li><a href="cadastro.html" class="btn-primary btn-nav">Criar conta</a></li>
+          <li class="t-nav-entrar"><a href="login.html">Entrar</a></li>
+          <li><a href="cadastro.html" class="t-btn t-btn--escuro t-btn--pequeno">Criar conta</a></li>
         </ul>
       </nav>
     </div>
@@ -641,20 +642,20 @@
 
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <p class="footer-marca">
-        <span class="brand-icon" aria-hidden="true">♥</span>
-        SEM BARREIRAS PET
-      </p>
+  <footer class="t-footer">
+    <div class="t-footer-inner">
+      <a href="../index.html" class="t-marca" aria-label="Sem Barreiras Pet, página inicial">
+        <span class="t-marca-icone" aria-hidden="true">♥</span>
+        Sem Barreiras Pet
+      </a>
       <nav aria-label="Links do rodapé">
         <ul>
-          <li><a href="#">Sobre</a></li>
-          <li><a href="#">Contato</a></li>
-          <li><a href="#">Política de privacidade</a></li>
+          <li><a href="como-funciona.html">Como funciona</a></li>
+          <li><a href="login.html">Entrar</a></li>
+          <li><a href="cadastro.html">Criar conta</a></li>
         </ul>
       </nav>
-      <p class="footer-copy">© 2026 Sem Barreiras Pet. Todos os direitos reservados.</p>
+      <p class="t-footer-copy">© 2026 Sem Barreiras Pet. Fotos de Unsplash.</p>
     </div>
   </footer>
 

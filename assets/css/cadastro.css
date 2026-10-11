@@ -2,7 +2,7 @@
   position: absolute;
   top: -100px;
   left: 0;
-  background-color: #1b5e52;
+  background-color: var(--t-tinta);
   color: #ffffff;
   padding: 0.75rem 1.25rem;
   z-index: 9999;
@@ -26,14 +26,15 @@ body, input, button, select, textarea, label {
   align-items: center;
   min-height: 100vh;
   padding: 2.5rem 1rem;
-  background-color: #f4f3ee;
+  background-color: var(--t-creme);
 }
 
 .cadastro-card {
-  background: #ffffff;
+  background: var(--t-papel);
   padding: 2.5rem 2rem;
-  border-radius: 1.25rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--t-borda);
+  border-radius: 1.5rem;
+  box-shadow: var(--t-sombra);
   width: 100%;
   max-width: 440px;
 }
@@ -45,33 +46,33 @@ body, input, button, select, textarea, label {
 .brand-icon {
   width: 2.5rem;
   height: 2.5rem;
-  background-color: #f7d154;
-  border-radius: 0.75rem;
+  background-color: var(--t-terracota);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  color: #1a1a1a;
+  color: #ffffff;
   margin-bottom: 1rem;
 }
 
 .brand-title {
   font-size: 0.75rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
-  color: #1b5e52;
+  letter-spacing: 0.14em;
+  color: var(--t-terracota-esc);
   text-transform: uppercase;
 }
 
 h1 {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: #1a1a1a;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--t-tinta);
   margin-bottom: 0.25rem;
 }
 
 .subtitulo {
-  color: #555555;
+  color: var(--t-suave);
   font-size: 0.95rem;
   margin-bottom: 1.5rem;
 }
@@ -90,11 +91,11 @@ label {
   font-weight: 800 !important;
   font-size: 0.95rem;
   margin-bottom: 0.35rem;
-  color: #1a1a1a;
+  color: var(--t-tinta);
 }
 
 .campo-obrigatorio {
-  color: #b91c1c;
+  color: var(--t-erro);
   font-weight: bold;
 }
 
@@ -104,21 +105,21 @@ input[type="tel"],
 input[type="password"] {
   min-height: 2.75rem;
   padding: 0.6rem 0.85rem;
-  border: 1px solid #b0b0b0;
+  border: 1px solid #8C7B6B;
   border-radius: 0.5rem;
   font-size: 0.95rem;
-  color: #1a1a1a;
+  color: var(--t-tinta);
   background-color: #ffffff;
 }
 
 .form-help {
   font-size: 0.8rem;
-  color: #666666;
+  color: var(--t-suave);
   margin-top: 0.35rem;
 }
 
 .form-fieldset {
-  border: 1px solid #b0b0b0;
+  border: 1px solid #8C7B6B;
   border-radius: 0.5rem;
   padding: 0.85rem 1rem;
   margin-bottom: 1.25rem;
@@ -127,7 +128,7 @@ input[type="password"] {
 .form-fieldset legend {
   font-weight: 800 !important;
   font-size: 0.95rem;
-  color: #1a1a1a;
+  color: var(--t-tinta);
   padding: 0 0.25rem;
 }
 
@@ -149,7 +150,7 @@ input[type="password"] {
 .radio-list input[type="radio"] {
   width: 1.15rem;
   height: 1.15rem;
-  accent-color: #1b5e52;
+  accent-color: var(--t-terracota);
   cursor: pointer;
 }
 
@@ -161,14 +162,14 @@ input[type="password"] {
 
 .legenda-obrigatorio {
   font-size: 0.8rem;
-  color: #666666;
+  color: var(--t-suave);
   margin-bottom: 1.25rem;
 }
 
 .btn-primary {
   width: 100%;
   min-height: 2.85rem;
-  background-color: #1b5e52;
+  background-color: var(--t-terracota);
   color: #ffffff;
   border: none;
   border-radius: 2rem;
@@ -179,18 +180,18 @@ input[type="password"] {
 }
 
 .btn-primary:hover {
-  background-color: #13463d;
+  background-color: var(--t-terracota-esc);
 }
 
 .cadastro-footer {
   margin-top: 1.5rem;
   text-align: center;
   font-size: 0.85rem;
-  color: #666666;
+  color: var(--t-suave);
 }
 
 .cadastro-footer a {
-  color: #1b5e52;
+  color: var(--t-terracota-esc);
   font-weight: 800;
   text-decoration: underline;
 }

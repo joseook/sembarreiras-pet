@@ -14,21 +14,23 @@
    ========================================================= */
 
 :root {
-  /* Paleta da home (contrastes verificados para WCAG AA) */
-  --sbp-verde: #2F6F63;          /* 5,9:1 sobre branco */
-  --sbp-verde-escuro: #255a50;
-  --sbp-verde-claro: #EAF2EF;
-  --sbp-verde-texto-claro: #E7F0EC;
+  /* Paleta creme + terracota (a mesma de tema.css). Os nomes --sbp-verde*
+     foram mantidos para não reescrever a página "Como funciona", mas agora
+     apontam para a terracota. Contrastes: terracota sobre creme 4,8:1. */
+  --sbp-verde: #B4492A;
+  --sbp-verde-escuro: #96391E;
+  --sbp-verde-claro: #F6E3D3;
+  --sbp-verde-texto-claro: #F3E9D8;
   --sbp-ambar: #E8A33D;          /* usar só como fundo, com texto --sbp-tinta */
   --sbp-ambar-escuro: #d8912c;
-  --sbp-ambar-claro: #FDF1DE;
-  --sbp-tinta: #1F2A24;
-  --sbp-texto: #34433C;
-  --sbp-texto-suave: #55645C;    /* 5,9:1 sobre branco */
-  --sbp-borda: #E4DFD5;
-  --sbp-fundo: #FBF8F3;
-  --sbp-branco: #FFFFFF;
-  --sbp-fonte-titulo: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --sbp-ambar-claro: #FBE9C7;
+  --sbp-tinta: #2A211C;
+  --sbp-texto: #4A3F37;
+  --sbp-texto-suave: #6B5E54;
+  --sbp-borda: #E6D9C4;
+  --sbp-fundo: #FAF3E7;
+  --sbp-branco: #FFFBF4;
+  --sbp-fonte-titulo: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --sbp-fonte-texto: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --sbp-raio: 8px;
   --sbp-raio-grande: 1rem;
