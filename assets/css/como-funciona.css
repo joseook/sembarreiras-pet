@@ -71,7 +71,7 @@
 
 .cf-sobretitulo {
   margin: 0 0 0.75rem;
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -89,7 +89,7 @@
   font-family: var(--sbp-fonte-titulo);
   font-size: clamp(1.25rem, 2.6vw, 1.6rem);
   font-style: italic;
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
 }
 
 .cf-hero-apoio {
@@ -154,7 +154,7 @@
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 50%;
-  background: var(--sbp-verde);
+  background: var(--sbp-terracota);
   color: var(--sbp-branco);
   font-size: 0.9rem;
 }
@@ -208,8 +208,8 @@
 }
 
 .cf-etapa-link:hover {
-  border-color: var(--sbp-verde);
-  color: var(--sbp-verde);
+  border-color: var(--sbp-terracota);
+  color: var(--sbp-terracota);
   text-decoration: underline;
 }
 
@@ -268,7 +268,7 @@
 
 .cf-etapa h2 {
   font-size: clamp(1.6rem, 3.4vw, 2.2rem);
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
 }
 
 .cf-etapa-texto-bloco--estreito {
@@ -282,8 +282,8 @@
   margin: 0 0 0.75rem;
   padding: 0.3rem 0.8rem;
   border-radius: 999px;
-  background: var(--sbp-verde-claro);
-  color: var(--sbp-verde);
+  background: var(--sbp-terracota-claro);
+  color: var(--sbp-terracota);
   font-size: 0.85rem;
   font-weight: 700;
 }
@@ -344,8 +344,8 @@
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 50%;
-  border: 2px solid var(--sbp-verde);
-  color: var(--sbp-verde);
+  border: 2px solid var(--sbp-terracota);
+  color: var(--sbp-terracota);
   font-size: 0.85rem;
   font-weight: 700;
 }
@@ -361,7 +361,7 @@
 
 .cf-privacidade .cf-icone {
   margin-top: 0.15rem;
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
 }
 
 /* ---------- Avisos ---------- */
@@ -380,8 +380,8 @@
 
 .cf-aviso--info {
   margin: 1.25rem 0;
-  border-color: var(--sbp-verde);
-  background: var(--sbp-verde-claro);
+  border-color: var(--sbp-terracota);
+  background: var(--sbp-terracota-claro);
   font-size: 0.95rem;
 }
 
@@ -445,7 +445,7 @@
   margin-top: 1.1rem;
   padding: 0.7rem;
   border-radius: 999px;
-  background: var(--sbp-verde);
+  background: var(--sbp-terracota);
   color: var(--sbp-branco);
   font-weight: 700;
   text-align: center;
@@ -538,7 +538,7 @@
   width: 100%;
   height: 11rem;
   object-fit: cover;
-  border-bottom: 4px solid var(--sbp-verde);
+  border-bottom: 4px solid var(--sbp-terracota);
 }
 
 .cf-pet-demo-foto--tom {
@@ -686,7 +686,7 @@
 }
 
 .cf-mapa-fallback .cf-icone {
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
 }
 
 .cf-mapa-fallback p {
@@ -699,7 +699,7 @@
 
 .cf-mapa-rota a {
   font-weight: 700;
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
 }
 
 .cf-mapa-debug summary {
@@ -776,7 +776,7 @@
 .cf-campo input:hover,
 .cf-campo select:hover,
 .cf-campo textarea:hover {
-  border-color: var(--sbp-verde);
+  border-color: var(--sbp-terracota);
 }
 
 /* Erro: borda mais grossa + ícone + texto (não depende só de cor) */
@@ -815,8 +815,8 @@
 }
 
 .cf-form-status[data-tipo="sucesso"] {
-  border: 2px solid var(--sbp-verde);
-  background: var(--sbp-verde-claro);
+  border: 2px solid var(--sbp-terracota);
+  background: var(--sbp-terracota-claro);
 }
 
 .cf-form-status[data-tipo="erro"] {
@@ -853,7 +853,7 @@
 
 .cf-fases li {
   padding: 0.2rem 0 0.2rem 1rem;
-  border-left: 3px solid var(--sbp-verde);
+  border-left: 3px solid var(--sbp-terracota);
   color: var(--sbp-texto);
 }
 
@@ -913,7 +913,7 @@
 .cf-pedido-chips .cf-icone {
   width: 1.05rem;
   height: 1.05rem;
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
 }
 
 /* Status + linha de progresso */
@@ -935,7 +935,7 @@
   align-items: center;
   gap: 0.5rem;
   margin: 0.15rem 0 0;
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
   font-size: 1.35rem;
   font-weight: 700;
 }
@@ -944,8 +944,8 @@
   width: 0.7rem;
   height: 0.7rem;
   border-radius: 50%;
-  background: var(--sbp-verde);
-  box-shadow: 0 0 0 4px var(--sbp-verde-claro);
+  background: var(--sbp-terracota);
+  box-shadow: 0 0 0 4px var(--sbp-terracota-claro);
 }
 
 .cf-pedido-status-tempo {
@@ -984,7 +984,7 @@
 
 .cf-fase--concluida:not(:last-child)::before {
   border-left-style: solid;
-  border-left-color: var(--sbp-verde);
+  border-left-color: var(--sbp-terracota);
 }
 
 .cf-fase-marcador {
@@ -1003,17 +1003,17 @@
 }
 
 .cf-fase--concluida .cf-fase-marcador {
-  border-color: var(--sbp-verde);
-  background: var(--sbp-verde);
+  border-color: var(--sbp-terracota);
+  background: var(--sbp-terracota);
 }
 
 /* Etapa atual: anel grosso + ponto central (forma diferente, não só cor) */
 .cf-fase--atual .cf-fase-marcador {
   width: 2rem;
   height: 2rem;
-  border: 3px solid var(--sbp-verde);
-  background: radial-gradient(circle, var(--sbp-verde) 0 35%, var(--sbp-branco) 40%);
-  box-shadow: 0 0 0 4px var(--sbp-verde-claro);
+  border: 3px solid var(--sbp-terracota);
+  background: radial-gradient(circle, var(--sbp-terracota) 0 35%, var(--sbp-branco) 40%);
+  box-shadow: 0 0 0 4px var(--sbp-terracota-claro);
 }
 
 .cf-fase-nome {
@@ -1032,7 +1032,7 @@
 }
 
 .cf-fase--atual .cf-fase-info {
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
   font-weight: 700;
 }
 
@@ -1065,7 +1065,7 @@
 
   .cf-fase--concluida:not(:last-child)::before {
     border-top-style: solid;
-    border-top-color: var(--sbp-verde);
+    border-top-color: var(--sbp-terracota);
   }
 
   .cf-fase-marcador {
@@ -1155,8 +1155,8 @@
   justify-self: start;
   padding: 0.25rem 0.75rem;
   border-radius: 999px;
-  background: var(--sbp-verde-claro);
-  color: var(--sbp-verde);
+  background: var(--sbp-terracota-claro);
+  color: var(--sbp-terracota);
   font-size: 0.85rem;
   font-weight: 700;
 }
@@ -1190,7 +1190,7 @@
 
 .cf-faq h2 {
   font-size: clamp(1.6rem, 3.4vw, 2.2rem);
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
 }
 
 .cf-faq-intro {
@@ -1229,9 +1229,9 @@
   place-items: center;
   width: 1.75rem;
   height: 1.75rem;
-  border: 2px solid var(--sbp-verde);
+  border: 2px solid var(--sbp-terracota);
   border-radius: 50%;
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
   font-size: 1.1rem;
   line-height: 1;
 }
@@ -1241,7 +1241,7 @@
 }
 
 .cf-faq-item summary:hover {
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
 }
 
 .cf-faq-resposta {
@@ -1256,7 +1256,7 @@
 /* ---------- 8. CTA final ---------- */
 .cf-cta-final {
   padding: 4rem 0;
-  background: var(--sbp-verde);
+  background: var(--sbp-terracota);
   color: var(--sbp-branco);
   text-align: center;
 }
@@ -1269,7 +1269,7 @@
 .cf-cta-final p {
   margin: 0 auto;
   max-width: 34rem;
-  color: var(--sbp-verde-texto-claro);
+  color: var(--sbp-texto-claro);
   font-size: 1.08rem;
 }
 

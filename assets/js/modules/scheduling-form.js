@@ -1,26 +1,14 @@
 /**
- * Formulário "Solicitar visita" — envia para POST /api/visits.
+ * Formulário "Solicitar visita" — modo PRÉVIA.
  *
- * Modos (decididos pela configuração, ver frontend/config.example.js):
- * - "previa"       (padrão): valida os campos, mas NÃO envia nada. Usado
- *                   quando não há API configurada ou usuário de demonstração.
- * - "demonstracao" (somente desenvolvimento): envia para a API em nome do
- *                   usuário de demonstração criado pelo seed. Existe apenas
- *                   enquanto a autenticação não é implementada.
+ * O site é estático (sem back-end nem autenticação): o formulário valida
+ * os campos e confirma o preenchimento, mas NÃO envia nada ao abrigo.
  *
  * Mensagens vão para a região [data-form-status] (role="status", aria-live)
  * e os erros de campo ficam ligados aos inputs por aria-describedby.
  */
 
-import { ApiError, NetworkError, requestJson } from './api.js';
-
 const LIMITE_MENSAGEM = 1000;
-
-/** Campos da API -> nome do campo no formulário. */
-const CAMPOS_API = {
-  scheduled_at: 'data',
-  adopter_notes: 'mensagem',
-};
 
 function hojeLocalISO() {
   const agora = new Date();
@@ -45,29 +33,17 @@ function formatarDataHora(iso) {
   return data.toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'short' });
 }
 
-export function initSchedulingForm(form, config) {
+export function initSchedulingForm(form) {
   const campos = {
     data: form.elements.namedItem('data'),
     horario: form.elements.namedItem('horario'),
     mensagem: form.elements.namedItem('mensagem'),
   };
-  const botao = form.querySelector('[data-submit]');
   const status = form.querySelector('[data-form-status]');
-  const avisoModo = form.querySelector('[data-form-mode]');
-  const textoBotao = botao.textContent;
-
-  const modoDemonstracao = Boolean(config.apiBaseUrl && config.demoUserId);
-  const shelterId = Number.parseInt(form.dataset.shelterId, 10);
 
   // Com JavaScript ativo, a validação passa a ser feita aqui (mensagens em português e acessíveis).
   form.noValidate = true;
   campos.data.min = hojeLocalISO();
-
-  if (modoDemonstracao && avisoModo) {
-    avisoModo.innerHTML =
-      '<strong>Modo demonstração (desenvolvimento):</strong> a solicitação será registrada ' +
-      'na API local em nome de um usuário fictício, porque o login ainda não existe.';
-  }
 
   function definirErro(nome, mensagem) {
     const campo = campos[nome];
@@ -99,13 +75,7 @@ export function initSchedulingForm(form, config) {
     );
   }
 
-  function definirCarregando(carregando) {
-    botao.disabled = carregando;
-    botao.setAttribute('aria-busy', String(carregando));
-    botao.textContent = carregando ? 'Enviando solicitação…' : textoBotao;
-  }
-
-  /** Validação no navegador. A API valida de novo (fonte da verdade). */
+  /** Validação no navegador (quando houver back-end, ele deve validar de novo). */
   function validar() {
     const erros = {};
     const data = campos.data.value;
@@ -142,7 +112,7 @@ export function initSchedulingForm(form, config) {
     });
   });
 
-  form.addEventListener('submit', async (evento) => {
+  form.addEventListener('submit', (evento) => {
     evento.preventDefault();
     limparErros();
 
@@ -159,59 +129,10 @@ export function initSchedulingForm(form, config) {
 
     const { iso } = montarDataHora(campos.data.value, campos.horario.value);
 
-    if (!modoDemonstracao) {
-      mostrarStatus('info', [
-        `Tudo certo com o preenchimento: visita em ${formatarDataHora(iso)}.`,
-        'Como esta é uma prévia, a solicitação não foi enviada ao abrigo. ' +
-          'Quando o login estiver disponível, ela seguirá para a ONG confirmar.',
-      ]);
-      return;
-    }
-
-    definirCarregando(true);
-    mostrarStatus('info', ['Enviando sua solicitação…']);
-
-    try {
-      const { data: visita } = await requestJson(config.apiBaseUrl, '/visits', {
-        method: 'POST',
-        json: {
-          user_id: Number(config.demoUserId),
-          shelter_id: shelterId,
-          scheduled_at: iso,
-          adopter_notes: campos.mensagem.value.trim() || null,
-        },
-      });
-      form.reset();
-      mostrarStatus('sucesso', [
-        `Solicitação enviada! Protocolo nº ${visita.id}, para ${formatarDataHora(visita.scheduled_at)}.`,
-        'Agora é com a ONG: a visita só fica confirmada depois da resposta do abrigo.',
-      ]);
-    } catch (erro) {
-      if (erro instanceof ApiError && (erro.status === 400 || erro.status === 422)) {
-        const errosCampo = {};
-        const gerais = [];
-        Object.entries(erro.details).forEach(([campoApi, mensagem]) => {
-          const nome = CAMPOS_API[campoApi];
-          if (nome) errosCampo[nome] = mensagem;
-          else gerais.push(mensagem);
-        });
-        aplicarErros(errosCampo);
-        mostrarStatus('erro', [erro.message, ...gerais]);
-      } else if (erro instanceof ApiError) {
-        mostrarStatus('erro', [
-          erro.message || 'O servidor não conseguiu registrar a solicitação.',
-          'Tente novamente em alguns minutos.',
-        ]);
-      } else if (erro instanceof NetworkError) {
-        mostrarStatus('erro', [
-          'Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.',
-          'Seus dados continuam preenchidos no formulário.',
-        ]);
-      } else {
-        mostrarStatus('erro', ['Algo inesperado aconteceu. Tente novamente.']);
-      }
-    } finally {
-      definirCarregando(false);
-    }
+    mostrarStatus('info', [
+      `Tudo certo com o preenchimento: visita em ${formatarDataHora(iso)}.`,
+      'Como esta é uma prévia, a solicitação não foi enviada ao abrigo. ' +
+        'Quando o login estiver disponível, ela seguirá para a ONG confirmar.',
+    ]);
   });
 }

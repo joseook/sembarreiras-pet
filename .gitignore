@@ -2,8 +2,6 @@
 .env
 .env.*
 !.env.example
-# Gerado por `python manage.py frontend-config` (pode conter a chave do Maps)
-frontend/config.js
 
 # ---------- Python ----------
 __pycache__/

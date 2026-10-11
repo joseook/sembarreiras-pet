@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Entenda o passo a passo da adoção responsável no Sem Barreiras Pet: criar conta, encontrar um pet, agendar a visita e acompanhar a adoção.">
   <title>Como funciona a adoção - Sem Barreiras Pet</title>
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
   <!-- Marca que o JavaScript está ativo (menu mobile usa aprimoramento progressivo) -->
   <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="../assets/css/global.css">
@@ -143,12 +144,12 @@
              de leitores de tela e descrito pela legenda. -->
         <figure class="cf-previa cf-previa-form">
           <div class="cf-previa-moldura" aria-hidden="true">
-            <p class="cf-previa-titulo">Criar sua conta</p>
+            <p class="cf-previa-titulo">Crie sua conta</p>
             <div class="cf-previa-campo"><span>Nome completo</span><span class="cf-previa-input">Camila Souza</span></div>
             <div class="cf-previa-campo"><span>E-mail</span><span class="cf-previa-input">camila@exemplo.com</span></div>
-            <div class="cf-previa-campo"><span>Telefone</span><span class="cf-previa-input">(00) 00000-0000</span></div>
+            <div class="cf-previa-campo"><span>Telefone</span><span class="cf-previa-input">(11) 91234-5678</span></div>
             <div class="cf-previa-campo"><span>Senha</span><span class="cf-previa-input">••••••••</span></div>
-            <span class="cf-previa-botao">Criar cadastro</span>
+            <span class="cf-previa-botao">Criar minha conta</span>
           </div>
           <figcaption>
             Prévia ilustrativa do formulário de cadastro, com os campos nome,
@@ -325,13 +326,11 @@
             <!--
               Componente de mapa (assets/js/modules/maps.js).
               - data-lat/data-lng: coordenadas MOCK (centro aproximado de Maceió/AL),
-                iguais às do seed de desenvolvimento. Não representam um endereço real.
-              - data-shelter-id: id do abrigo na API. Se config.js tiver apiBaseUrl,
-                as coordenadas são atualizadas a partir de GET /api/shelters/<id>.
+                Não representam um endereço real.
+              - Com googleMapsApiKey em config.js (raiz do site) o mapa é desenhado.
               - Sem chave do Google Maps, o fallback abaixo permanece visível.
             -->
             <div class="cf-mapa" data-map
-                 data-shelter-id="1"
                  data-lat="-9.6658"
                  data-lng="-35.7353"
                  data-nome="Abrigo Patas Livres"
@@ -354,7 +353,7 @@
           </article>
 
           <form class="cf-form-visita" id="form-visita" aria-labelledby="titulo-form-visita"
-                data-scheduling-form data-shelter-id="1">
+                data-scheduling-form>
             <h3 id="titulo-form-visita">Solicitar visita ao Abrigo Patas Livres</h3>
 
             <p class="cf-form-modo" data-form-mode>

@@ -1,28 +1,22 @@
 /* =========================================================
    Sem Barreiras Pet — login.css
-   Tela de login no tema creme + terracota (tokens de tema.css).
-   Ordem: global.css -> tema.css -> login.css
+   Ajustes específicos da tela de login. O layout em duas
+   colunas, campos e mensagens vêm de auth.css.
+   Ordem: global.css -> tema.css -> auth.css -> login.css
    ========================================================= */
 
-.auth-page { background: var(--t-creme); }
-.auth-header { width: min(calc(100% - 2rem), 68rem); padding-block: 1rem; margin-inline: auto; }
-.auth-layout { display: grid; min-height: calc(100svh - 8.5rem); place-items: center; padding-block: 2rem 3rem; width: min(calc(100% - 2rem), 72rem); margin-inline: auto; }
-.auth-card { width: 100%; max-width: 25rem; padding: 1.5rem; border: 1px solid var(--t-borda); border-radius: 1.5rem; background: var(--t-papel); box-shadow: var(--t-sombra); text-align: left; }
-.auth-card__mark { display: grid; width: 2.75rem; height: 2.75rem; margin-bottom: 1.25rem; place-items: center; border-radius: 50%; background: var(--t-terracota); color: #fff; font-size: 1.15rem; }
-.eyebrow { margin: 0 0 0.5rem; color: var(--t-terracota-esc); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
-.auth-card h1 { margin: 0; color: var(--t-tinta); font-size: clamp(1.9rem, 7vw, 2.4rem); line-height: 1.1; }
-.form-intro { margin: 0.65rem 0 1.75rem; color: var(--t-suave); }
-.field { margin-bottom: 1.15rem; }
-.field label { display: block; margin-bottom: 0.4rem; color: var(--t-tinta); font-size: 0.95rem; font-weight: 800; }
-.field label span[aria-hidden="true"] { color: var(--t-erro); }
-.field input { width: 100%; min-height: 3rem; padding: 0.75rem 0.85rem; border: 1px solid #8C7B6B; border-radius: 0.75rem; background: #fff; color: var(--t-tinta); }
-.field input:hover { border-color: var(--t-terracota); }
-.field input:focus { border-color: var(--t-terracota); }
-.field small { display: block; margin-top: 0.35rem; color: var(--t-suave); font-size: 0.82rem; line-height: 1.4; }
-.form-required { margin: 0 0 1rem; color: var(--t-suave); font-size: 0.82rem; }
-.auth-card .t-btn { width: 100%; min-height: 3rem; }
-.auth-switch { margin: 1.5rem 0 0; color: var(--t-suave); font-size: 0.9rem; text-align: center; }
-.auth-switch a { font-weight: 800; color: var(--t-terracota-esc); }
-.auth-footer { padding: 1rem; border-top: 1px solid var(--t-borda); color: var(--t-suave); font-size: 0.8rem; text-align: center; }
-.auth-footer p { margin: 0; }
-@media (min-width: 48rem) { .auth-header { padding-block: 1.5rem; } .auth-layout { min-height: calc(100svh - 9.5rem); padding-block: 3rem; } .auth-card { padding: 2rem; } }
+/* "Lembrar meu acesso" + aviso de recuperação de senha */
+.login-opcoes { display: grid; gap: 0.5rem; }
+
+.login-recuperacao {
+  padding: 0.55rem 0.8rem;
+  border-radius: var(--t-raio-pequeno);
+  background: var(--t-creme-2);
+  color: var(--t-texto);
+  font-size: 0.85rem;
+}
+
+/* No mobile, os benefícios ficam em duas colunas para o painel ser compacto */
+@media (min-width: 30rem) and (max-width: 59.99rem) {
+  .auth-pagina--login .auth-lista { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+}

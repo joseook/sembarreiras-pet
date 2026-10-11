@@ -1,8 +1,8 @@
 # Sem Barreiras Pet
 
 Plataforma acadêmica de adoção responsável que aproxima pessoas interessadas em adotar de ONGs e abrigos.
-Começou como protótipo de IHC em HTML semântico e CSS puro e agora ganha uma página "Como funciona"
-completa e a fundação de uma API em Python/Flask com PostgreSQL.
+Nesta fase é um **site estático** (HTML semântico, CSS e JavaScript puro), publicado no GitHub Pages:
+não há back-end, banco de dados, API nem autenticação.
 
 ## O problema
 
@@ -14,7 +14,7 @@ O projeto trabalha com personas de alto apelo emocional: o adotante de primeira 
 
 A página "Como funciona" responde diretamente à persona Camila Souza e à jornada em `IHC/`: explica as etapas sem pressa, deixa claro que a ONG avalia cada pedido, fala de custos e adaptação (as principais dificuldades citadas na pesquisa) e inclui, nos exemplos de pets, um animal idoso e um com deficiência, perfis que a pesquisa aponta como os mais preteridos.
 
-## Escopo da plataforma
+## Escopo da plataforma (visão completa)
 
 - Catálogo público com filtros por porte, espécie, temperamento e necessidades especiais.
 - Formulário de pré-adoção e triagem com dados pessoais, moradia e contato.
@@ -27,15 +27,13 @@ A página "Como funciona" responde diretamente à persona Camila Souza e à jorn
 
 | Área | Situação |
 | --- | --- |
-| Home (`index.html`) | Redesenhada (tema creme + terracota, `assets/css/tema.css`). Pets linkam para a ficha |
-| Ficha do pet (`pages/pet.html?id=nina`) | Nova. Raça, idade, vacinas, doenças atuais e passadas, exames, convivência e cuidados. Dados fictícios em `assets/js/data/pets.js` |
-| Login e cadastro (`frontend/pages/`) | Telas estáticas (José Paulo e Ana Clara). **Não autenticam nem salvam dados** |
-| Como funciona (`frontend/pages/como-funciona.html`) | Nova. Etapas, prévia de catálogo, agendamento, FAQ |
-| Mapa do abrigo | Funciona com chave do Google Maps; sem chave mostra endereço em texto (fallback) |
-| Formulário de visita | **Modo prévia** por padrão (valida, não envia). Envia de verdade em **modo demonstração**, só em desenvolvimento |
-| API Flask | `GET /api/health`, `GET /api/shelters`, `GET /api/shelters/<id>`, `POST /api/visits`, `GET /api/visits/<id>` |
-| Banco | PostgreSQL com migration inicial e seed de dados fictícios |
-| Autenticação, catálogo real, filtros, painel da ONG | **Ainda não implementados** |
+| Home (`index.html`) | Tema creme + terracota (`assets/css/tema.css`). Pets linkam para a ficha |
+| Ficha do pet (`pages/pet.html?id=nina`) | Raça, idade, vacinas, doenças atuais e passadas, exames, convivência e cuidados. Dados fictícios em `assets/js/data/pets.js` |
+| Login e cadastro (`pages/login.html`, `pages/cadastro.html`) | Cartão em duas colunas (painel institucional + formulário). Validam os campos com mensagens acessíveis e mostram um aviso de **demonstração**: não autenticam, não enviam e não salvam dados |
+| Como funciona (`pages/como-funciona.html`) | Etapas, prévia de catálogo, agendamento, FAQ |
+| Formulário de visita | **Modo prévia**: valida e confirma o preenchimento, mas não envia ao abrigo |
+| Mapa do abrigo | Desenhado só se houver chave do Google Maps em `config.js`; sem chave, mostra o endereço em texto |
+| Autenticação, catálogo real, filtros, painel da ONG, back-end | **Ainda não implementados** |
 
 Todos os abrigos, endereços e pets de exemplo são **fictícios** e aparecem marcados como "Dados demonstrativos".
 
@@ -43,83 +41,56 @@ Todos os abrigos, endereços e pets de exemplo são **fictícios** e aparecem ma
 
 ```
 sembarreiras-pet/
-├── README.md, .env.example, .gitignore, docker-compose.yml
-├── docs/                    arquitetura, API, setup e decisões (ADR)
-├── frontend/                site estático (HTML, CSS, JS puro)
-│   ├── index.html
-│   ├── pages/               login, cadastro, como-funciona
-│   ├── assets/css/          global, components, home, login, cadastro, como-funciona
-│   ├── assets/js/           main.js + modules/ (api, maps, scheduling-form)
-│   └── config.example.js    modelo de configuração (config.js não é versionado)
-├── backend/                 API Flask
-│   ├── app/                 factory, config, models, schemas, services, api, utils
-│   ├── migrations/          Alembic (Flask-Migrate)
-│   ├── tests/               pytest
-│   ├── manage.py, wsgi.py, requirements.txt
-├── IHC/                     persona, jornada e pesquisa documental
-└── inspiracoes/             referências visuais (antes "inspirações/")
+├── index.html                 landing page
+├── config.js                  configuração pública (chave do Google Maps, vazia por padrão)
+├── pages/                     login, cadastro, como-funciona, pet
+├── assets/
+│   ├── css/
+│   │   ├── global.css         base: foco visível, skip link, .sr-only, .back-link
+│   │   ├── tema.css           tokens do tema creme + terracota, cabeçalho, botões, rodapé
+│   │   ├── auth.css           componente compartilhado de login e cadastro
+│   │   ├── components.css     base da página "Como funciona" (apelidos dos tokens do tema)
+│   │   └── home.css, login.css, cadastro.css, como-funciona.css, pet.css
+│   ├── js/
+│   │   ├── main.js            menu mobile + carrega módulos sob demanda
+│   │   ├── data/pets.js       pets fictícios da ficha
+│   │   └── modules/           auth-demo, maps, pet-ficha, scheduling-form
+│   └── img/                   fotos locais (créditos em assets/img/CREDITOS.md)
+├── IHC/                       persona, jornada e pesquisa documental
+└── inspiracoes/               referências visuais
 ```
 
-Detalhes em [docs/architecture.md](docs/architecture.md).
+Ordem dos estilos: `global.css` → `tema.css` → `<página>.css` (login e cadastro carregam `auth.css`
+antes do CSS da página; "Como funciona" carrega `components.css` antes de `tema.css`).
 
-## Pré-requisitos
-
-- Python 3.12+ (também testado com 3.14)
-- Docker com Docker Compose **ou** PostgreSQL 14+ local (somente para a API)
-- Um navegador moderno
-
-## Executar o front-end
+## Executar localmente
 
 Na raiz do repositório:
 
 ```bash
-python3 -m http.server 8000 -d frontend
+python3 -m http.server 8000
 ```
 
 Acesse `http://localhost:8000`. Abrir os arquivos com duplo clique (`file://`) mostra o conteúdo, mas os
 módulos JavaScript não carregam; use sempre um servidor estático.
 
-Sem API e sem `config.js`, o site funciona em modo prévia: o console mostra um 404 para `config.js`, o que é esperado.
+## Publicar no GitHub Pages
 
-## Executar o back-end
+O site fica na raiz do repositório, então basta, em **Settings → Pages**, escolher a branch `main` e a pasta
+`/ (root)`. Todos os caminhos são relativos e funcionam também em `usuario.github.io/sembarreiras-pet/`.
 
-Passo a passo completo em [docs/setup.md](docs/setup.md). Resumo:
+## Google Maps (opcional)
 
-```bash
-cp .env.example .env                 # ajuste SECRET_KEY e senha do banco
-docker compose up -d db              # sobe só o PostgreSQL (volume persistente)
-
-cd backend
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-python manage.py db upgrade          # migrations
-python manage.py seed                # dados FICTÍCIOS de desenvolvimento
-python manage.py frontend-config     # gera frontend/config.js (modo demonstração + Maps)
-python manage.py run                 # http://localhost:5000/api/health
-```
-
-## Testes
-
-```bash
-cd backend && source .venv/bin/activate
-pytest
-```
-
-Os testes usam **SQLite em memória** (isolado, sem precisar do PostgreSQL). Os modelos evitam recursos
-exclusivos do PostgreSQL, então os cenários testados se comportam igual. Para rodar contra um PostgreSQL
-descartável, defina `TEST_DATABASE_URL`.
-
-## Google Maps sem expor a chave
+Com a chave vazia em `config.js` (padrão), a página "Como funciona" mostra o endereço do abrigo em texto.
+Para desenhar o mapa:
 
 1. No Google Cloud Console, ative a **Maps JavaScript API** e crie uma chave de navegador.
-2. Restrinja a chave por **HTTP referrer** (ex.: `http://localhost:8000/*` e o domínio de produção) e por API.
-3. Coloque a chave em `GOOGLE_MAPS_API_KEY` no `.env` (nunca no código).
-4. Rode `python manage.py frontend-config` para gerar `frontend/config.js`, que está no `.gitignore`.
+2. Restrinja a chave por **HTTP referrer** (ex.: `http://localhost:8000/*` e o domínio do GitHub Pages) e por API.
+3. Preencha `googleMapsApiKey` em `config.js` (raiz do site).
 
-Chaves de navegador ficam visíveis para quem acessa o site (é assim que o Google Maps funciona);
-a proteção está nas restrições acima. O módulo usa o carregamento atual (`loading=async`,
-`importLibrary`, `AdvancedMarkerElement`). Para autocomplete de endereços no futuro, use a
-**Places API (New)**, não a biblioteca legada `places`.
+Chaves de navegador ficam visíveis para quem acessa o site (é assim que o Google Maps funciona), por isso
+`config.js` é versionado e publicado junto com o site; a proteção está nas restrições acima. Nunca use ali
+uma chave sem restrição nem chaves de outras APIs.
 
 ## Acessibilidade
 
@@ -135,43 +106,34 @@ O protótipo segue como meta o nível AA da WCAG 2.2 e inclui:
 - Contraste de cores definido no design system; estados que não dependem só de cor (texto, ícone, borda).
 - Foco visível por `:focus-visible`, sem remover `outline`.
 - FAQ com `<details>`/`<summary>` nativos, sem JavaScript.
-- Menu e conteúdo essencial funcionam sem JavaScript (aprimoramento progressivo).
+- Menu e conteúdo essencial funcionam sem JavaScript (aprimoramento progressivo). Sem JS, login e cadastro
+  usam a validação nativa do navegador e não enviam nada.
 - Unidades relativas, layout responsivo sem rolagem horizontal a partir de 320 px (equivalente a 1280 px com zoom de 400%).
 - Respeito a `prefers-reduced-motion`.
 
 ## Limitações atuais e próximos passos
 
-- Sem autenticação: o cadastro e o login não funcionam; visitas usam um usuário fictício só em desenvolvimento.
+- Sem back-end: login, cadastro e solicitação de visita apenas validam os campos e mostram um aviso honesto
+  de demonstração. Não há recuperação de senha, "lembrar acesso" real, login social nem política de privacidade publicada.
 - Sem catálogo real: "Encontrar um pet" aponta temporariamente para `index.html#pets-destaque`
   (procure por `TEMPORÁRIO` nos HTML) até existir `pages/catalogo.html`.
 - O abrigo da página "Como funciona" está fixo no HTML (demonstração).
-- A API não controla disponibilidade de horários nem conflitos; apenas impede datas passadas.
-- As fotos dos pets da home vêm de URLs externas (instáveis) e devem ser substituídas por imagens próprias em
-  `frontend/assets/img/`. Na página "Como funciona", a foto do topo e as dos pets fictícios são do Unsplash
-  (licença livre, salvas no repositório; créditos em `frontend/assets/img/CREDITOS.md`) e devem ser trocadas
-  por fotos enviadas pelas ONGs quando o catálogo real existir.
-- O painel "Acompanhe seu pedido" (etapa 4) é um exemplo estático; será preenchido pela API quando houver
-  autenticação e pedidos de adoção.
+- As fotos são do Unsplash (licença livre, salvas no repositório; créditos em `assets/img/CREDITOS.md`) e
+  devem ser trocadas por fotos enviadas pelas ONGs quando o catálogo real existir.
+- O painel "Acompanhe seu pedido" (etapa 4) é um exemplo estático.
 
-Próximos passos sugeridos: autenticação, `GET /api/pets` com filtros e página de catálogo, painel da ONG
-para confirmar visitas e agenda de disponibilidade. Detalhes em [docs/architecture.md](docs/architecture.md#evolução-prevista).
+Próximos passos sugeridos: back-end com autenticação, política de privacidade, catálogo com filtros e
+painel da ONG para confirmar visitas.
 
 ## Autoria das telas
 
 | Arquivo | Responsável |
 | --- | --- |
-| `frontend/assets/css/global.css` | José Paulo (design system base) |
-| `frontend/pages/login.html` / `login.css` | José Paulo |
-| `frontend/pages/cadastro.html` / `cadastro.css` | Ana Clara |
-| `frontend/index.html` / `home.css` (antigo `index.css`) | Lucas |
+| `assets/css/global.css` | José Paulo (design system base) |
+| `pages/login.html` / `login.css` | José Paulo |
+| `pages/cadastro.html` / `cadastro.css` | Ana Clara |
+| `index.html` / `home.css` (antigo `index.css`) | Lucas |
 | `IHC/` | Persona, jornada e pesquisa documental (jornada e pesquisa levantadas por Victor Seixas) |
-
-## Documentação
-
-- [docs/setup.md](docs/setup.md) — ambiente local passo a passo
-- [docs/architecture.md](docs/architecture.md) — camadas, modelos e fluxo de visita
-- [docs/api.md](docs/api.md) — endpoints, payloads e respostas
-- [docs/decisions/001-frontend-backend-structure.md](docs/decisions/001-frontend-backend-structure.md) — ADR
 
 ## Referências de pesquisa
 

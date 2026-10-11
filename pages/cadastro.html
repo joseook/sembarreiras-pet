@@ -1,127 +1,174 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Criar cadastro - Sem Barreiras Pet</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Crie sua conta no Sem Barreiras Pet e comece sua jornada de adoção responsável.">
+  <title>Criar conta | Sem Barreiras Pet</title>
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../assets/css/global.css">
   <link rel="stylesheet" href="../assets/css/tema.css">
+  <link rel="stylesheet" href="../assets/css/auth.css">
   <link rel="stylesheet" href="../assets/css/cadastro.css">
+  <script type="module" src="../assets/js/modules/auth-demo.js"></script>
 </head>
-<body>
+<body class="auth-pagina auth-pagina--cadastro">
+  <a class="skip-link" href="#conteudo">Pular para o formulário de cadastro</a>
 
-  <a href="#conteudo-principal" class="skip-link">Pular para o formulário de cadastro</a>
-
-  <main id="conteudo-principal" class="cadastro-container">
-    
-    <section class="cadastro-card" aria-labelledby="titulo-cadastro">
-
-      <a href="../index.html" class="back-link">
-        <span class="back-link-seta" aria-hidden="true">←</span> Voltar para a página inicial
+  <div class="auth-cartao">
+    <!-- Painel institucional (contexto) -->
+    <header class="auth-painel">
+      <a class="t-marca" href="../index.html" aria-label="Sem Barreiras Pet, página inicial">
+        <span class="t-marca-icone" aria-hidden="true">♥</span>
+        Sem Barreiras Pet
       </a>
 
-      <header class="card-header">
-        <div class="brand-icon" aria-hidden="true">
-          <span>♥</span>
-        </div>
-        <p class="brand-title">SEM BARREIRAS PET</p>
-      </header>
+      <div>
+        <p class="auth-painel__titulo">Uma nova história pode <em>começar aqui.</em></p>
+        <p class="auth-painel__apoio">
+          Conte um pouco sobre você para tornar o processo de adoção mais seguro e cuidadoso.
+        </p>
+      </div>
 
-      <h1 id="titulo-cadastro">Criar sua conta</h1>
-      <p class="subtitulo">Preencha seus dados para começar a adotar.</p>
+      <!-- Ilustração decorativa: casa, coração e pegadas chegando -->
+      <svg class="auth-ilustracao" viewBox="0 0 260 180" aria-hidden="true" focusable="false">
+        <defs>
+          <g id="pata-cadastro">
+            <ellipse cx="0" cy="6" rx="9" ry="7.5"/>
+            <ellipse cx="-10" cy="-6" rx="3.4" ry="4.2"/>
+            <ellipse cx="-3.5" cy="-11" rx="3.4" ry="4.2"/>
+            <ellipse cx="3.5" cy="-11" rx="3.4" ry="4.2"/>
+            <ellipse cx="10" cy="-6" rx="3.4" ry="4.2"/>
+          </g>
+        </defs>
+        <circle class="ilu-fundo" cx="130" cy="96" r="80"/>
+        <path class="ilu-linha" d="M44 156h172"/>
+        <path class="ilu-linha" d="M72 100l58-48 58 48"/>
+        <path class="ilu-linha" d="M86 90v66h88V90"/>
+        <path class="ilu-terracota" d="M116 156v-32a14 14 0 0 1 28 0v32z"/>
+        <path class="ilu-terracota-claro" d="M130 100c-8-5-12-9.5-12-14.5a6 6 0 0 1 12-2 6 6 0 0 1 12 2c0 5-4 9.5-12 14.5z"/>
+        <use href="#pata-cadastro" class="ilu-verde-claro" transform="translate(198 146) rotate(-80) scale(0.6)"/>
+        <use href="#pata-cadastro" class="ilu-verde-claro" transform="translate(222 134) rotate(-80) scale(0.6)"/>
+        <use href="#pata-cadastro" class="ilu-verde-claro" transform="translate(246 146) rotate(-80) scale(0.6)"/>
+      </svg>
 
-      <form action="/cadastro" method="POST" class="form-acessivel" novalidate>
-        
-        <article class="form-section">
-          <p class="form-group">
-            <label for="nome">Nome Completo <span class="campo-obrigatorio" aria-hidden="true">*</span></label>
-            <input 
-              type="text" 
-              id="nome" 
-              name="nome" 
-              required 
-              aria-required="true"
-              aria-describedby="dica-nome"
-              autocomplete="name"
-            >
-            <span id="dica-nome" class="form-help">Digite seu nome e sobrenome.</span>
-          </p>
+      <ol class="auth-lista cadastro-jornada" aria-label="Sua jornada de adoção">
+        <li class="cadastro-jornada__atual">
+          <span class="auth-icone" aria-hidden="true">1</span>
+          <span>Crie sua conta <span class="cadastro-jornada__selo">Você está aqui</span></span>
+        </li>
+        <li>
+          <span class="auth-icone" aria-hidden="true">2</span>
+          <span>Conheça os pets</span>
+        </li>
+        <li>
+          <span class="auth-icone" aria-hidden="true">3</span>
+          <span>Agende uma visita</span>
+        </li>
+      </ol>
 
-          <p class="form-group">
-            <label for="email">E-mail <span class="campo-obrigatorio" aria-hidden="true">*</span></label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              required 
-              aria-required="true"
-              aria-describedby="dica-email"
-              autocomplete="email"
-            >
-            <span id="dica-email" class="form-help">Exemplo: nome@exemplo.com</span>
-          </p>
+      <p class="cadastro-confianca">
+        <span class="auth-icone" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7v9H4z"/><path d="M12 17.5s-3-1.9-3-3.9a1.6 1.6 0 0 1 3-.8 1.6 1.6 0 0 1 3 .8c0 2-3 3.9-3 3.9z"/></svg>
+        </span>
+        A adoção é responsável, mas o começo pode ser simples.
+      </p>
 
-          <p class="form-group">
-            <label for="telefone">Telefone <span class="campo-obrigatorio" aria-hidden="true">*</span></label>
-            <input 
-              type="tel" 
-              id="telefone" 
-              name="telefone" 
-              required 
-              aria-required="true"
-              aria-describedby="dica-telefone"
-              placeholder="(00) 00000-0000"
-              autocomplete="tel"
-            >
-            <span id="dica-telefone" class="form-help">Usado para o contato da adoção.</span>
-          </p>
+      <a class="auth-painel__link" href="login.html">
+        Já tenho uma conta <span aria-hidden="true">→</span>
+      </a>
+    </header>
 
-          <p class="form-group">
-            <label for="senha">Senha <span class="campo-obrigatorio" aria-hidden="true">*</span></label>
-            <input 
-              type="password" 
-              id="senha" 
-              name="senha" 
-              required 
-              aria-required="true"
-              aria-describedby="dica-senha"
-              autocomplete="new-password"
-            >
-            <span id="dica-senha" class="form-help">Crie uma senha segura com no mínimo 8 caracteres.</span>
-          </p>
-        </article>
+    <!-- Formulário -->
+    <main id="conteudo" class="auth-conteudo">
+      <div class="auth-conteudo-interno">
+        <h1 id="titulo-cadastro">Crie sua conta</h1>
+        <p class="auth-intro">Leva poucos minutos. Você poderá completar outras informações depois.</p>
+        <p class="auth-legenda-obrigatorio"><span class="auth-obrigatorio" aria-hidden="true">*</span> Campo obrigatório</p>
 
-        <article class="form-section">
-          <fieldset class="form-fieldset">
-            <legend>Tipo de moradia <span class="campo-obrigatorio" aria-hidden="true">*</span></legend>
-            <span id="dica-moradia" class="form-help">Onde o pet vai morar?</span>
+        <!-- Demonstração: ainda não há back-end. method="dialog" fora de um
+             <dialog> não envia nem recarrega; o JS mostra uma mensagem honesta. -->
+        <form class="auth-form" method="dialog" aria-labelledby="titulo-cadastro" data-auth-demo
+              data-demo-mensagem="O cadastro real será disponibilizado em uma próxima etapa do projeto.">
+          <div class="field">
+            <label for="nome">Nome completo <span class="auth-obrigatorio" aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
+            <input id="nome" name="nome" type="text" autocomplete="name" required
+                   pattern="\s*\S+(\s+\S+)+\s*" data-erro-formato="Informe nome e sobrenome."
+                   aria-describedby="nome-ajuda">
+            <p id="nome-ajuda" class="field__ajuda">Nome e sobrenome, como no documento.</p>
+          </div>
 
-            <ul class="radio-list">
-              <li>
-                <input type="radio" id="casa" name="tipo_moradia" value="casa" required aria-describedby="dica-moradia">
+          <div class="auth-form__dupla">
+            <div class="field">
+              <label for="email">E-mail <span class="auth-obrigatorio" aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
+              <input id="email" name="email" type="email" autocomplete="email" spellcheck="false" required aria-describedby="email-ajuda">
+              <p id="email-ajuda" class="field__ajuda">Exemplo: nome@exemplo.com</p>
+            </div>
+
+            <div class="field">
+              <label for="telefone">Telefone <span class="auth-obrigatorio" aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
+              <input id="telefone" name="telefone" type="tel" autocomplete="tel-national" required
+                     placeholder="(11) 91234-5678" pattern="[0-9\(\)\s\+\-]{10,20}"
+                     data-erro-formato="Informe o DDD e o número, por exemplo (11) 91234-5678."
+                     aria-describedby="telefone-ajuda">
+              <p id="telefone-ajuda" class="field__ajuda">Com DDD. Usado para o contato sobre a adoção.</p>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="senha">Senha <span class="auth-obrigatorio" aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
+            <input id="senha" name="senha" type="password" autocomplete="new-password" required minlength="8" aria-describedby="senha-ajuda">
+            <p id="senha-ajuda" class="field__ajuda">Mínimo de 8 caracteres. Misturar letras e números deixa a senha mais segura.</p>
+          </div>
+
+          <fieldset class="auth-grupo">
+            <legend>Tipo de moradia <span class="auth-obrigatorio" aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></legend>
+            <p id="moradia-ajuda" class="field__ajuda">Onde o pet vai morar?</p>
+            <div class="auth-opcoes">
+              <div class="auth-opcao">
+                <input id="casa" name="tipo_moradia" type="radio" value="casa" required aria-describedby="moradia-ajuda">
                 <label for="casa">Casa</label>
-              </li>
-
-              <li>
-                <input type="radio" id="apartamento" name="tipo_moradia" value="apartamento" required aria-describedby="dica-moradia">
+              </div>
+              <div class="auth-opcao">
+                <input id="apartamento" name="tipo_moradia" type="radio" value="apartamento" required aria-describedby="moradia-ajuda">
                 <label for="apartamento">Apartamento</label>
-              </li>
-            </ul>
+              </div>
+            </div>
           </fieldset>
-        </article>
 
-        <p class="legenda-obrigatorio">* Campos Obrigatórios</p>
+          <div class="field-check cadastro-consentimento">
+            <input id="consentimento" name="consentimento" type="checkbox" required aria-describedby="consentimento-ajuda">
+            <label for="consentimento">
+              <span>Li e concordo com o uso dos meus dados para fins de adoção responsável.
+                <span class="auth-obrigatorio" aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></span>
+            </label>
+            <p id="consentimento-ajuda" class="field__ajuda">
+              Seus dados servirão apenas para avaliar e acompanhar a adoção.
+              <a href="#politica-privacidade">Política de privacidade (em breve)</a>
+            </p>
+          </div>
 
-        <button type="submit" class="btn-primary">Criar Cadastro</button>
+          <button class="t-btn t-btn--terracota" type="submit">Criar minha conta</button>
 
-      </form>
+          <div class="auth-status" role="status" aria-live="polite" data-form-status></div>
+          <noscript>
+            <p class="field__ajuda">Demonstração: o cadastro real será disponibilizado em uma próxima etapa do projeto. Nenhum dado é enviado.</p>
+          </noscript>
+        </form>
 
-      <footer class="cadastro-footer">
-        <p>Já tem uma conta? <a href="login.html">Entrar na conta</a></p>
-      </footer>
+        <footer class="auth-alternativa cadastro-rodape-form">
+          <p>Já tem uma conta? <a href="login.html">Entrar</a></p>
+        </footer>
+      </div>
+    </main>
+  </div>
 
-    </section>
-  </main>
-
+  <footer class="auth-rodape">
+    <p>&copy; 2026 Sem Barreiras Pet. Projeto acadêmico de IHC.</p>
+    <p id="politica-privacidade" tabindex="-1">
+      Política de privacidade: em elaboração. Ela será publicada antes de o cadastro real funcionar;
+      nesta fase, nenhum dado digitado é enviado ou salvo.
+    </p>
+  </footer>
 </body>
 </html>

@@ -6,32 +6,32 @@
 
    Estes blocos vieram do antigo index.css (entrega da home) e
    foram centralizados aqui para que todas as páginas públicas
-   tenham a mesma aparência. Os valores de cor são os mesmos,
-   agora expostos como variáveis para facilitar a manutenção.
+   tenham a mesma aparência. As cores são apelidos dos tokens
+   de tema.css, que precisa estar carregado na mesma página.
 
    Ordem de carregamento esperada:
-   global.css -> components.css -> <página>.css
+   global.css -> components.css -> tema.css -> <página>.css
    ========================================================= */
 
 :root {
-  /* Paleta creme + terracota (a mesma de tema.css). Os nomes --sbp-verde*
-     foram mantidos para não reescrever a página "Como funciona", mas agora
-     apontam para a terracota. Contrastes: terracota sobre creme 4,8:1. */
-  --sbp-verde: #B4492A;
-  --sbp-verde-escuro: #96391E;
-  --sbp-verde-claro: #F6E3D3;
-  --sbp-verde-texto-claro: #F3E9D8;
+  /* Apelidos dos tokens de tema.css (carregado na mesma página), para não
+     repetir valores. Só os âmbar e os raios não existem no tema.
+     Contrastes: terracota sobre creme 4,8:1. */
+  --sbp-terracota: var(--t-terracota);
+  --sbp-terracota-escuro: var(--t-terracota-esc);
+  --sbp-terracota-claro: var(--t-terracota-claro);
+  --sbp-texto-claro: var(--t-creme-2);   /* texto sobre fundo escuro */
   --sbp-ambar: #E8A33D;          /* usar só como fundo, com texto --sbp-tinta */
   --sbp-ambar-escuro: #d8912c;
-  --sbp-ambar-claro: #FBE9C7;
-  --sbp-tinta: #2A211C;
-  --sbp-texto: #4A3F37;
-  --sbp-texto-suave: #6B5E54;
-  --sbp-borda: #E6D9C4;
-  --sbp-fundo: #FAF3E7;
-  --sbp-branco: #FFFBF4;
-  --sbp-fonte-titulo: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --sbp-fonte-texto: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --sbp-ambar-claro: var(--t-ambar-claro);
+  --sbp-tinta: var(--t-tinta);
+  --sbp-texto: var(--t-texto);
+  --sbp-texto-suave: var(--t-suave);
+  --sbp-borda: var(--t-borda);
+  --sbp-fundo: var(--t-creme);
+  --sbp-branco: var(--t-papel);
+  --sbp-fonte-titulo: var(--t-fonte-titulo);
+  --sbp-fonte-texto: var(--t-fonte-texto);
   --sbp-raio: 8px;
   --sbp-raio-grande: 1rem;
 }
@@ -133,7 +133,7 @@ h1, h2, h3, h4 {
   text-decoration: none;
   font-weight: 700;
   letter-spacing: 0.03em;
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
 }
 
 .brand-icon {
@@ -150,10 +150,10 @@ h1, h2, h3, h4 {
   align-items: center;
   gap: 0.5rem;
   background: none;
-  border: 2px solid var(--sbp-verde);
+  border: 2px solid var(--sbp-terracota);
   border-radius: 6px;
   padding: 0.45rem 0.75rem;
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
   font-weight: 600;
   cursor: pointer;
 }
@@ -161,7 +161,7 @@ h1, h2, h3, h4 {
 .menu-toggle-icone {
   width: 18px;
   height: 2px;
-  background: var(--sbp-verde);
+  background: var(--sbp-terracota);
   position: relative;
 }
 
@@ -172,7 +172,7 @@ h1, h2, h3, h4 {
   left: 0;
   width: 18px;
   height: 2px;
-  background: var(--sbp-verde);
+  background: var(--sbp-terracota);
 }
 
 .menu-toggle-icone::before {
@@ -198,7 +198,7 @@ h1, h2, h3, h4 {
 
 .nav-principal a:hover,
 .nav-principal a[aria-current="page"] {
-  color: var(--sbp-verde);
+  color: var(--sbp-terracota);
   text-decoration: underline;
 }
 
@@ -223,24 +223,24 @@ h1, h2, h3, h4 {
 }
 
 .btn-primary {
-  background-color: var(--sbp-verde);
+  background-color: var(--sbp-terracota);
   color: var(--sbp-branco);
 }
 
 .btn-primary:hover {
-  background-color: var(--sbp-verde-escuro);
+  background-color: var(--sbp-terracota-escuro);
   color: var(--sbp-branco);
 }
 
 .btn-secundario {
   background-color: transparent;
-  color: var(--sbp-verde);
-  border-color: var(--sbp-verde);
+  color: var(--sbp-terracota);
+  border-color: var(--sbp-terracota);
 }
 
 .btn-secundario:hover {
-  background-color: var(--sbp-verde-claro);
-  color: var(--sbp-verde);
+  background-color: var(--sbp-terracota-claro);
+  color: var(--sbp-terracota);
 }
 
 .btn-terciario {
@@ -301,7 +301,7 @@ h1, h2, h3, h4 {
 /* ---------- Rodapé ---------- */
 .site-footer {
   background-color: var(--sbp-tinta);
-  color: var(--sbp-verde-texto-claro);
+  color: var(--sbp-texto-claro);
   padding: 2.5rem 1.25rem;
 }
 
@@ -332,12 +332,12 @@ h1, h2, h3, h4 {
 
 .footer-inner nav a {
   text-decoration: none;
-  color: var(--sbp-verde-texto-claro);
+  color: var(--sbp-texto-claro);
 }
 
 .footer-inner nav a:hover {
   text-decoration: underline;
-  color: var(--sbp-verde-texto-claro);
+  color: var(--sbp-texto-claro);
 }
 
 .footer-copy {

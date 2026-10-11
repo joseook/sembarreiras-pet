@@ -17,8 +17,6 @@
  *   </div>
  */
 
-import { requestJson } from './api.js';
-
 const SCRIPT_ID = 'google-maps-js-api';
 const TEMPO_LIMITE_MS = 10000;
 const ZOOM_PADRAO = 15;
@@ -63,34 +61,11 @@ function carregarGoogleMaps(chave) {
 
 function lerAbrigoDoHtml(container) {
   return {
-    id: container.dataset.shelterId || null,
     nome: container.dataset.nome || 'Abrigo',
     latitude: Number.parseFloat(container.dataset.lat),
     longitude: Number.parseFloat(container.dataset.lng),
     mock: container.dataset.mock === 'true',
   };
-}
-
-/**
- * Busca as coordenadas atualizadas na API (GET /api/shelters/<id>).
- * Em qualquer falha devolve os dados do HTML, sem interromper a página.
- */
-async function buscarAbrigoNaApi(abrigo, config) {
-  if (!config.apiBaseUrl || !abrigo.id) return abrigo;
-  try {
-    const { data } = await requestJson(config.apiBaseUrl, `/shelters/${encodeURIComponent(abrigo.id)}`);
-    if (data?.latitude == null || data?.longitude == null) return abrigo;
-    return {
-      ...abrigo,
-      nome: data.name || abrigo.nome,
-      latitude: Number(data.latitude),
-      longitude: Number(data.longitude),
-      // "mock" vem do HTML (data-mock). Quando a página for gerada a partir da
-      // API com abrigos reais, basta publicar data-mock="false".
-    };
-  } catch {
-    return abrigo;
-  }
 }
 
 function atualizarFallback(container, abrigo) {
@@ -120,13 +95,13 @@ function mostrarStatus(container, mensagem) {
 /**
  * Inicializa o mapa do abrigo.
  * @param {HTMLElement} container elemento com [data-map]
- * @param {{googleMapsApiKey?: string, googleMapsMapId?: string, apiBaseUrl?: string|null}} config
+ * @param {{googleMapsApiKey?: string, googleMapsMapId?: string}} config
  */
 export async function initShelterMap(container, config) {
   const canvas = container.querySelector('[data-map-canvas]');
   const fallback = container.querySelector('[data-map-fallback]');
 
-  const abrigo = await buscarAbrigoNaApi(lerAbrigoDoHtml(container), config);
+  const abrigo = lerAbrigoDoHtml(container);
   atualizarFallback(container, abrigo);
 
   const temCoordenadas = Number.isFinite(abrigo.latitude) && Number.isFinite(abrigo.longitude);
