@@ -1,0 +1,44 @@
+# ---------- Segredos e configuração local ----------
+.env
+.env.*
+!.env.example
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.python-version
+
+# ---------- Testes e cobertura ----------
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# ---------- Bancos locais ----------
+*.db
+*.sqlite3
+instance/
+
+# ---------- IDEs e sistema ----------
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# ---------- Node (caso alguma ferramenta seja usada no futuro) ----------
+node_modules/
+
+# ---------- Claude Code (configuração e arquivos locais, nunca versionar) ----------
+.claude/

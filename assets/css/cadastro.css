@@ -1,0 +1,55 @@
+/* =========================================================
+   Sem Barreiras Pet — cadastro.css
+   Ajustes específicos da tela de cadastro. O layout em duas
+   colunas, campos e mensagens vêm de auth.css.
+   Ordem: global.css -> tema.css -> auth.css -> cadastro.css
+   ========================================================= */
+
+/* Jornada em 3 passos: o passo atual tem selo em texto (não só cor) */
+.cadastro-jornada__atual .auth-icone { background: var(--t-terracota-claro); color: var(--t-tinta); }
+
+.cadastro-jornada .auth-icone {
+  font-family: var(--t-fonte-titulo);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.cadastro-jornada__selo {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.55rem;
+  border-radius: 999px;
+  background: var(--t-verde-claro);
+  color: var(--t-tinta);
+  font-size: 0.75rem;
+  font-weight: 700;
+  vertical-align: 0.1em;
+}
+
+/* Bloco de confiança */
+.cadastro-confianca {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--t-tinta-2);
+  border-radius: var(--t-raio-pequeno);
+  background: var(--t-tinta-2);
+  color: var(--t-creme-2);
+  font-family: var(--t-fonte-titulo);
+  font-size: 1.05rem;
+  font-style: italic;
+}
+.cadastro-confianca .auth-icone { background: var(--t-tinta); color: var(--t-verde-claro); }
+
+/* Consentimento: o link fica numa linha própria, fora do <label> */
+.cadastro-consentimento .field__ajuda a {
+  display: inline-block;
+  margin-top: 0.15rem;
+  color: var(--t-terracota-esc);
+  font-weight: 700;
+  text-underline-offset: 0.2em;
+}
+.cadastro-consentimento .field__ajuda a:hover { color: var(--t-tinta); }
+
+.cadastro-rodape-form { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--t-borda); }
