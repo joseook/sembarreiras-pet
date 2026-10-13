@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidade - Sem Barreiras Pet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='privacidade.css') }}">
+</head>
+<body>
+
+    <header class="hero-section">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🐾</span> Sem Barreiras Pet
+            </div>
+            <nav class="nav-links">
+                <a href="#">Início</a>
+                <a href="#">Preços</a>
+                <a href="#">Sobre</a>
+                <a href="#">Contato</a>
+            </nav>
+            <div class="nav-cta">
+                <a href="/cadastro" class="btn-primary">Entrar / Registar</a>
+            </div>
+        </div>
+
+        <div class="hero-content">
+            <h1>Política de Privacidade</h1>
+            <p class="last-updated">
+                Última atualização em 
+                {% if politica.ultima_atualizacao is string %}
+                    {{ politica.ultima_atualizacao }}
+                {% else %}
+                    {{ politica.ultima_atualizacao.strftime('%d/%m/%Y') }}
+                {% endif %} 
+                | Versão {{ politica.versao }}
+            </p>
+        </div>
+    </header>
+
+    <main class="content-container">
+        <div class="content-card">
+            <p class="intro-text">
+                A plataforma <strong>Sem Barreiras Pet</strong> está amplamente comprometida com a proteção dos seus dados pessoais e o respeito à sua privacidade. Esta política descreve como recolhemos, usamos e protegemos as suas informações ao utilizar os nossos serviços.
+            </p>
+
+            <div class="privacy-sections">
+                {% for secao in secoes %}
+                <section class="privacy-section">
+                    <h2>{{ secao.titulo }}</h2>
+                    <p>{{ secao.conteudo }}</p>
+                </section>
+                {% endfor %}
+            </div>
+
+            <footer class="page-footer">
+                <p>&copy; 2026 Sem Barreiras Pet. Todos os direitos reservados.</p>
+            </footer>
+        </div>
+    </main>
+
+</body>
+</html>
