@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Acesse sua conta do Sem Barreiras Pet e continue sua jornada de adoção responsável.">
+  <title>Entrar | Sem Barreiras Pet</title>
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/tema.css">
+  <link rel="stylesheet" href="../assets/css/auth.css">
+  <link rel="stylesheet" href="../assets/css/login.css">
+  <script type="module" src="../assets/js/modules/auth-demo.js"></script>
+</head>
+<body class="auth-pagina auth-pagina--login">
+  <a class="skip-link" href="#conteudo">Pular para o formulário de login</a>
+
+  <div class="auth-cartao">
+    <!-- Painel institucional (contexto) -->
+    <header class="auth-painel">
+      <a class="t-marca" href="../index.html" aria-label="Sem Barreiras Pet, página inicial">
+        <span class="t-marca-icone" aria-hidden="true">♥</span>
+        Sem Barreiras Pet
+      </a>
+
+      <div>
+        <p class="auth-painel__titulo">Que bom ter você <em>de volta.</em></p>
+        <p class="auth-painel__apoio">
+          Continue sua jornada de adoção, acompanhe seus interesses e fique por dentro dos próximos passos.
+        </p>
+      </div>
+
+      <!-- Ilustração decorativa: tigela, coração e pegadas -->
+      <svg class="auth-ilustracao" viewBox="0 0 260 180" aria-hidden="true" focusable="false">
+        <defs>
+          <g id="pata-login">
+            <ellipse cx="0" cy="6" rx="9" ry="7.5"/>
+            <ellipse cx="-10" cy="-6" rx="3.4" ry="4.2"/>
+            <ellipse cx="-3.5" cy="-11" rx="3.4" ry="4.2"/>
+            <ellipse cx="3.5" cy="-11" rx="3.4" ry="4.2"/>
+            <ellipse cx="10" cy="-6" rx="3.4" ry="4.2"/>
+          </g>
+        </defs>
+        <circle class="ilu-fundo" cx="130" cy="96" r="80"/>
+        <path class="ilu-terracota-claro" d="M130 80c-14-9-22-17-22-26a11 11 0 0 1 22-3 11 11 0 0 1 22 3c0 9-8 17-22 26z"/>
+        <circle class="ilu-creme" cx="104" cy="103" r="6"/>
+        <circle class="ilu-creme" cx="117" cy="99" r="6"/>
+        <circle class="ilu-creme" cx="130" cy="102" r="6"/>
+        <circle class="ilu-creme" cx="143" cy="98" r="6"/>
+        <circle class="ilu-creme" cx="156" cy="103" r="6"/>
+        <rect class="ilu-terracota-claro" x="62" y="106" width="136" height="12" rx="6"/>
+        <path class="ilu-terracota" d="M72 118h116l-11 32a10 10 0 0 1-9.4 6.7H92.4a10 10 0 0 1-9.4-6.7z"/>
+        <use href="#pata-login" class="ilu-verde-claro" transform="translate(212 74) rotate(24) scale(0.85)"/>
+        <use href="#pata-login" class="ilu-verde-claro" transform="translate(232 38) rotate(18) scale(0.7)"/>
+        <use href="#pata-login" class="ilu-verde-claro" transform="translate(34 66) rotate(-18) scale(0.7)"/>
+      </svg>
+
+      <ul class="auth-lista" aria-label="Na sua conta você pode">
+        <li>
+          <span class="auth-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7-4.4-9-8.6A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 9 4.4C19 15.6 12 20 12 20z"/></svg>
+          </span>
+          Acompanhe seus interesses
+        </li>
+        <li>
+          <span class="auth-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+          </span>
+          Organize suas visitas
+        </li>
+        <li>
+          <span class="auth-icone" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false" fill="currentColor"><ellipse cx="12" cy="15.5" rx="5" ry="4.2"/><ellipse cx="6" cy="9.5" rx="1.9" ry="2.4"/><ellipse cx="10" cy="6.5" rx="1.9" ry="2.4"/><ellipse cx="14" cy="6.5" rx="1.9" ry="2.4"/><ellipse cx="18" cy="9.5" rx="1.9" ry="2.4"/></svg>
+          </span>
+          Fique por dentro da adoção
+        </li>
+      </ul>
+
+      <a class="auth-painel__link" href="../index.html">
+        <span aria-hidden="true">←</span> Voltar para o início
+      </a>
+    </header>
+
+    <!-- Formulário -->
+    <main id="conteudo" class="auth-conteudo">
+      <div class="auth-conteudo-interno">
+        <h1 id="titulo-login">Entrar na sua conta</h1>
+        <p class="auth-intro">Acesse sua jornada de adoção responsável.</p>
+        <p class="auth-legenda-obrigatorio"><span class="auth-obrigatorio" aria-hidden="true">*</span> Campo obrigatório</p>
+
+        <!-- Demonstração: ainda não há autenticação. method="dialog" fora de um
+             <dialog> não envia nem recarrega; o JS mostra uma mensagem honesta. -->
+        <form class="auth-form" method="dialog" aria-labelledby="titulo-login" data-auth-demo
+              data-demo-mensagem="O acesso real será disponibilizado em uma próxima etapa do projeto.">
+          <div class="field">
+            <label for="email">E-mail <span class="auth-obrigatorio" aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
+            <input id="email" name="email" type="email" autocomplete="email" spellcheck="false" required aria-describedby="email-ajuda">
+            <p id="email-ajuda" class="field__ajuda">O mesmo e-mail usado no cadastro.</p>
+          </div>
+
+          <div class="field">
+            <label for="senha">Senha <span class="auth-obrigatorio" aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
+            <input id="senha" name="senha" type="password" autocomplete="current-password" required aria-describedby="senha-ajuda">
+            <p id="senha-ajuda" class="field__ajuda">Letras maiúsculas e minúsculas fazem diferença.</p>
+          </div>
+
+          <div class="login-opcoes">
+            <div class="field-check">
+              <input id="lembrar" name="lembrar" type="checkbox" aria-describedby="lembrar-ajuda">
+              <label for="lembrar">Lembrar meu acesso</label>
+              <p id="lembrar-ajuda" class="field__ajuda">Opção ilustrativa: nesta fase, nada fica salvo.</p>
+            </div>
+            <p class="login-recuperacao">Recuperação de senha disponível em breve.</p>
+          </div>
+
+          <button class="t-btn t-btn--terracota" type="submit">Entrar</button>
+
+          <div class="auth-status" role="status" aria-live="polite" data-form-status></div>
+          <noscript>
+            <p class="field__ajuda">Demonstração: o acesso real será disponibilizado em uma próxima etapa do projeto. Nenhum dado é enviado.</p>
+          </noscript>
+        </form>
+
+        <div class="auth-divisor" aria-hidden="true">ou</div>
+
+        <footer class="auth-alternativa">
+          <p>Ainda não tem uma conta?</p>
+          <a class="t-btn t-btn--contorno" href="cadastro.html">Criar minha conta</a>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <footer class="auth-rodape">
+    <p>&copy; 2026 Sem Barreiras Pet. Projeto acadêmico de IHC.</p>
+  </footer>
+</body>
+</html>

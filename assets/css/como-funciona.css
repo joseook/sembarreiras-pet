@@ -1,0 +1,1284 @@
+/* =========================================================
+   Sem Barreiras Pet — como-funciona.css
+   Página "Como funciona a adoção" (pages/como-funciona.html).
+   Depende de global.css e components.css (variáveis --sbp-*).
+   Mobile-first; prefixo .cf- evita conflito com outras páginas.
+   ========================================================= */
+
+/* ---------- Estrutura ---------- */
+.cf-container {
+  width: min(100% - 2.5rem, 72rem);
+  margin-inline: auto;
+}
+
+.cf-container--estreito {
+  width: min(100% - 2.5rem, 46rem);
+}
+
+.cf-duas-colunas {
+  display: grid;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (min-width: 56rem) {
+  .cf-duas-colunas {
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5rem;
+  }
+}
+
+.cf-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin: 1.75rem 0 0;
+}
+
+.cf-acoes--centro {
+  justify-content: center;
+}
+
+.cf-icone {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cf-icone--grande {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* ---------- 1. Hero ---------- */
+.cf-hero {
+  padding: 3.5rem 0 3rem;
+  background:
+    radial-gradient(circle at 85% 20%, var(--sbp-ambar-claro) 0, transparent 45%),
+    var(--sbp-fundo);
+}
+
+.cf-hero-grade {
+  display: grid;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.cf-sobretitulo {
+  margin: 0 0 0.75rem;
+  color: var(--sbp-terracota);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cf-hero h1 {
+  font-size: clamp(2rem, 5vw, 3.1rem);
+  color: var(--sbp-tinta);
+  margin-bottom: 0.75rem;
+}
+
+.cf-hero-destaque {
+  margin: 0 0 1rem;
+  font-family: var(--sbp-fonte-titulo);
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  font-style: italic;
+  color: var(--sbp-terracota);
+}
+
+.cf-hero-apoio {
+  max-width: 36rem;
+  margin: 0;
+  font-size: 1.08rem;
+  color: var(--sbp-texto);
+}
+
+/* Foto do topo: retrato com cantos arredondados e um selo sobreposto */
+.cf-hero-grade {
+  isolation: isolate; /* mantém a moldura (z-index -1) dentro da seção */
+}
+
+.cf-hero-foto {
+  position: relative;
+  justify-self: center;
+  width: min(100% - 1rem, 20rem);
+  margin: 0 0 1rem;
+}
+
+.cf-hero-foto img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center 35%;
+  border-radius: 2rem 2rem 2rem 0.5rem;
+  box-shadow: 0 1.25rem 2.5rem rgba(42, 33, 28, 0.18);
+}
+
+/* Moldura decorativa atrás da foto */
+.cf-hero-foto::before {
+  content: "";
+  position: absolute;
+  inset: 1rem -1rem -1rem 1rem;
+  z-index: -1;
+  border: 3px solid var(--sbp-ambar);
+  border-radius: 2rem 2rem 2rem 0.5rem;
+}
+
+.cf-hero-selo {
+  position: absolute;
+  left: -0.5rem;
+  bottom: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: calc(100% + 0.5rem);
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  background: var(--sbp-branco);
+  color: var(--sbp-tinta);
+  font-weight: 700;
+  font-size: 0.92rem;
+  box-shadow: 0 0.5rem 1.25rem rgba(42, 33, 28, 0.15);
+}
+
+.cf-hero-selo-icone {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--sbp-terracota);
+  color: var(--sbp-branco);
+  font-size: 0.9rem;
+}
+
+@media (min-width: 56rem) {
+  .cf-hero {
+    padding: 5rem 0 4.5rem;
+  }
+
+  .cf-hero-grade {
+    grid-template-columns: 3fr 2fr;
+  }
+
+  .cf-hero-foto {
+    width: min(100%, 24rem);
+  }
+}
+
+/* ---------- 2. Linha do tempo ---------- */
+.cf-linha-tempo {
+  padding: 2rem 0;
+  background: var(--sbp-branco);
+  border-block: 1px solid var(--sbp-borda);
+}
+
+.cf-linha-tempo-titulo {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  color: var(--sbp-tinta);
+}
+
+.cf-etapas-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.75rem;
+}
+
+.cf-etapa-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 100%;
+  padding: 0.7rem;
+  overflow-wrap: anywhere;
+  border: 1px solid var(--sbp-borda);
+  border-radius: var(--sbp-raio);
+  background: var(--sbp-fundo);
+  color: var(--sbp-tinta);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cf-etapa-link:hover {
+  border-color: var(--sbp-terracota);
+  color: var(--sbp-terracota);
+  text-decoration: underline;
+}
+
+.cf-etapa-numero {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--sbp-ambar);
+  color: var(--sbp-tinta);
+  font-weight: 700;
+}
+
+@media (min-width: 56rem) {
+  .cf-etapas-lista {
+    position: relative;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  /* Linha que conecta as etapas: apenas decorativa */
+  .cf-etapas-lista::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 1.5rem;
+    right: 1.5rem;
+    border-top: 2px dashed var(--sbp-borda);
+    z-index: 0;
+  }
+
+  .cf-etapas-lista li {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* ---------- Etapas (seções detalhadas) ---------- */
+.cf-etapa {
+  padding: 3.5rem 0;
+  scroll-margin-top: 5rem; /* evita que o cabeçalho fixo cubra o título ao navegar pela linha do tempo */
+}
+
+.cf-etapa--alternada {
+  background: var(--sbp-branco);
+  border-block: 1px solid var(--sbp-borda);
+}
+
+@media (min-width: 56rem) {
+  .cf-etapa {
+    padding: 5rem 0;
+  }
+}
+
+.cf-etapa h2 {
+  font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+  color: var(--sbp-terracota);
+}
+
+.cf-etapa-texto-bloco--estreito {
+  max-width: 42rem;
+}
+
+.cf-etapa-rotulo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.75rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--sbp-terracota-claro);
+  color: var(--sbp-terracota);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.cf-lead {
+  margin: 0;
+  font-size: 1.12rem;
+  color: var(--sbp-texto);
+}
+
+.cf-tutorial-titulo {
+  margin: 1.75rem 0 0.75rem;
+  font-family: var(--sbp-fonte-texto);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sbp-texto-suave);
+}
+
+.cf-duas-colunas > div > .cf-tutorial-titulo:first-child {
+  margin-top: 0;
+}
+
+@media (max-width: 55.99rem) {
+  .cf-duas-colunas > div > .cf-tutorial-titulo:first-child {
+    margin-top: 0.25rem;
+  }
+}
+
+.cf-tutorial {
+  display: grid;
+  gap: 0.75rem;
+  counter-reset: tutorial;
+}
+
+.cf-tutorial li {
+  position: relative;
+  padding: 0.85rem 1rem 0.85rem 3.25rem;
+  border: 1px solid var(--sbp-borda);
+  border-radius: var(--sbp-raio);
+  background: var(--sbp-branco);
+  counter-increment: tutorial;
+}
+
+.cf-etapa--alternada .cf-tutorial li {
+  background: var(--sbp-fundo);
+}
+
+/* O número vem do <ol> (lido por leitores de tela); aqui só ganha forma visual */
+.cf-tutorial li::before {
+  content: counter(tutorial);
+  position: absolute;
+  left: 0.85rem;
+  top: 0.8rem;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  border: 2px solid var(--sbp-terracota);
+  color: var(--sbp-terracota);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.cf-privacidade {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  margin: 1.5rem 0 0;
+  color: var(--sbp-texto-suave);
+  font-size: 0.95rem;
+}
+
+.cf-privacidade .cf-icone {
+  margin-top: 0.15rem;
+  color: var(--sbp-terracota);
+}
+
+/* ---------- Avisos ---------- */
+.cf-aviso {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  margin: 2rem 0 0;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--sbp-ambar);
+  border-left-width: 6px;
+  border-radius: var(--sbp-raio);
+  background: var(--sbp-ambar-claro);
+  color: var(--sbp-tinta);
+}
+
+.cf-aviso--info {
+  margin: 1.25rem 0;
+  border-color: var(--sbp-terracota);
+  background: var(--sbp-terracota-claro);
+  font-size: 0.95rem;
+}
+
+.cf-aviso-icone {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--sbp-tinta);
+  color: var(--sbp-branco);
+  font-family: var(--sbp-fonte-titulo);
+  font-weight: 700;
+}
+
+/* ---------- Prévias ilustrativas ---------- */
+.cf-previa {
+  margin: 0;
+}
+
+.cf-previa figcaption {
+  margin-top: 0.75rem;
+  color: var(--sbp-texto-suave);
+  font-size: 0.9rem;
+}
+
+.cf-previa-moldura {
+  padding: 1.5rem;
+  border: 1px solid var(--sbp-borda);
+  border-radius: var(--sbp-raio-grande);
+  background: var(--sbp-branco);
+  box-shadow: 0 1rem 2rem rgba(42, 33, 28, 0.07);
+}
+
+.cf-previa-titulo {
+  margin: 0 0 1rem;
+  font-family: var(--sbp-fonte-titulo);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.cf-previa-campo {
+  display: grid;
+  gap: 0.3rem;
+  margin-bottom: 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.cf-previa-input {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #CDBDA5;
+  border-radius: 0.5rem;
+  color: var(--sbp-texto-suave);
+  font-weight: 400;
+}
+
+.cf-previa-botao {
+  display: block;
+  margin-top: 1.1rem;
+  padding: 0.7rem;
+  border-radius: 999px;
+  background: var(--sbp-terracota);
+  color: var(--sbp-branco);
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Prévia do catálogo */
+.cf-previa-catalogo {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  border: 2px dashed var(--sbp-borda);
+  border-radius: var(--sbp-raio-grande);
+  background: var(--sbp-fundo);
+}
+
+.cf-previa-cabecalho {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+.cf-previa-cabecalho h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.cf-previa-cabecalho .selo-demo {
+  margin: 0;
+}
+
+.cf-previa-nota {
+  margin: 0.5rem 0 1.25rem;
+  color: var(--sbp-texto-suave);
+  font-size: 0.95rem;
+}
+
+.cf-filtros {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0 0 1.75rem;
+}
+
+.cf-filtros div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
+}
+
+.cf-filtros dt {
+  min-width: 11rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.cf-filtros dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+}
+
+/* Chips não interativos: sem cursor de clique para não parecerem botões */
+.cf-chip {
+  display: inline-block;
+  padding: 0.2rem 0.75rem;
+  border: 1px solid #CDBDA5;
+  border-radius: 999px;
+  background: var(--sbp-branco);
+  font-size: 0.85rem;
+}
+
+.cf-pets-demo {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.cf-pet-demo {
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--sbp-borda);
+  border-radius: var(--sbp-raio);
+  background: var(--sbp-branco);
+}
+
+/* Fotos ilustrativas dos pets fictícios (ver assets/img/CREDITOS.md) */
+.cf-pet-demo-foto {
+  width: 100%;
+  height: 11rem;
+  object-fit: cover;
+  border-bottom: 4px solid var(--sbp-terracota);
+}
+
+.cf-pet-demo-foto--tom {
+  object-position: 60% center;
+}
+
+.cf-pet-demo-corpo {
+  padding: 1rem 1.1rem 1.15rem;
+}
+
+.cf-pet-demo h4 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.cf-pet-demo-tag {
+  font-family: var(--sbp-fonte-texto);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sbp-texto-suave);
+}
+
+.cf-pet-dados {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.cf-pet-dados dt {
+  display: inline;
+  font-weight: 700;
+}
+
+.cf-pet-dados dt::after {
+  content: ": ";
+}
+
+.cf-pet-dados dd {
+  display: inline;
+  margin: 0;
+  color: var(--sbp-texto);
+}
+
+/* ---------- 5. Agendamento ---------- */
+.cf-agendamento {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+@media (min-width: 56rem) {
+  .cf-agendamento {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+}
+
+.cf-abrigo,
+.cf-form-visita {
+  padding: 1.5rem;
+  border: 1px solid var(--sbp-borda);
+  border-radius: var(--sbp-raio-grande);
+  background: var(--sbp-branco);
+}
+
+@media (min-width: 56rem) {
+  .cf-abrigo,
+  .cf-form-visita {
+    padding: 2rem;
+  }
+}
+
+.cf-abrigo .selo-demo {
+  margin: 0 0 0.75rem;
+}
+
+.cf-abrigo h3,
+.cf-form-visita h3 {
+  font-size: 1.35rem;
+}
+
+.cf-abrigo-nota {
+  margin: 0 0 1.25rem;
+  color: var(--sbp-texto-suave);
+  font-size: 0.92rem;
+}
+
+.cf-abrigo-dados {
+  display: grid;
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+}
+
+.cf-abrigo-dados dt {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--sbp-texto-suave);
+}
+
+.cf-abrigo-dados dd {
+  margin: 0.15rem 0 0;
+}
+
+.cf-abrigo-dados address {
+  font-style: normal;
+}
+
+/* Mapa */
+.cf-mapa {
+  overflow: hidden;
+  border: 1px solid var(--sbp-borda);
+  border-radius: var(--sbp-raio);
+  background: var(--sbp-fundo);
+}
+
+.cf-mapa-canvas {
+  width: 100%;
+  height: 16rem;
+}
+
+.cf-mapa-canvas[hidden],
+.cf-mapa-fallback[hidden] {
+  display: none;
+}
+
+.cf-mapa-fallback {
+  display: grid;
+  justify-items: start;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 14px, rgba(180, 73, 42, 0.05) 14px 28px),
+    var(--sbp-fundo);
+  color: var(--sbp-texto);
+  font-size: 0.92rem;
+}
+
+.cf-mapa-fallback .cf-icone {
+  color: var(--sbp-terracota);
+}
+
+.cf-mapa-fallback p {
+  margin: 0;
+}
+
+.cf-mapa-status {
+  color: var(--sbp-texto-suave);
+}
+
+.cf-mapa-rota a {
+  font-weight: 700;
+  color: var(--sbp-terracota);
+}
+
+.cf-mapa-debug summary {
+  cursor: pointer;
+  color: var(--sbp-texto-suave);
+  font-size: 0.85rem;
+}
+
+.cf-mapa-debug p {
+  margin-top: 0.35rem;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 0.8rem;
+}
+
+/* Formulário */
+.cf-form-modo {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--sbp-texto-suave);
+  border-radius: var(--sbp-raio);
+  background: var(--sbp-fundo);
+  font-size: 0.92rem;
+}
+
+.cf-form-legenda {
+  margin: 0 0 1rem;
+  color: var(--sbp-texto-suave);
+  font-size: 0.88rem;
+}
+
+.cf-obrigatorio {
+  color: #9b2c22; /* 7,4:1 sobre branco; o asterisco é complementado por texto para leitores de tela */
+  font-weight: 700;
+}
+
+.cf-fieldset {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1rem 0.25rem;
+  border: 1px solid var(--sbp-borda);
+  border-radius: var(--sbp-raio);
+}
+
+.cf-fieldset legend {
+  padding: 0 0.35rem;
+  font-weight: 700;
+}
+
+.cf-campo {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 1.1rem;
+}
+
+.cf-campo label {
+  font-weight: 700;
+}
+
+.cf-campo input,
+.cf-campo select,
+.cf-campo textarea {
+  width: 100%;
+  min-height: 2.9rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #8C7B6B; /* 3,6:1 sobre branco: borda de campo perceptível (WCAG 1.4.11) */
+  border-radius: 0.5rem;
+  background: var(--sbp-branco);
+  color: var(--sbp-tinta);
+}
+
+.cf-campo textarea {
+  resize: vertical;
+}
+
+.cf-campo input:hover,
+.cf-campo select:hover,
+.cf-campo textarea:hover {
+  border-color: var(--sbp-terracota);
+}
+
+/* Erro: borda mais grossa + ícone + texto (não depende só de cor) */
+.cf-campo [aria-invalid="true"] {
+  border: 2px solid #9b2c22;
+}
+
+.cf-campo-dica {
+  margin: 0;
+  color: var(--sbp-texto-suave);
+  font-size: 0.85rem;
+}
+
+.cf-campo-erro {
+  margin: 0;
+  color: #9b2c22;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.cf-campo-erro::before {
+  content: "⚠ ";
+}
+
+.cf-botao-enviar {
+  width: 100%;
+  border-radius: 999px;
+}
+
+.cf-form-status:not(:empty) {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: var(--sbp-raio);
+  border: 1px solid var(--sbp-borda);
+  background: var(--sbp-fundo);
+}
+
+.cf-form-status[data-tipo="sucesso"] {
+  border: 2px solid var(--sbp-terracota);
+  background: var(--sbp-terracota-claro);
+}
+
+.cf-form-status[data-tipo="erro"] {
+  border: 2px solid #9b2c22;
+  background: #FBEAE8;
+}
+
+.cf-form-status p {
+  margin: 0;
+}
+
+.cf-form-status p + p {
+  margin-top: 0.4rem;
+}
+
+/* ---------- 6. Acompanhe a adoção (painel do pedido) ---------- */
+.cf-acompanhe-grade {
+  display: grid;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .cf-acompanhe-grade {
+    grid-template-columns: 5fr 7fr;
+    gap: 3.5rem;
+  }
+}
+
+.cf-fases {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.cf-fases li {
+  padding: 0.2rem 0 0.2rem 1rem;
+  border-left: 3px solid var(--sbp-terracota);
+  color: var(--sbp-texto);
+}
+
+/* Cartão principal */
+.cf-pedido {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--sbp-borda);
+  border-radius: var(--sbp-raio-grande);
+  background: var(--sbp-fundo);
+  box-shadow: 0 1rem 2rem rgba(42, 33, 28, 0.06);
+}
+
+@media (min-width: 40rem) {
+  .cf-pedido {
+    padding: 1.75rem;
+  }
+}
+
+.cf-pedido-topo .selo-demo {
+  margin: 0 0 0.6rem;
+}
+
+.cf-pedido-topo h3 {
+  margin-bottom: 0.25rem;
+  font-size: clamp(1.35rem, 3vw, 1.65rem);
+}
+
+.cf-pedido-meta {
+  margin: 0 0 0.85rem;
+  color: var(--sbp-texto-suave);
+  font-size: 0.95rem;
+}
+
+.cf-pedido-meta strong {
+  color: var(--sbp-tinta);
+}
+
+.cf-pedido-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.cf-pedido-chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--sbp-borda);
+  border-radius: var(--sbp-raio);
+  background: var(--sbp-branco);
+  font-size: 0.9rem;
+}
+
+.cf-pedido-chips .cf-icone {
+  width: 1.05rem;
+  height: 1.05rem;
+  color: var(--sbp-terracota);
+}
+
+/* Status + linha de progresso */
+.cf-pedido-status {
+  padding: 1.25rem;
+  border: 1px solid var(--sbp-borda);
+  border-radius: var(--sbp-raio);
+  background: var(--sbp-branco);
+}
+
+.cf-pedido-status-rotulo {
+  margin: 0;
+  color: var(--sbp-texto-suave);
+  font-size: 0.88rem;
+}
+
+.cf-pedido-status-valor {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.15rem 0 0;
+  color: var(--sbp-terracota);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.cf-pedido-status-ponto {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--sbp-terracota);
+  box-shadow: 0 0 0 4px var(--sbp-terracota-claro);
+}
+
+.cf-pedido-status-tempo {
+  margin: 0.1rem 0 1.5rem;
+  color: var(--sbp-texto-suave);
+  font-size: 0.88rem;
+}
+
+/* Mobile: linha do tempo vertical */
+.cf-progresso {
+  display: grid;
+  gap: 0;
+}
+
+.cf-fase {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  column-gap: 0.75rem;
+  padding-bottom: 1.25rem;
+}
+
+.cf-fase:last-child {
+  padding-bottom: 0;
+}
+
+/* Trecho da linha que liga esta fase à próxima */
+.cf-fase:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: calc(1rem - 1.5px);
+  top: 1.9rem;
+  bottom: 0.15rem;
+  border-left: 3px dashed #A8977F;
+}
+
+.cf-fase--concluida:not(:last-child)::before {
+  border-left-style: solid;
+  border-left-color: var(--sbp-terracota);
+}
+
+.cf-fase-marcador {
+  grid-row: 1 / span 2;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-inline: auto;
+  border: 2px solid #8C7B6B;
+  border-radius: 50%;
+  background: var(--sbp-branco);
+  color: var(--sbp-branco);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.cf-fase--concluida .cf-fase-marcador {
+  border-color: var(--sbp-terracota);
+  background: var(--sbp-terracota);
+}
+
+/* Etapa atual: anel grosso + ponto central (forma diferente, não só cor) */
+.cf-fase--atual .cf-fase-marcador {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--sbp-terracota);
+  background: radial-gradient(circle, var(--sbp-terracota) 0 35%, var(--sbp-branco) 40%);
+  box-shadow: 0 0 0 4px var(--sbp-terracota-claro);
+}
+
+.cf-fase-nome {
+  font-weight: 600;
+  line-height: 1.3;
+  padding-top: 0.2rem;
+}
+
+.cf-fase--atual .cf-fase-nome {
+  font-weight: 800;
+}
+
+.cf-fase-info {
+  color: var(--sbp-texto-suave);
+  font-size: 0.85rem;
+}
+
+.cf-fase--atual .cf-fase-info {
+  color: var(--sbp-terracota);
+  font-weight: 700;
+}
+
+/* Telas maiores: linha do tempo horizontal */
+@media (min-width: 40rem) {
+  .cf-progresso {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+  }
+
+  .cf-fase {
+    grid-template-columns: 1fr;
+    grid-template-rows: 2rem auto auto; /* mesma altura de marcador em todas as fases */
+    align-content: start;
+    align-items: center;
+    justify-items: center;
+    row-gap: 0.4rem;
+    padding-bottom: 0;
+    text-align: center;
+  }
+
+  .cf-fase:not(:last-child)::before {
+    left: calc(50% + 1.25rem);
+    right: calc(-50% + 1.25rem - 0.5rem);
+    top: calc(1rem - 1.5px);
+    bottom: auto;
+    border-left: 0;
+    border-top: 3px dashed #A8977F;
+  }
+
+  .cf-fase--concluida:not(:last-child)::before {
+    border-top-style: solid;
+    border-top-color: var(--sbp-terracota);
+  }
+
+  .cf-fase-marcador {
+    grid-row: auto;
+    margin-top: 0.125rem;
+  }
+
+  .cf-fase--atual .cf-fase-marcador {
+    margin-top: 0;
+  }
+}
+
+/* Próximo passo */
+.cf-pedido-proximo {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid var(--sbp-ambar);
+  border-radius: var(--sbp-raio);
+  background: var(--sbp-ambar-claro);
+}
+
+.cf-pedido-proximo img {
+  flex-shrink: 0;
+  width: 3.25rem;
+  height: 3.25rem;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--sbp-branco);
+}
+
+@media (max-width: 39.99rem) {
+  .cf-pedido-proximo {
+    align-items: flex-start;
+  }
+}
+
+@media (min-width: 40rem) {
+  .cf-pedido-proximo img {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+}
+
+.cf-pedido-proximo p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.cf-pedido-proximo-titulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem !important;
+  font-weight: 700;
+  font-size: 1.05rem !important;
+}
+
+.cf-pedido-tag {
+  padding: 0.05rem 0.55rem;
+  border: 1px solid var(--sbp-tinta);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Local de retirada */
+.cf-pedido-local {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1rem;
+  border: 1px solid var(--sbp-borda);
+  border-radius: var(--sbp-raio);
+  background: var(--sbp-branco);
+}
+
+.cf-pedido-local p {
+  margin: 0;
+}
+
+.cf-pedido-local-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  justify-self: start;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--sbp-terracota-claro);
+  color: var(--sbp-terracota);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.cf-pedido-local-tag .cf-icone,
+.cf-pedido-local-nota .cf-icone {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.cf-pedido-local-nota {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--sbp-raio);
+  background: var(--sbp-fundo);
+  color: var(--sbp-texto);
+  font-size: 0.9rem;
+}
+
+.cf-pedido-local-nota .cf-icone {
+  margin-top: 0.15rem;
+  color: var(--sbp-texto-suave);
+}
+
+/* ---------- 7. FAQ ---------- */
+.cf-faq {
+  padding: 3.5rem 0;
+}
+
+.cf-faq h2 {
+  font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+  color: var(--sbp-terracota);
+}
+
+.cf-faq-intro {
+  margin: 0 0 1.5rem;
+  color: var(--sbp-texto-suave);
+}
+
+.cf-faq-item {
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--sbp-borda);
+  border-radius: var(--sbp-raio);
+  background: var(--sbp-branco);
+}
+
+.cf-faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 2.75rem;
+  padding: 1rem 1.15rem;
+  cursor: pointer;
+  font-weight: 700;
+  list-style: none;
+}
+
+.cf-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Indicador textual de estado: "+" fechado, "−" aberto (além da mudança de conteúdo) */
+.cf-faq-item summary::after {
+  content: "+";
+  flex-shrink: 0;
+  display: inline-grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 2px solid var(--sbp-terracota);
+  border-radius: 50%;
+  color: var(--sbp-terracota);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.cf-faq-item[open] summary::after {
+  content: "−";
+}
+
+.cf-faq-item summary:hover {
+  color: var(--sbp-terracota);
+}
+
+.cf-faq-resposta {
+  padding: 0 1.15rem 1.1rem;
+  color: var(--sbp-texto);
+}
+
+.cf-faq-resposta p {
+  margin: 0;
+}
+
+/* ---------- 8. CTA final ---------- */
+.cf-cta-final {
+  padding: 4rem 0;
+  background: var(--sbp-terracota);
+  color: var(--sbp-branco);
+  text-align: center;
+}
+
+.cf-cta-final h2 {
+  font-size: clamp(1.6rem, 3.6vw, 2.3rem);
+  color: var(--sbp-branco);
+}
+
+.cf-cta-final p {
+  margin: 0 auto;
+  max-width: 34rem;
+  color: var(--sbp-texto-claro);
+  font-size: 1.08rem;
+}
+
+.cf-cta-final .btn-secundario {
+  color: var(--sbp-branco);
+  border-color: var(--sbp-branco);
+}
+
+.cf-cta-final .btn-secundario:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: var(--sbp-branco);
+}

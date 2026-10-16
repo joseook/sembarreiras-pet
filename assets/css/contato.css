@@ -1,0 +1,40 @@
+.contato { padding-block: 4rem 5rem; }
+.contato-intro { max-width: 46rem; margin-bottom: 3rem; }
+.contato-intro h1 { font-size: clamp(2.4rem, 5vw, 3.8rem); }
+.contato-intro > p:last-child { margin-top: 1.25rem; max-width: 37rem; color: var(--t-texto); font-size: 1.1rem; }
+.contato-grade { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 3rem; align-items: start; }
+.contato-apoio { padding: 2rem; background: var(--t-creme-2); border-radius: var(--t-raio); }
+.contato-simbolo { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; margin-bottom: 1.5rem; border-radius: 50%; background: var(--t-terracota-claro); color: var(--t-terracota-esc); font-size: 2.5rem; }
+.contato-apoio h2, .contato-cartao h2 { font-size: 2rem; }
+.contato-apoio > p { margin-top: 1rem; color: var(--t-texto); }
+.contato-caminho { border-top: 1px solid var(--t-borda); padding-top: 1.5rem; margin-top: 1.5rem; }
+.contato-caminho h3 { font-size: 1.35rem; }
+.contato-caminho p { margin-block: .75rem; color: var(--t-texto); }
+.contato-nota, .contato-legenda, .field__ajuda { font-size: .85rem; color: var(--t-suave); }
+.contato-cartao { background: var(--t-papel); border: 1px solid var(--t-borda); border-radius: var(--t-raio); padding: 2rem; }
+.contato-descricao { margin-top: .75rem; color: var(--t-texto); }
+.contato-demo { margin-block: 1.5rem 1rem; padding: 1rem; background: var(--t-verde-claro); color: var(--t-tinta); border-radius: var(--t-raio-pequeno); font-size: .9rem; }
+.contato-legenda { margin-bottom: 1.25rem; }
+.contato-cartao form, .field { display: grid; gap: .5rem; }
+.contato-cartao form { gap: 1.25rem; }
+.contato-linha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+.field label { font-weight: 700; }
+.field input, .field select, .field textarea { width: 100%; min-width: 0; padding: .8rem; border: 1px solid var(--t-suave); border-radius: .6rem; background: var(--t-papel); color: var(--t-tinta); }
+.field textarea { resize: vertical; min-height: 9rem; }
+.field [aria-invalid="true"] { border: 2px solid var(--t-erro); }
+.field__erro { color: var(--t-erro); font-size: .9rem; font-weight: 600; }
+.contato-cartao .t-btn { justify-self: start; }
+.auth-status:empty { display: none; }
+.auth-status { padding: 1rem; border-radius: .6rem; background: var(--t-verde-claro); overflow-wrap: anywhere; }
+.auth-status--erro { background: var(--t-erro-claro); color: var(--t-erro); }
+@media (max-width: 55rem) {
+  .contato-grade { grid-template-columns: 1fr; gap: 1.5rem; }
+  .contato { padding-block: 2.5rem 3rem; }
+}
+@media (max-width: 35rem) {
+  .contato-linha { grid-template-columns: 1fr; }
+  .contato-cartao, .contato-apoio { padding: 1.25rem; }
+  .contato-cartao .t-btn { width: 100%; }
+}
+
+.contato-obrigatorio { color: var(--t-terracota-esc); font-weight: 700; }
