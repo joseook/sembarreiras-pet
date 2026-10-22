@@ -25,7 +25,7 @@ class PagesPublishingTest(unittest.TestCase):
         home = ROOT / "index.html"
         self.assertTrue(home.is_file(), "GitHub Pages needs index.html at the root")
 
-        for page in [home, *(ROOT / "pages").glob("*.html")]:
+        for page in [*ROOT.glob("*.html"), *(ROOT / "pages").glob("*.html")]:
             parser = LocalReferences()
             parser.feed(page.read_text(encoding="utf-8"))
             for reference in parser.references:

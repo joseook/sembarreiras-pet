@@ -1,42 +1,26 @@
-from flask import Flask, render_template
-import psycopg2
-from psycopg2.extras import RealDictCursor
+"""Servidor local opcional para o mesmo site estático publicado no GitHub Pages."""
+from pathlib import Path
+from flask import Flask, send_from_directory
 
-app = Flask(__name__, template_folder='.')
+ROOT = Path(__file__).resolve().parent
+app = Flask(__name__, static_folder=None)
 
-DB_CONFIG = {
-    'dbname': 'sembarreiras_db',
-    'user': 'postgres',
-    'password': 'postgres',
-    'host': 'localhost',
-    'port': '5432'
-}
-
-def get_db_connection():
-    return psycopg2.connect(**DB_CONFIG, cursor_factory=RealDictCursor)
+@app.route('/')
+def home():
+    return send_from_directory(ROOT, 'index.html')
 
 @app.route('/privacidade')
 def politica_privacidade():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    
-    cur.execute("SELECT id, versao, ultima_atualizacao FROM politica_privacidade WHERE ativo = TRUE LIMIT 1;")
-    politica = cur.fetchone()
-    
-    secoes = []
-    if politica:
-        cur.execute("""
-            SELECT titulo, conteudo 
-            FROM secoes_privacidade 
-            WHERE politica_id = %s 
-            ORDER BY ordem ASC;
-        """, (politica['id'],))
-        secoes = cur.fetchall()
-        
-    cur.close()
-    conn.close()
-    
-    return render_template('privacidade.html', politica=politica, secoes=secoes)
+    return send_from_directory(ROOT, 'privacidade.html')
+
+@app.route('/<path:filename>')
+def arquivo_publico(filename):
+    # Exponha somente os arquivos que fazem parte do site.
+    path = Path(filename)
+    if path.parts[0] in {'assets', 'pages'} or filename in {'config.js', 'privacidade.html', 'index.html'}:
+        return send_from_directory(ROOT, filename)
+    from flask import abort
+    abort(404)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

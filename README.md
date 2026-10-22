@@ -43,7 +43,7 @@ Todos os abrigos, endereços e pets de exemplo são **fictícios** e aparecem ma
 sembarreiras-pet/
 ├── index.html                 landing page
 ├── config.js                  configuração pública (chave do Google Maps, vazia por padrão)
-├── pages/                     login, cadastro, como-funciona, pet
+├── pages/                     login, cadastro, como-funciona, contato, pet
 ├── assets/
 │   ├── css/
 │   │   ├── global.css         base: foco visível, skip link, .sr-only, .back-link
@@ -138,3 +138,13 @@ painel da ONG para confirmar visitas.
 ## Referências de pesquisa
 
 As decisões de fluxo foram comparadas com referências do Mobbin para telas de login, cadastro e seções com imagens de pets. A identidade visual, o conteúdo e a estrutura foram adaptados às inspirações locais do projeto (`inspiracoes/`) e às regras de acessibilidade, sem copiar interfaces literalmente.
+
+## Organização das páginas
+
+Login e cadastro têm uma única versão, em `pages/`, com estilos em `assets/css/`. As versões antigas da raiz e seus estilos exclusivos foram removidos; os campos de cadastro foram preservados na versão integrada.
+
+`privacidade.html` funciona diretamente no site estático, sem Flask ou PostgreSQL, e descreve o protótipo atual. Seu estilo está em `assets/css/privacidade.css`.
+
+`app.py` é um servidor Flask opcional para os mesmos arquivos (requer Flask instalado). Para uso normal, prefira o servidor estático acima. Os scripts `setup_db.py` e `atualizar_textos.py` são experimentos antigos de PostgreSQL, preservados como trabalho único; não são usados pelo site e não devem ser executados para publicá-lo.
+
+Validação dos caminhos locais: `python -m unittest discover -s tests`.

@@ -1,0 +1,5 @@
+.privacidade { max-width: 52rem; padding-block: 3rem; }
+.privacidade h1 { margin-bottom: 1.5rem; }
+.privacidade section { margin-block: 2rem; }
+.privacidade h2 { margin-bottom: .75rem; }
+.privacidade p + p { margin-top: 1rem; }

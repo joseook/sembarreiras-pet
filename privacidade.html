@@ -1,64 +1,43 @@
-<!DOCTYPE html>
-<html lang="pt-PT">
+<!doctype html>
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Política de Privacidade - Sem Barreiras Pet</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='privacidade.css') }}">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacidade | Sem Barreiras Pet</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/global.css">
+  <link rel="stylesheet" href="assets/css/tema.css">
+  <link rel="stylesheet" href="assets/css/privacidade.css">
 </head>
 <body>
-
-    <header class="hero-section">
-        <div class="nav-container">
-            <div class="logo">
-                <span class="logo-icon">🐾</span> Sem Barreiras Pet
-            </div>
-            <nav class="nav-links">
-                <a href="#">Início</a>
-                <a href="#">Preços</a>
-                <a href="#">Sobre</a>
-                <a href="#">Contato</a>
-            </nav>
-            <div class="nav-cta">
-                <a href="/cadastro" class="btn-primary">Entrar / Registar</a>
-            </div>
-        </div>
-
-        <div class="hero-content">
-            <h1>Política de Privacidade</h1>
-            <p class="last-updated">
-                Última atualização em 
-                {% if politica.ultima_atualizacao is string %}
-                    {{ politica.ultima_atualizacao }}
-                {% else %}
-                    {{ politica.ultima_atualizacao.strftime('%d/%m/%Y') }}
-                {% endif %} 
-                | Versão {{ politica.versao }}
-            </p>
-        </div>
-    </header>
-
-    <main class="content-container">
-        <div class="content-card">
-            <p class="intro-text">
-                A plataforma <strong>Sem Barreiras Pet</strong> está amplamente comprometida com a proteção dos seus dados pessoais e o respeito à sua privacidade. Esta política descreve como recolhemos, usamos e protegemos as suas informações ao utilizar os nossos serviços.
-            </p>
-
-            <div class="privacy-sections">
-                {% for secao in secoes %}
-                <section class="privacy-section">
-                    <h2>{{ secao.titulo }}</h2>
-                    <p>{{ secao.conteudo }}</p>
-                </section>
-                {% endfor %}
-            </div>
-
-            <footer class="page-footer">
-                <p>&copy; 2026 Sem Barreiras Pet. Todos os direitos reservados.</p>
-            </footer>
-        </div>
-    </main>
-
+  <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo principal</a>
+  <header class="t-header">
+    <div class="t-header-inner">
+      <a class="t-marca" href="index.html"><span aria-hidden="true">♥</span> Sem Barreiras Pet</a>
+      <nav aria-label="Navegação principal">
+        <a href="index.html">Início</a> &middot; <a href="pages/contato.html">Contato</a> &middot; <a href="pages/cadastro.html">Criar conta</a>
+      </nav>
+    </div>
+  </header>
+  <main class="t-container privacidade" id="conteudo-principal">
+    <h1>Privacidade no protótipo</h1>
+    <p>Este é um projeto acadêmico demonstrativo. Estas informações descrevem o funcionamento atual do site.</p>
+    <section aria-labelledby="dados">
+      <h2 id="dados">Dados nos formulários</h2>
+      <p>Login, cadastro, contato e agendamento são demonstrações. Os campos são validados no navegador; os dados digitados não são enviados nem salvos pelo projeto. Não existe uma conta real ou um banco de dados conectado ao site publicado.</p>
+      <p>Use dados fictícios para experimentar os formulários.</p>
+    </section>
+    <section aria-labelledby="servicos">
+      <h2 id="servicos">Hospedagem e serviços externos</h2>
+      <p>O site é publicado no GitHub Pages. O serviço de hospedagem pode processar informações técnicas de acesso conforme suas próprias condições.</p>
+      <p>Se uma chave do Google Maps estiver configurada, a página Como funciona carrega o mapa do Google. Nesse caso, o navegador se conecta a esse serviço externo.</p>
+    </section>
+    <section aria-labelledby="futuro">
+      <h2 id="futuro">Antes do cadastro real</h2>
+      <p>Uma política de privacidade completa deverá ser publicada antes da implementação de contas e do envio de dados reais, explicando o tratamento de dados, os responsáveis e os canais de atendimento.</p>
+    </section>
+    <p><a class="t-btn t-btn--contorno" href="pages/cadastro.html">Voltar ao cadastro</a></p>
+  </main>
+  <footer class="t-footer"><div class="t-container"><p>© 2026 Sem Barreiras Pet. Projeto acadêmico de IHC.</p></div></footer>
 </body>
 </html>
