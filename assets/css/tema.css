@@ -150,7 +150,7 @@ a:hover { color: var(--t-tinta); }
 .t-menu-toggle .menu-toggle-icone::before,
 .t-menu-toggle .menu-toggle-icone::after { background: var(--t-tinta); }
 
-@media (max-width: 55rem) {
+@media (max-width: 68rem) {
   .js .t-menu-toggle { display: inline-flex; }
   .js .t-nav { display: none; }
   .js .t-nav.menu-aberto { display: block; }
