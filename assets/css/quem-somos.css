@@ -20,6 +20,13 @@
 .pagina-quem-somos a,
 .pagina-quem-somos button { min-width: 2.75rem; }
 .pagina-quem-somos p { max-width: 75ch; }
+.pagina-quem-somos .t-sobretitulo {
+  max-width: none;
+  line-height: 1.6;
+  text-wrap: balance;
+}
+.qs-intro > p,
+.qs-equipe-cabecalho > p { margin-inline: auto; }
 .pagina-quem-somos .t-footer-copy { max-width: none; }
 .pagina-quem-somos .t-marca { flex-wrap: wrap; }
 .pagina-quem-somos .t-btn { overflow-wrap: anywhere; }
