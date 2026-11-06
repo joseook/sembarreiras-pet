@@ -427,12 +427,28 @@ function montarNaoEncontrado(container) {
   document.title = 'Animal não encontrado - Sem Barreiras Pet';
 }
 
-function iniciar() {
+async function iniciar() {
   const container = document.querySelector('[data-ficha]');
   if (!container) return;
 
   const id = new URLSearchParams(window.location.search).get('id');
-  const pet = id ? buscarPet(id) : null;
+  let pet = null;
+
+  if (id) {
+    try {
+      const resp = await fetch(`/api/pets/${encodeURIComponent(id)}`);
+      if (resp.ok) {
+        pet = await resp.json();
+      }
+    } catch (_) {
+      // Ignora erro de rede e usa fallback estático local
+    }
+
+    if (!pet) {
+      pet = buscarPet(id);
+    }
+  }
+
   if (!pet) {
     montarNaoEncontrado(container);
     return;
