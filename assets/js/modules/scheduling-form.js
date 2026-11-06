@@ -1,11 +1,9 @@
 /**
- * Formulário "Solicitar visita" — modo PRÉVIA.
+ * Formulário "Solicitar visita" — Sem Barreiras Pet
+ * Integração com API REST e Fallback gracioso.
  *
- * O site é estático (sem back-end nem autenticação): o formulário valida
- * os campos e confirma o preenchimento, mas NÃO envia nada ao abrigo.
- *
- * Mensagens vão para a região [data-form-status] (role="status", aria-live)
- * e os erros de campo ficam ligados aos inputs por aria-describedby.
+ * Se a API estiver ativa, registra o agendamento no banco de dados.
+ * Se estiver no Vercel (modo estático), exibe a confirmação amigável de prévia.
  */
 
 const LIMITE_MENSAGEM = 1000;
@@ -41,7 +39,6 @@ export function initSchedulingForm(form) {
   };
   const status = form.querySelector('[data-form-status]');
 
-  // Com JavaScript ativo, a validação passa a ser feita aqui (mensagens em português e acessíveis).
   form.noValidate = true;
   campos.data.min = hojeLocalISO();
 
@@ -75,7 +72,6 @@ export function initSchedulingForm(form) {
     );
   }
 
-  /** Validação no navegador (quando houver back-end, ele deve validar de novo). */
   function validar() {
     const erros = {};
     const data = campos.data.value;
@@ -112,7 +108,7 @@ export function initSchedulingForm(form) {
     });
   });
 
-  form.addEventListener('submit', (evento) => {
+  form.addEventListener('submit', async (evento) => {
     evento.preventDefault();
     limparErros();
 
@@ -128,11 +124,56 @@ export function initSchedulingForm(form) {
     }
 
     const { iso } = montarDataHora(campos.data.value, campos.horario.value);
+    const botao = form.querySelector('button[type="submit"]');
+    const textoOriginalBotao = botao ? botao.textContent : '';
 
-    mostrarStatus('info', [
-      `Tudo certo com o preenchimento: visita em ${formatarDataHora(iso)}.`,
-      'Como esta é uma prévia, a solicitação não foi enviada ao abrigo. ' +
-        'Quando o login estiver disponível, ela seguirá para a ONG confirmar.',
-    ]);
+    try {
+      if (botao) {
+        botao.disabled = true;
+        botao.textContent = 'Enviando ao abrigo...';
+      }
+
+      const resposta = await fetch('/api/agendamentos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          data: campos.data.value,
+          horario: campos.horario.value,
+          mensagem: campos.mensagem.value.trim() || null,
+        }),
+      });
+
+      const resultado = await resposta.json().catch(() => null);
+
+      if (resposta.ok && resultado) {
+        mostrarStatus('sucesso', [
+          `Solicitação gravada com sucesso no banco de dados para ${formatarDataHora(iso)}!`,
+          'O abrigo parceiro já tem acesso ao seu agendamento para análise e confirmação.',
+        ]);
+        form.reset();
+        return;
+      }
+
+      if (resultado && resultado.erro) {
+        mostrarStatus('erro', [resultado.erro]);
+        return;
+      }
+
+      throw new Error('API_INDISPONIVEL');
+    } catch (err) {
+      console.info('API de agendamentos indisponível no ambiente atual, usando modo prévia:', err.message);
+      mostrarStatus('info', [
+        `Tudo certo com o preenchimento: visita em ${formatarDataHora(iso)}.`,
+        'Como esta é uma prévia do protótipo, a solicitação não foi enviada ao abrigo.',
+      ]);
+    } finally {
+      if (botao) {
+        botao.disabled = false;
+        botao.textContent = textoOriginalBotao;
+      }
+    }
   });
 }
