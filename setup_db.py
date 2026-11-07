@@ -1,53 +1,44 @@
-import psycopg2
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+"""Script de inicialização do banco de dados PostgreSQL para o Sem Barreiras Pet."""
+from app import app
+from database import db
+from models import PoliticaPrivacidade, SecaoPrivacidade, Usuario, Pet, Agendamento
 
-SENHA = 'postgres'
+def inicializar_banco():
+    with app.app_context():
+        print("A conectar ao PostgreSQL e a criar as tabelas...")
+        try:
+            # Cria todas as tabelas mapeadas pelos modelos SQLAlchemy
+            db.create_all()
+            print("Tabelas criadas/verificadas com sucesso!")
 
-print("A conectar ao PostgreSQL...")
-conexao_padrao = psycopg2.connect(user="postgres", password=SENHA, host="localhost", port="5432")
-conexao_padrao.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-cursor_padrao = conexao_padrao.cursor()
+            # Insere dados iniciais na Política de Privacidade se a tabela estiver vazia
+            if not PoliticaPrivacidade.query.first():
+                print("A inserir dados iniciais da Política de Privacidade...")
+                politica = PoliticaPrivacidade(versao="1.0", ativo=True)
+                db.session.add(politica)
+                db.session.flush()  # Gera o id da política para vincular às seções
 
-try:
-    cursor_padrao.execute("CREATE DATABASE sembarreiras_db;")
-    print("Banco de dados 'sembarreiras_db' criado com sucesso!")
-except psycopg2.errors.DuplicateDatabase:
-    print("O banco de dados já existia, a continuar...")
-cursor_padrao.close()
-conexao_padrao.close()
+                secao1 = SecaoPrivacidade(
+                    politica_id=politica.id,
+                    ordem=1,
+                    titulo="Informações que Coletamos",
+                    conteudo="A Sem Barreiras Pet coleta informações pessoais que você nos fornece voluntariamente ao se cadastrar em nossos serviços, como nome e e-mail."
+                )
+                secao2 = SecaoPrivacidade(
+                    politica_id=politica.id,
+                    ordem=2,
+                    titulo="Como Usamos Suas Informações",
+                    conteudo="Utilizamos os dados coletados para melhorar sua experiência, garantir a segurança do sistema e personalizar as sugestões de adoção."
+                )
+                db.session.add_all([secao1, secao2])
+                db.session.commit()
+                print("Dados da Política de Privacidade inseridos com sucesso!")
+            else:
+                print("A Política de Privacidade já possui dados cadastrados.")
 
-conexao_projeto = psycopg2.connect(dbname="sembarreiras_db", user="postgres", password=SENHA, host="localhost", port="5432")
-cursor_projeto = conexao_projeto.cursor()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Erro ao inicializar o banco de dados: {e}")
 
-cursor_projeto.execute("""
-CREATE TABLE IF NOT EXISTS politica_privacidade (
-    id SERIAL PRIMARY KEY,
-    versao VARCHAR(20) NOT NULL,
-    ultima_atualizacao DATE NOT NULL DEFAULT CURRENT_DATE,
-    ativo BOOLEAN DEFAULT TRUE
-);
-
-CREATE TABLE IF NOT EXISTS secoes_privacidade (
-    id SERIAL PRIMARY KEY,
-    politica_id INT REFERENCES politica_privacidade(id) ON DELETE CASCADE,
-    ordem INT NOT NULL,
-    titulo VARCHAR(255) NOT NULL,
-    conteudo TEXT NOT NULL
-);
-""")
-
-cursor_projeto.execute("TRUNCATE TABLE politica_privacidade CASCADE;")
-cursor_projeto.execute("INSERT INTO politica_privacidade (versao, ultima_atualizacao) VALUES ('1.0', '2026-10-13') RETURNING id;")
-id_politica = cursor_projeto.fetchone()[0]
-
-cursor_projeto.execute("""
-INSERT INTO secoes_privacidade (politica_id, ordem, titulo, conteudo) VALUES 
-(%s, 1, 'Informações que Coletamos', 'A Sem Barreiras Pet coleta informações pessoais que você nos fornece voluntariamente ao se cadastrar em nossos serviços, como nome e e-mail.'),
-(%s, 2, 'Como Usamos Suas Informações', 'Utilizamos os dados coletados para melhorar sua experiência, garantir a segurança do sistema e personalizar as sugestões de adoção.')
-""", (id_politica, id_politica))
-
-conexao_projeto.commit()
-cursor_projeto.close()
-conexao_projeto.close()
-
-print("Tabelas prontas e dados inseridos com sucesso!")
+if __name__ == '__main__':
+    inicializar_banco()
