@@ -1,4 +1,5 @@
 """Servidor Flask com suporte a PostgreSQL e rotas estáticas para o Sem Barreiras Pet."""
+import os
 from pathlib import Path
 from datetime import datetime
 from flask import Flask, send_from_directory, request, jsonify, session, abort
@@ -11,7 +12,10 @@ ROOT = Path(__file__).resolve().parent
 def create_app(config_class=Config):
     app = Flask(__name__, static_folder=None)
     app.config.from_object(config_class)
-    
+
+    if os.getenv('DATABASE_URL'):
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+        
     # Inicializa SQLAlchemy
     db.init_app(app)
     
