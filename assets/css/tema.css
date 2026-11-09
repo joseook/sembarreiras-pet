@@ -130,6 +130,8 @@ a:hover { color: var(--t-tinta); }
 .t-nav a:hover,
 .t-nav a[aria-current="page"] { color: var(--t-terracota-esc); text-decoration: underline; text-underline-offset: 0.25em; }
 .t-nav .t-nav-entrar { margin-left: 0.5rem; }
+.t-btn-logout { background: transparent; border: 0; color: inherit; cursor: pointer; text-decoration: underline; }
+.t-nav-usuario { font-weight: 600; }
 /* Botões dentro do menu mantêm a cor própria (vencem a regra .t-nav a) */
 .t-nav a.t-btn { color: #fff; text-decoration: none; }
 .t-nav a.t-btn:hover { color: #fff; text-decoration: none; }

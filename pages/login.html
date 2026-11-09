@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../assets/css/tema.css">
   <link rel="stylesheet" href="../assets/css/auth.css">
   <link rel="stylesheet" href="../assets/css/login.css">
-  <script type="module" src="../assets/js/modules/auth-demo.js"></script>
+  <script type="module" src="../assets/js/modules/formularios.js"></script>
 </head>
 <body class="auth-pagina auth-pagina--login">
   <a class="skip-link" href="#conteudo">Pular para o formulário de login</a>
@@ -88,28 +88,21 @@
         <p class="auth-intro">Acesse sua jornada de adoção responsável.</p>
         <p class="auth-legenda-obrigatorio"><span class="auth-obrigatorio" aria-hidden="true">*</span> Campo obrigatório</p>
 
-        <!-- Demonstração: ainda não há autenticação. method="dialog" fora de um
-             <dialog> não envia nem recarrega; o JS mostra uma mensagem honesta. -->
-        <form class="auth-form" method="dialog" aria-labelledby="titulo-login" data-auth-demo
-              data-demo-mensagem="O acesso real será disponibilizado em uma próxima etapa do projeto.">
+        <!-- Sem JavaScript, method="dialog" evita envio acidental dos campos. -->
+        <form class="auth-form" method="dialog" aria-labelledby="titulo-login" data-formulario="login">
           <div class="field">
             <label for="email">E-mail <span class="auth-obrigatorio" aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
-            <input id="email" name="email" type="email" autocomplete="email" spellcheck="false" required aria-describedby="email-ajuda">
+            <input id="email" name="email" maxlength="120" type="email" autocomplete="email" spellcheck="false" required aria-describedby="email-ajuda">
             <p id="email-ajuda" class="field__ajuda">O mesmo e-mail usado no cadastro.</p>
           </div>
 
           <div class="field">
             <label for="senha">Senha <span class="auth-obrigatorio" aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
-            <input id="senha" name="senha" type="password" autocomplete="current-password" required aria-describedby="senha-ajuda">
+            <input id="senha" name="senha" type="password" maxlength="128" autocomplete="current-password" required aria-describedby="senha-ajuda">
             <p id="senha-ajuda" class="field__ajuda">Letras maiúsculas e minúsculas fazem diferença.</p>
           </div>
 
           <div class="login-opcoes">
-            <div class="field-check">
-              <input id="lembrar" name="lembrar" type="checkbox" aria-describedby="lembrar-ajuda">
-              <label for="lembrar">Lembrar meu acesso</label>
-              <p id="lembrar-ajuda" class="field__ajuda">Opção ilustrativa: nesta fase, nada fica salvo.</p>
-            </div>
             <p class="login-recuperacao">Recuperação de senha disponível em breve.</p>
           </div>
 
@@ -117,7 +110,7 @@
 
           <div class="auth-status" role="status" aria-live="polite" data-form-status></div>
           <noscript>
-            <p class="field__ajuda">Demonstração: o acesso real será disponibilizado em uma próxima etapa do projeto. Nenhum dado é enviado.</p>
+            <p class="field__ajuda">Ative o JavaScript para acessar sua conta com segurança.</p>
           </noscript>
         </form>
 

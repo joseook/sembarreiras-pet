@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="../assets/css/tema.css">
   <link rel="stylesheet" href="../assets/css/contato.css">
   <script type="module" src="../assets/js/main.js"></script>
-  <script type="module" src="../assets/js/modules/auth-demo.js"></script>
+  <script type="module" src="../assets/js/modules/formularios.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo principal</a>
@@ -58,18 +58,18 @@
       <section class="contato-cartao" aria-labelledby="titulo-formulario">
         <h2 id="titulo-formulario">Fale com a gente</h2>
         <p class="contato-descricao">Conte como podemos ajudar.</p>
-        <p class="contato-demo" id="aviso-demo"><strong>Modo demonstração.</strong> Você pode preencher e validar o formulário. As mensagens ainda não são enviadas nem salvas.</p>
+        <p class="contato-demo" id="aviso-demo">Sua mensagem será registrada para consulta pela equipe. O registro não envia uma notificação por e-mail.</p>
         <p class="contato-legenda"><span class="contato-obrigatorio" aria-hidden="true">*</span> Campo obrigatório. Todos os campos são obrigatórios.</p>
-        <form method="dialog" data-auth-demo data-demo-mensagem="Sua mensagem está preenchida corretamente. O envio real será disponibilizado em uma próxima etapa do projeto." aria-labelledby="titulo-formulario" aria-describedby="aviso-demo">
+        <form method="dialog" data-formulario="contato" aria-labelledby="titulo-formulario" aria-describedby="aviso-demo">
           <div class="contato-linha">
             <div class="field"><label for="nome">Seu nome <span class="contato-obrigatorio" aria-hidden="true">*</span></label><input id="nome" name="nome" autocomplete="name" required maxlength="100" pattern=".*\S.*" data-erro-formato="Informe seu nome, sem usar apenas espaços."></div>
-            <div class="field"><label for="email">Seu e-mail <span class="contato-obrigatorio" aria-hidden="true">*</span></label><input id="email" name="email" type="email" autocomplete="email" spellcheck="false" required maxlength="254" aria-describedby="email-ajuda"><p class="field__ajuda" id="email-ajuda">Exemplo: nome@exemplo.com</p></div>
+            <div class="field"><label for="email">Seu e-mail <span class="contato-obrigatorio" aria-hidden="true">*</span></label><input id="email" name="email" type="email" autocomplete="email" spellcheck="false" required maxlength="120" aria-describedby="email-ajuda"><p class="field__ajuda" id="email-ajuda">Exemplo: nome@exemplo.com</p></div>
           </div>
           <div class="field"><label for="assunto">Sobre o que você quer falar? <span class="contato-obrigatorio" aria-hidden="true">*</span></label><select id="assunto" name="assunto" required><option value="">Selecione um assunto</option><option value="adocao">Dúvidas sobre adoção</option><option value="parceria">ONGs, abrigos e parcerias</option><option value="acessibilidade">Acessibilidade ou problema no site</option><option value="sugestao">Sugestões e feedback</option><option value="outro">Outro assunto</option></select></div>
           <div class="field"><label for="mensagem">Sua mensagem <span class="contato-obrigatorio" aria-hidden="true">*</span></label><textarea id="mensagem" name="mensagem" rows="6" required minlength="10" maxlength="2000" aria-describedby="mensagem-ajuda"></textarea><p class="field__ajuda" id="mensagem-ajuda">De 10 a 2.000 caracteres. Evite incluir dados sensíveis.</p></div>
-          <button class="t-btn t-btn--terracota" type="submit">Validar mensagem <span aria-hidden="true">→</span></button>
+          <button class="t-btn t-btn--terracota" type="submit">Enviar mensagem <span aria-hidden="true">→</span></button>
           <div class="auth-status" role="status" aria-live="polite" data-form-status></div>
-          <noscript><p class="contato-nota">Este formulário é demonstrativo e não envia dados. Ative o JavaScript para ver a confirmação de preenchimento.</p></noscript>
+          <noscript><p class="contato-nota">Ative o JavaScript para enviar sua mensagem.</p></noscript>
         </form>
       </section>
     </div>

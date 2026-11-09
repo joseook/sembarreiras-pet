@@ -7,14 +7,7 @@
  */
 import { PETS, buscarPet } from '../data/pets.js';
 
-async function carregarApiBaseUrl() {
-  try {
-    const modulo = await import(new URL('../../../config.js', import.meta.url).href);
-    return (modulo.default && modulo.default.apiBaseUrl) ? modulo.default.apiBaseUrl.replace(/\/+$/, '') : '';
-  } catch {
-    return '';
-  }
-}
+import { api, sessaoAtual } from './api.js';
 
 const STATUS_VACINA = {
   'em-dia': { texto: 'Em dia', classe: 'p-selo--ok' },
@@ -67,6 +60,8 @@ function montarGaleria(pet) {
   const galeria = el('div', 'p-galeria');
   galeria.setAttribute('role', 'group');
   galeria.setAttribute('aria-label', `Fotos de ${pet.nome}`);
+
+  if (!pet.fotos.length) return anexar(galeria, el('p', 'p-aviso', 'Foto ainda não cadastrada.'));
 
   const principal = el('div', 'p-foto-principal');
   const img = document.createElement('img');
@@ -123,10 +118,16 @@ function montarCartaoAcao(pet) {
   ].forEach((texto) => resumo.append(el('li', null, texto)));
 
   const agendar = el('a', 't-btn t-btn--terracota', 'Agendar visita');
-  agendar.href = 'como-funciona.html#etapa-visita';
+  agendar.href = 'como-funciona.html?pet_id=' + encodeURIComponent(pet.id) + '#etapa-visita';
+  if (pet._somenteLeitura) {
+    agendar.removeAttribute('href');
+    agendar.textContent = 'Agendamento indisponível sem conexão';
+    agendar.setAttribute('aria-disabled', 'true');
+  }
 
   const conta = el('a', 't-btn t-btn--contorno', 'Criar conta para adotar');
-  conta.href = 'cadastro.html';
+  conta.href = 'cadastro.html?retorno=' + encodeURIComponent(location.pathname + location.search);
+  sessaoAtual().then(sessao => { conta.hidden = sessao.autenticado; }).catch(() => {});
 
   const nota = el(
     'p',
@@ -445,17 +446,12 @@ async function iniciar() {
 
   if (id) {
     try {
-      const apiBase = await carregarApiBaseUrl();
-      const resp = await fetch(`${apiBase}/api/pets/${encodeURIComponent(id)}`);
-      if (resp.ok) {
-        pet = await resp.json();
+      pet = await api('/api/pets/' + encodeURIComponent(id));
+    } catch (erro) {
+      if (erro.status !== 404) {
+        const exemplo = buscarPet(id);
+        if (exemplo) pet = { ...exemplo, _somenteLeitura: true };
       }
-    } catch (_) {
-      // Ignora erro de rede e usa fallback estático local
-    }
-
-    if (!pet) {
-      pet = buscarPet(id);
     }
   }
 
@@ -464,8 +460,22 @@ async function iniciar() {
     return;
   }
 
+  pet = {
+    ...pet,
+    etiquetas: pet.etiquetas || [],
+    fotos: pet.fotos || [],
+    convive: pet.convive || { criancas: 'nao-testado', caes: 'nao-testado', gatos: 'nao-testado' },
+  };
   container.replaceChildren(montarFicha(pet));
+  if (pet._somenteLeitura) {
+    container.prepend(el('p', 'p-aviso', 'Sem conexão com o serviço. Esta ficha de exemplo está disponível apenas para leitura.'));
+  }
   document.title = `${pet.nome}, ${pet.raca} - Sem Barreiras Pet`;
 }
 
-iniciar();
+iniciar().catch(() => {
+  const container = document.querySelector('[data-ficha]');
+  if (container) {
+    container.replaceChildren(el('h1', null, 'Não foi possível carregar a ficha'), el('p', 'p-aviso', 'Tente novamente em alguns instantes.'));
+  }
+});

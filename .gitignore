@@ -39,6 +39,8 @@ Thumbs.db
 
 # ---------- Node (caso alguma ferramenta seja usada no futuro) ----------
 node_modules/
+test-results/
+debug.log
 
 # ---------- Claude Code (configuração e arquivos locais, nunca versionar) ----------
 .claude/
