@@ -1,25 +1,43 @@
-import { api } from './api.js';
+/**
+ * Formulário "Solicitar visita" — Sem Barreiras Pet
+ * Integração com API REST e Fallback gracioso.
+ *
+ * Se a API estiver ativa, registra o agendamento no banco de dados.
+ * Se estiver no Vercel (modo estático), exibe a confirmação amigável de prévia.
+ */
 
 const LIMITE_MENSAGEM = 1000;
 
 function hojeLocalISO() {
-  const partes = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit',
-  }).formatToParts(new Date());
-  const valor = tipo => partes.find(parte => parte.type === tipo).value;
-  return `${valor('year')}-${valor('month')}-${valor('day')}`;
+  const agora = new Date();
+  const local = new Date(agora.getTime() - agora.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 10);
 }
 
-/** Horários oferecidos pelo abrigo são de Brasília (UTC-03). */
+/** Monta "AAAA-MM-DDTHH:MM:00-03:00" com o fuso do navegador. */
 function montarDataHora(data, horario) {
-  const iso = `${data}T${horario}:00-03:00`;
-  return { momento: new Date(iso), iso };
+  const momento = new Date(`${data}T${horario}:00`);
+  const offsetMin = -momento.getTimezoneOffset();
+  const sinal = offsetMin >= 0 ? '+' : '-';
+  const abs = Math.abs(offsetMin);
+  const hh = String(Math.floor(abs / 60)).padStart(2, '0');
+  const mm = String(abs % 60).padStart(2, '0');
+  return { momento, iso: `${data}T${horario}:00${sinal}${hh}:${mm}` };
 }
 
 function formatarDataHora(iso) {
   const data = new Date(iso);
   if (Number.isNaN(data.getTime())) return iso;
-  return data.toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'short', timeZone: 'America/Sao_Paulo' }) + ' (Brasília)';
+  return data.toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'short' });
+}
+
+async function carregarApiBaseUrl() {
+  try {
+    const modulo = await import(new URL('../../../config.js', import.meta.url).href);
+    return (modulo.default && modulo.default.apiBaseUrl) ? modulo.default.apiBaseUrl.replace(/\/+$/, '') : '';
+  } catch {
+    return '';
+  }
 }
 
 export function initSchedulingForm(form) {
@@ -31,10 +49,6 @@ export function initSchedulingForm(form) {
   const status = form.querySelector('[data-form-status]');
 
   form.noValidate = true;
-  const petId = new URLSearchParams(location.search).get('pet_id');
-  const contexto = document.createElement('p');
-  contexto.textContent = petId ? 'Visita referente ao pet: ' + petId + '.' : 'Visita geral ao abrigo.';
-  form.querySelector('[data-form-mode]').after(contexto);
   campos.data.min = hojeLocalISO();
 
   function definirErro(nome, mensagem) {
@@ -75,7 +89,6 @@ export function initSchedulingForm(form) {
     if (!data) erros.data = 'Escolha a data da visita.';
     else if (data < hojeLocalISO()) erros.data = 'Escolha uma data a partir de hoje.';
 
-    if (data && !erros.data && [0, 1].includes(new Date(data + 'T12:00:00').getDay())) erros.data = 'O abrigo recebe visitas de terça a sábado.';
     if (!horario) erros.horario = 'Escolha um horário para a visita.';
 
     if (data && horario && !erros.data) {
@@ -99,14 +112,13 @@ export function initSchedulingForm(form) {
 
   // Remove a marcação de erro assim que a pessoa corrige o campo
   Object.entries(campos).forEach(([nome, campo]) => {
-    campo.addEventListener('input', () => {
+    campo.addEventListener('change', () => {
       if (campo.getAttribute('aria-invalid') === 'true') definirErro(nome, '');
     });
   });
 
   form.addEventListener('submit', async (evento) => {
     evento.preventDefault();
-    if (form.querySelector('button[type="submit"]').disabled) return;
     limparErros();
 
     const erros = validar();
@@ -130,29 +142,43 @@ export function initSchedulingForm(form) {
         botao.textContent = 'Enviando ao abrigo...';
       }
 
-      const resultado = await api('/api/agendamentos', {
+      const apiBase = await carregarApiBaseUrl();
+      const resposta = await fetch(`${apiBase}/api/agendamentos`, {
         method: 'POST',
-        body: {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
           data: campos.data.value,
           horario: campos.horario.value,
-          mensagem: campos.mensagem.value.trim(),
-          pet_id: petId,
-        },
+          mensagem: campos.mensagem.value.trim() || null,
+        }),
       });
-      if (!resultado.agendamento) throw new Error('Não foi possível confirmar o registro da visita.');
-      mostrarStatus('sucesso', [
-        'Solicitação registrada para ' + formatarDataHora(iso) + '.',
-        'Aguarde a confirmação antes de ir ao abrigo.',
-      ]);
-      form.reset();
-    } catch (erro) {
-      mostrarStatus('erro', [erro.message]);
-      if (erro.status === 401) {
-        const link = document.createElement('a');
-        link.textContent = 'Entrar e continuar o agendamento';
-        link.href = 'login.html?retorno=' + encodeURIComponent(location.pathname + location.search + '#etapa-visita');
-        status.append(link);
+
+      const resultado = await resposta.json().catch(() => null);
+
+      if (resposta.ok && resultado) {
+        mostrarStatus('sucesso', [
+          `Solicitação gravada com sucesso no banco de dados para ${formatarDataHora(iso)}!`,
+          'O abrigo parceiro já tem acesso ao seu agendamento para análise e confirmação.',
+        ]);
+        form.reset();
+        return;
       }
+
+      if (resultado && resultado.erro) {
+        mostrarStatus('erro', [resultado.erro]);
+        return;
+      }
+
+      throw new Error('API_INDISPONIVEL');
+    } catch (err) {
+      console.info('API de agendamentos indisponível no ambiente atual, usando modo prévia:', err.message);
+      mostrarStatus('info', [
+        `Tudo certo com o preenchimento: visita em ${formatarDataHora(iso)}.`,
+        'Como esta é uma prévia do protótipo, a solicitação não foi enviada ao abrigo.',
+      ]);
     } finally {
       if (botao) {
         botao.disabled = false;

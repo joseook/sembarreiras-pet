@@ -1,4 +1,5 @@
 from datetime import date, datetime, timezone
+import json
 from database import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -142,17 +143,7 @@ class Pet(db.Model):
             'vermifugo': self.vermifugo,
             'antiparasitario': self.antiparasitario,
             'alergias': self.alergias,
-            'status': self.status,
-            'etiquetas': (self.temperamento or [])[:2],
-            'energia': 'Não informada',
-            'convive': {'criancas': 'nao-testado', 'caes': 'nao-testado', 'gatos': 'nao-testado'},
-            'cuidados': 'Consulte o abrigo para confirmar os cuidados necessários.',
-            'alimentacao': 'Confirme com o abrigo a alimentação recomendada.',
-            'abrigo': 'Confirme o abrigo responsável antes da visita',
-            'fotos': [
-                {'src': f'../assets/img/pets/{self.id}{sufixo}.jpg', 'alt': f'Foto ilustrativa de {self.nome}'}
-                for sufixo in ('', '-2', '-3')
-            ] if self.id in {'nina', 'simba', 'bento', 'mel'} else [],
+            'status': self.status
         }
 
 
@@ -179,14 +170,3 @@ class Agendamento(db.Model):
             'status': self.status,
             'criado_em': self.criado_em.isoformat() if self.criado_em else None
         }
-
-
-class MensagemContato(db.Model):
-    __tablename__ = 'mensagens_contato'
-
-    id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), nullable=False)
-    assunto = db.Column(db.String(30), nullable=False)
-    mensagem = db.Column(db.Text, nullable=False)
-    criado_em = db.Column(db.DateTime, default=agora_utc)
