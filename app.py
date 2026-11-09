@@ -13,11 +13,36 @@ def create_app(config_class=Config):
     app = Flask(__name__, static_folder=None)
     app.config.from_object(config_class)
 
-    if os.getenv('DATABASE_URL'):
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-        
     # Inicializa SQLAlchemy
     db.init_app(app)
+
+    # Cria tabelas automaticamente e popula dados iniciais se necessário
+    with app.app_context():
+        try:
+            from seed import inicializar_banco
+            inicializar_banco(app)
+        except Exception as e:
+            app.logger.warning(f"Aviso ao inicializar tabelas do banco: {e}")
+
+    # -------------------------------------------------------------
+    # Suporte a CORS para consumo frontend independente
+    # -------------------------------------------------------------
+    @app.after_request
+    def adicionar_cabecalhos_cors(resposta):
+        resposta.headers['Access-Control-Allow-Origin'] = '*'
+        resposta.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+        resposta.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS'
+        return resposta
+
+    @app.before_request
+    def tratar_preflight():
+        if request.method == 'OPTIONS':
+            from flask import Response
+            res = Response()
+            res.headers['Access-Control-Allow-Origin'] = '*'
+            res.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+            res.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS'
+            return res
     
     # -------------------------------------------------------------
     # Rotas de Arquivos Estáticos (mantém compatibilidade total)

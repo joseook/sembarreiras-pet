@@ -60,5 +60,48 @@ async function iniciarModulos() {
   }
 }
 
+function atualizarNavegacaoUsuario() {
+  const usuarioSalvo = localStorage.getItem('sb_usuario_atual');
+  if (!usuarioSalvo) return;
+
+  try {
+    const usuario = JSON.parse(usuarioSalvo);
+    if (!usuario || !usuario.nome) return;
+
+    const primeiroNome = usuario.nome.split(' ')[0];
+    const itensEntrar = document.querySelectorAll('.t-nav-entrar');
+
+    itensEntrar.forEach((item) => {
+      item.innerHTML = `
+        <span class="t-nav-usuario" style="font-weight: 600; margin-right: 0.5rem;">Olá, ${primeiroNome}</span>
+        <button type="button" class="t-btn-logout" style="background: none; border: none; color: inherit; cursor: pointer; text-decoration: underline; font: inherit;" aria-label="Sair da conta">Sair</button>
+      `;
+
+      const btnLogout = item.querySelector('.t-btn-logout');
+      if (btnLogout) {
+        btnLogout.addEventListener('click', async () => {
+          localStorage.removeItem('sb_usuario_atual');
+          try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+          } catch {
+            // Fallback caso backend esteja offline
+          }
+          window.location.reload();
+        });
+      }
+    });
+
+    document.querySelectorAll('a[href$="cadastro.html"].t-btn').forEach((btn) => {
+      const li = btn.closest('li');
+      if (li && !li.classList.contains('t-nav-entrar')) {
+        li.style.display = 'none';
+      }
+    });
+  } catch (e) {
+    console.warn('Erro ao ler dados do usuário:', e);
+  }
+}
+
 iniciarMenu();
+atualizarNavegacaoUsuario();
 iniciarModulos();

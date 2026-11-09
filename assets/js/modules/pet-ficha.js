@@ -7,6 +7,15 @@
  */
 import { PETS, buscarPet } from '../data/pets.js';
 
+async function carregarApiBaseUrl() {
+  try {
+    const modulo = await import(new URL('../../../config.js', import.meta.url).href);
+    return (modulo.default && modulo.default.apiBaseUrl) ? modulo.default.apiBaseUrl.replace(/\/+$/, '') : '';
+  } catch {
+    return '';
+  }
+}
+
 const STATUS_VACINA = {
   'em-dia': { texto: 'Em dia', classe: 'p-selo--ok' },
   pendente: { texto: 'Pendente', classe: 'p-selo--alerta' },
@@ -436,7 +445,8 @@ async function iniciar() {
 
   if (id) {
     try {
-      const resp = await fetch(`/api/pets/${encodeURIComponent(id)}`);
+      const apiBase = await carregarApiBaseUrl();
+      const resp = await fetch(`${apiBase}/api/pets/${encodeURIComponent(id)}`);
       if (resp.ok) {
         pet = await resp.json();
       }

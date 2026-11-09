@@ -31,6 +31,15 @@ function formatarDataHora(iso) {
   return data.toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'short' });
 }
 
+async function carregarApiBaseUrl() {
+  try {
+    const modulo = await import(new URL('../../../config.js', import.meta.url).href);
+    return (modulo.default && modulo.default.apiBaseUrl) ? modulo.default.apiBaseUrl.replace(/\/+$/, '') : '';
+  } catch {
+    return '';
+  }
+}
+
 export function initSchedulingForm(form) {
   const campos = {
     data: form.elements.namedItem('data'),
@@ -133,7 +142,8 @@ export function initSchedulingForm(form) {
         botao.textContent = 'Enviando ao abrigo...';
       }
 
-      const resposta = await fetch('/api/agendamentos', {
+      const apiBase = await carregarApiBaseUrl();
+      const resposta = await fetch(`${apiBase}/api/agendamentos`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
