@@ -27,6 +27,8 @@ class Config:
     # Compatibilidade com prefixo legado do Heroku/Render
     if raw_url and raw_url.startswith('postgres://'):
         raw_url = raw_url.replace('postgres://', 'postgresql+psycopg2://', 1)
+    elif raw_url and raw_url.startswith('postgresql://'):
+        raw_url = raw_url.replace('postgresql://', 'postgresql+psycopg2://', 1)
         
     # Se a URL aponta para localhost mas o serviço PostgreSQL não está rodando localmente,
     # usa SQLite local (sembarreiras.db) como fallback seguro para desenvolvimento/testes.
