@@ -151,7 +151,7 @@ erDiagram
 ```
 
 #### Principais Destaques dos Modelos:
-1. **`PoliticaPrivacidade` e `SecaoPrivacidade`:** Mantêm fidelidade total ao modelo que já havia sido planejado nos seus scripts `setup_db.py` e `atualizar_textos.py`, com chave estrangeira em cascata (`ondelete='CASCADE'`).
+1. **`PoliticaPrivacidade` e `SecaoPrivacidade`:** A inicialização das tabelas e da política está centralizada em `seed.py`, com chave estrangeira em cascata (`ondelete='CASCADE'`). Os scripts antigos `setup_db.py` e `atualizar_textos.py` foram removidos por redundância.
 2. **`Usuario` (Segurança):** 
    - A senha crua **nunca** é gravada no banco. O método `set_senha(senha)` gera um hash unidirecional (ex.: `pbkdf2:sha256:...`).
    - O método `check_senha(senha)` compara a senha fornecida com o hash de forma resistente a ataques de temporização (*timing attacks*).

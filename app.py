@@ -1,8 +1,9 @@
 """Servidor Flask com suporte a PostgreSQL e rotas estáticas para o Sem Barreiras Pet."""
 import os
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from flask import Flask, send_from_directory, request, jsonify, session, abort
+from sqlalchemy.exc import SQLAlchemyError
 from config import Config
 from database import db
 from models import PoliticaPrivacidade, SecaoPrivacidade, Usuario, Pet, Agendamento
@@ -13,6 +14,11 @@ def create_app(config_class=Config):
     app = Flask(__name__, static_folder=None)
     app.config.from_object(config_class)
 
+    chave = app.config.get('SECRET_KEY')
+    if not app.testing and (not isinstance(chave, str) or len(chave) < 32 or
+                            chave == 'sembarreiras-pet-chave-secreta-dev'):
+        raise RuntimeError('Configure SECRET_KEY com uma chave aleatória de pelo menos 32 caracteres.')
+
     # Inicializa SQLAlchemy
     db.init_app(app)
 
@@ -20,9 +26,17 @@ def create_app(config_class=Config):
     with app.app_context():
         try:
             from seed import inicializar_banco
-            inicializar_banco(app)
+            # Testes desativam a inicialização automática antes de importar app.
+            if app.config.get('AUTO_INIT_DB', os.getenv('SB_AUTO_INIT_DB', '1') == '1'):
+                inicializar_banco(app)
         except Exception as e:
-            app.logger.warning(f"Aviso ao inicializar tabelas do banco: {e}")
+            app.logger.warning('Falha ao inicializar tabelas (%s).', type(e).__name__)
+
+    @app.errorhandler(SQLAlchemyError)
+    def falha_banco(erro):
+        db.session.rollback()
+        app.logger.error('Falha de banco em %s (%s).', request.path, type(erro).__name__)
+        return jsonify({'erro': 'Serviço temporariamente indisponível. Tente novamente.'}), 503
 
     # -------------------------------------------------------------
     # Suporte a CORS para consumo frontend independente
@@ -32,10 +46,18 @@ def create_app(config_class=Config):
         resposta.headers['Access-Control-Allow-Origin'] = '*'
         resposta.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
         resposta.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS'
+        if request.path.startswith('/api/'):
+            resposta.headers['Cache-Control'] = 'no-store'
         return resposta
 
     @app.before_request
     def tratar_preflight():
+        if request.path.startswith('/api/') and request.method in {'POST', 'PUT', 'PATCH', 'DELETE'}:
+            origem = request.headers.get('Origin')
+            if origem and origem != request.host_url.rstrip('/'):
+                return jsonify({'erro': 'Origem não autorizada.'}), 403
+            if not request.is_json:
+                return jsonify({'erro': 'Envie os dados como JSON.'}), 415
         if request.method == 'OPTIONS':
             from flask import Response
             res = Response()
@@ -57,9 +79,12 @@ def create_app(config_class=Config):
 
     @app.route('/<path:filename>')
     def arquivo_publico(filename):
-        path = Path(filename)
-        if path.parts and (path.parts[0] in {'assets', 'pages'} or filename in {'config.js', 'privacidade.html', 'index.html'}):
+        if filename in {'config.js', 'privacidade.html', 'index.html'}:
             return send_from_directory(ROOT, filename)
+        pasta, separador, relativo = filename.partition('/')
+        if pasta in {'assets', 'pages'} and separador and '\\' not in relativo:
+            # safe_join opera dentro da pasta pública, não da raiz do projeto.
+            return send_from_directory(ROOT / pasta, relativo)
         abort(404)
 
     # -------------------------------------------------------------
@@ -77,7 +102,7 @@ def create_app(config_class=Config):
                 inspector = db.inspect(db.engine)
                 tabelas = inspector.get_table_names()
         except Exception as e:
-            erro_banco = str(e)
+            erro_banco = 'Banco temporariamente indisponível.'
 
         return jsonify({
             'status': 'online',
@@ -119,7 +144,7 @@ def create_app(config_class=Config):
 
     @app.route('/api/pets/<pet_id>', methods=['GET'])
     def obter_pet(pet_id):
-        pet = Pet.query.get(pet_id)
+        pet = db.session.get(Pet, pet_id)
         if not pet:
             return jsonify({'erro': 'Pet não encontrado'}), 404
         return jsonify(pet.to_dict())
@@ -129,13 +154,20 @@ def create_app(config_class=Config):
     # -------------------------------------------------------------
     @app.route('/api/auth/cadastro', methods=['POST'])
     def cadastrar_usuario():
-        dados = request.get_json() or request.form
+        dados = request.get_json(silent=True)
+        if not isinstance(dados, dict) or any(not isinstance(dados.get(campo, ''), str)
+                                             for campo in ('nome', 'email', 'telefone', 'senha')):
+            return jsonify({'erro': 'Confira os dados de cadastro enviados.'}), 400
         nome = (dados.get('nome') or '').strip()
         email = (dados.get('email') or '').strip().lower()
         telefone = (dados.get('telefone') or '').strip()
         senha = dados.get('senha') or ''
         tipo_moradia = dados.get('tipo_moradia') or 'casa'
-        consentimento = bool(dados.get('consentimento', True))
+        if not isinstance(tipo_moradia, str) or tipo_moradia not in {'casa', 'apartamento'}:
+            return jsonify({'erro': 'Escolha um tipo de moradia válido.'}), 400
+        if dados.get('consentimento') is not True:
+            return jsonify({'erro': 'Confirme o consentimento para criar a conta.'}), 400
+        consentimento = True
         
         if not nome or not email or not telefone or not senha:
             return jsonify({'erro': 'Todos os campos obrigatórios devem ser preenchidos.'}), 400
@@ -165,11 +197,15 @@ def create_app(config_class=Config):
             }), 201
         except Exception as e:
             db.session.rollback()
-            return jsonify({'erro': f'Erro ao salvar usuário no banco: {str(e)}'}), 500
+            app.logger.error('Falha ao cadastrar usuário (%s).', type(e).__name__)
+            return jsonify({'erro': 'Não foi possível registrar a conta. Tente novamente.'}), 500
 
     @app.route('/api/auth/login', methods=['POST'])
     def login_usuario():
-        dados = request.get_json() or request.form
+        dados = request.get_json(silent=True)
+        if not isinstance(dados, dict) or any(not isinstance(dados.get(campo, ''), str)
+                                             for campo in ('email', 'senha')):
+            return jsonify({'erro': 'Informe e-mail e senha válidos.'}), 400
         email = (dados.get('email') or '').strip().lower()
         senha = dados.get('senha') or ''
         
@@ -189,11 +225,12 @@ def create_app(config_class=Config):
     @app.route('/api/auth/me', methods=['GET'])
     def usuario_atual():
         usuario_id = session.get('usuario_id')
-        if not usuario_id:
+        if not isinstance(usuario_id, int):
+            session.clear()
             return jsonify({'autenticado': False}), 200
-        usuario = Usuario.query.get(usuario_id)
+        usuario = db.session.get(Usuario, usuario_id)
         if not usuario:
-            session.pop('usuario_id', None)
+            session.clear()
             return jsonify({'autenticado': False}), 200
         return jsonify({
             'autenticado': True,
@@ -202,7 +239,7 @@ def create_app(config_class=Config):
 
     @app.route('/api/auth/logout', methods=['POST'])
     def logout_usuario():
-        session.pop('usuario_id', None)
+        session.clear()
         return jsonify({'mensagem': 'Logout efetuado com sucesso.'})
 
     # -------------------------------------------------------------
@@ -210,20 +247,48 @@ def create_app(config_class=Config):
     # -------------------------------------------------------------
     @app.route('/api/agendamentos', methods=['POST'])
     def criar_agendamento():
-        dados = request.get_json() or request.form
+        usuario_id = session.get('usuario_id')
+        usuario = db.session.get(Usuario, usuario_id) if isinstance(usuario_id, int) else None
+        if usuario is None:
+            session.clear()
+            return jsonify({'erro': 'Entre na sua conta para solicitar uma visita.'}), 401
+
+        dados = request.get_json(silent=True)
+        if not isinstance(dados, dict):
+            return jsonify({'erro': 'Envie um objeto JSON válido.'}), 400
         data_visita_str = dados.get('data')
         horario = dados.get('horario')
         mensagem = dados.get('mensagem')
         pet_id = dados.get('pet_id')
-        usuario_id = session.get('usuario_id') or dados.get('usuario_id')
+        # A identidade fornecida pelo cliente nunca autoriza a operação.
+        usuario_id = usuario.id
+
+        if not isinstance(data_visita_str, str) or not isinstance(horario, str):
+            return jsonify({'erro': 'Data e horário devem ser textos válidos.'}), 400
+        if mensagem is not None and (not isinstance(mensagem, str) or len(mensagem) > 1000):
+            return jsonify({'erro': 'A mensagem deve conter até 1.000 caracteres.'}), 400
+        if pet_id is not None:
+            if not isinstance(pet_id, str) or len(pet_id) > 50:
+                return jsonify({'erro': 'Identificador do pet inválido.'}), 400
+            if db.session.get(Pet, pet_id) is None:
+                return jsonify({'erro': 'Pet não encontrado.'}), 404
 
         if not data_visita_str or not horario:
             return jsonify({'erro': 'Data e horário são obrigatórios para agendar a visita.'}), 400
 
         try:
             data_visita = datetime.strptime(data_visita_str, '%Y-%m-%d').date()
+            if len(data_visita_str) != 10 or len(horario) != 5:
+                raise ValueError('Formato inválido')
+            datetime.strptime(horario, '%H:%M')
         except ValueError:
             return jsonify({'erro': 'Formato de data inválido. Use AAAA-MM-DD.'}), 400
+
+        brasilia = timezone(timedelta(hours=-3))
+        momento = datetime.combine(data_visita, datetime.strptime(horario, '%H:%M').time(),
+                                   tzinfo=brasilia)
+        if momento <= datetime.now(brasilia):
+            return jsonify({'erro': 'Escolha uma data e horário futuros (horário de Brasília).'}), 400
 
         agendamento = Agendamento(
             usuario_id=usuario_id,
@@ -242,7 +307,8 @@ def create_app(config_class=Config):
             }), 201
         except Exception as e:
             db.session.rollback()
-            return jsonify({'erro': f'Erro ao salvar agendamento: {str(e)}'}), 500
+            app.logger.error('Falha ao registrar visita (%s).', type(e).__name__)
+            return jsonify({'erro': 'Não foi possível registrar a visita. Tente novamente.'}), 500
 
     # -------------------------------------------------------------
     # Comandos CLI para Terminal (Flask)

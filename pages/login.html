@@ -88,10 +88,9 @@
         <p class="auth-intro">Acesse sua jornada de adoção responsável.</p>
         <p class="auth-legenda-obrigatorio"><span class="auth-obrigatorio" aria-hidden="true">*</span> Campo obrigatório</p>
 
-        <!-- Demonstração: ainda não há autenticação. method="dialog" fora de um
+        <!-- Envio controlado pelo JavaScript. method="dialog" fora de um
              <dialog> não envia nem recarrega; o JS mostra uma mensagem honesta. -->
-        <form class="auth-form" method="dialog" aria-labelledby="titulo-login" data-auth-demo
-              data-demo-mensagem="O acesso real será disponibilizado em uma próxima etapa do projeto.">
+        <form class="auth-form" method="dialog" aria-labelledby="titulo-login" data-auth-form="login">
           <div class="field">
             <label for="email">E-mail <span class="auth-obrigatorio" aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
             <input id="email" name="email" type="email" autocomplete="email" spellcheck="false" required aria-describedby="email-ajuda">
@@ -108,7 +107,7 @@
             <div class="field-check">
               <input id="lembrar" name="lembrar" type="checkbox" aria-describedby="lembrar-ajuda">
               <label for="lembrar">Lembrar meu acesso</label>
-              <p id="lembrar-ajuda" class="field__ajuda">Opção ilustrativa: nesta fase, nada fica salvo.</p>
+              <p id="lembrar-ajuda" class="field__ajuda">Opção ilustrativa: ainda não altera a duração da sessão.</p>
             </div>
             <p class="login-recuperacao">Recuperação de senha disponível em breve.</p>
           </div>
@@ -117,7 +116,7 @@
 
           <div class="auth-status" role="status" aria-live="polite" data-form-status></div>
           <noscript>
-            <p class="field__ajuda">Demonstração: o acesso real será disponibilizado em uma próxima etapa do projeto. Nenhum dado é enviado.</p>
+            <p class="field__ajuda">Ative o JavaScript para acessar sua conta.</p>
           </noscript>
         </form>
 
