@@ -1,18 +1,20 @@
+"""Inicialização única de tabelas e dados iniciais (substitui setup_db.py)."""
 from datetime import date
 from flask import Flask
-from config import Config
 from database import db
-from models import PoliticaPrivacidade, SecaoPrivacidade, Usuario, Pet
+from models import PoliticaPrivacidade, SecaoPrivacidade, Pet
 
 def inicializar_banco(app: Flask):
+    """Cria tabelas e insere dados ausentes, preservando registros existentes."""
     with app.app_context():
-        print(f"[*] Conectando ao banco em: {app.config['SQLALCHEMY_DATABASE_URI']}")
+        print('[*] Inicializando tabelas do banco configurado.')
         
         try:
             db.create_all()
             print("[+] Tabelas criadas com sucesso (db.create_all)!")
         except Exception as e:
-            print(f"[-] Erro ao conectar/criar tabelas no banco de dados: {e}")
+            db.session.rollback()
+            print('[-] Não foi possível inicializar as tabelas. Confira a configuração do servidor.')
             print("[!] Dica: Verifique se o PostgreSQL está em execução e se o banco 'sembarreiras_db' foi criado.")
             return False
 
@@ -113,22 +115,6 @@ def inicializar_banco(app: Flask):
             print("[+] Pet Nina inserido com sucesso!")
         else:
             print("[i] Pet Nina já cadastrado.")
-
-        # 3. Cria um usuário de demonstração se não existir
-        if not Usuario.query.filter_by(email='admin@sembarreiras.pet').first():
-            print("[*] Criando usuário de demonstração/teste...")
-            usuario_demo = Usuario(
-                nome='Adotante Teste',
-                email='admin@sembarreiras.pet',
-                telefone='(11) 98765-4321',
-                tipo_moradia='casa',
-                consentimento=True
-            )
-            usuario_demo.set_senha('senha1234')
-            db.session.add(usuario_demo)
-            print("[+] Usuário demonstrativo criado: admin@sembarreiras.pet (senha: senha1234)")
-        else:
-            print("[i] Usuário demonstrativo já existente.")
 
         db.session.commit()
         print("\n=== Banco inicializado e semeado com sucesso! ===")

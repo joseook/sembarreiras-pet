@@ -1,150 +1,155 @@
-# Sem Barreiras Pet
+﻿# Sem Barreiras Pet
 
-Plataforma acadêmica de adoção responsável que aproxima pessoas interessadas em adotar de ONGs e abrigos.
-Nesta fase é um **site estático** (HTML semântico, CSS e JavaScript puro), publicado no GitHub Pages:
-não há back-end, banco de dados, API nem autenticação.
-
-## O problema
-
-ONGs e abrigos independentes enfrentam caos na triagem de adotantes, no controle de vacinas e na divulgação de animais para feiras de adoção. Ao mesmo tempo, adotantes de primeira viagem precisam de informação confiável para reduzir a ansiedade e tomar uma decisão responsável.
-
-## Oportunidade em IHC
-
-O projeto trabalha com personas de alto apelo emocional: o adotante de primeira viagem, que sente dúvidas e responsabilidade, e o voluntário sobrecarregado, que precisa organizar informações e reduzir tarefas repetitivas. Esses perfis ajudam a construir mapas de empatia ricos e uma jornada que considera descoberta, filtros, perfil do animal, pré-adoção, avaliação, aprovação e acompanhamento posterior.
-
-A página "Como funciona" responde diretamente à persona Camila Souza e à jornada em `IHC/`: explica as etapas sem pressa, deixa claro que a ONG avalia cada pedido, fala de custos e adaptação (as principais dificuldades citadas na pesquisa) e inclui, nos exemplos de pets, um animal idoso e um com deficiência, perfis que a pesquisa aponta como os mais preteridos.
-
-## Escopo da plataforma (visão completa)
-
-- Catálogo público com filtros por porte, espécie, temperamento e necessidades especiais.
-- Formulário de pré-adoção e triagem com dados pessoais, moradia e contato.
-- Painel administrativo da ONG para aprovar ou reprovar cadastros e atualizar o status da adoção.
-- Perfis de animais com informações de saúde, vacinas, comportamento e histórico.
-- Agendamento de visitas aos abrigos, com localização no mapa.
-- Orientação para adaptação e suporte pós-adoção.
+Plataforma acadêmica de adoção responsável que aproxima adotantes de ONGs e abrigos. O frontend usa HTML, CSS e JavaScript puro; o backend usa Flask, SQLAlchemy e PostgreSQL, com alternativa SQLite para desenvolvimento local.
 
 ## Estado atual
 
-| Área | Situação |
+| Área | Implementação no código local |
 | --- | --- |
-| Home (`index.html`) | Tema creme + terracota (`assets/css/tema.css`). Pets linkam para a ficha |
-| Ficha do pet (`pages/pet.html?id=nina`) | Raça, idade, vacinas, doenças atuais e passadas, exames, convivência e cuidados. Dados fictícios em `assets/js/data/pets.js` |
-| Login e cadastro (`pages/login.html`, `pages/cadastro.html`) | Cartão em duas colunas (painel institucional + formulário). Validam os campos com mensagens acessíveis e mostram um aviso de **demonstração**: não autenticam, não enviam e não salvam dados |
-| Como funciona (`pages/como-funciona.html`) | Etapas, prévia de catálogo, agendamento, FAQ |
-| Formulário de visita | **Modo prévia**: valida e confirma o preenchimento, mas não envia ao abrigo |
-| Mapa do abrigo | Desenhado só se houver chave do Google Maps em `config.js`; sem chave, mostra o endereço em texto |
-| Autenticação, catálogo real, filtros, painel da ONG, back-end | **Ainda não implementados** |
+| Início | Apresentação e quatro pets fictícios em destaque |
+| Login e cadastro | Integração com a API, senhas com hash e sessão por cookie |
+| Ficha do pet | Consulta à API; dados demonstrativos locais como alternativa de leitura |
+| Visitas | Solicitação gravada no banco, exigindo usuário autenticado; não confirma visita nem notifica o abrigo |
+| Contato | Formulário demonstrativo: valida os campos, sem enviar ou salvar mensagens |
+| Como funciona | Etapas de adoção, exemplos, FAQ e mapa opcional |
+| Privacidade | Página HTML estática; API separada para a política cadastrada no banco |
+| Catálogo | API com filtros por espécie e porte; página completa de catálogo ainda pendente |
 
-Todos os abrigos, endereços e pets de exemplo são **fictícios** e aparecem marcados como "Dados demonstrativos".
+Os pets, abrigos e endereços demonstrativos são fictícios. O banco é inicialmente preenchido com Nina; os demais exemplos das fichas estão em `assets/js/data/pets.js`.
 
 ## Estrutura
 
-```
-sembarreiras-pet/
-├── index.html                 landing page
-├── config.js                  configuração pública (chave do Google Maps, vazia por padrão)
-├── pages/                     login, cadastro, como-funciona, contato, pet
-├── assets/
-│   ├── css/
-│   │   ├── global.css         base: foco visível, skip link, .sr-only, .back-link
-│   │   ├── tema.css           tokens do tema creme + terracota, cabeçalho, botões, rodapé
-│   │   ├── auth.css           componente compartilhado de login e cadastro
-│   │   ├── components.css     base da página "Como funciona" (apelidos dos tokens do tema)
-│   │   └── home.css, login.css, cadastro.css, como-funciona.css, pet.css
-│   ├── js/
-│   │   ├── main.js            menu mobile + carrega módulos sob demanda
-│   │   ├── data/pets.js       pets fictícios da ficha
-│   │   └── modules/           auth-demo, maps, pet-ficha, scheduling-form
-│   └── img/                   fotos locais (créditos em assets/img/CREDITOS.md)
-├── IHC/                       persona, jornada e pesquisa documental
-└── inspiracoes/               referências visuais
+```text
+app.py                     aplicação Flask, arquivos públicos e rotas de API
+api/index.py               entrada serverless para o Vercel
+config.py                  configuração do backend e conexão com o banco
+config.js                  configuração pública do frontend e Google Maps
+database.py                instância compartilhada do SQLAlchemy
+models.py                  modelos e serialização dos dados
+seed.py                    criação de tabelas e inserção dos dados iniciais
+index.html                 página inicial
+privacidade.html           política apresentada no site
+pages/                     login, cadastro, contato, como funciona, quem somos e ficha
+assets/css/                estilos compartilhados e de cada página
+assets/js/main.js          navegação e carregamento dos módulos
+assets/js/data/pets.js      dados fictícios das fichas
+assets/js/modules/         API, formulários, ficha, mapas e agendamento
+tests/                     testes Python, JavaScript e navegador
+IHC/                       pesquisa documental, persona e jornada
+inspiracoes/               referências visuais
 ```
 
-Ordem dos estilos: `global.css` → `tema.css` → `<página>.css` (login e cadastro carregam `auth.css`
-antes do CSS da página; "Como funciona" carrega `components.css` antes de `tema.css`).
+`auth-demo.js` mantém o nome histórico, mas login e cadastro usam a API real. Somente o formulário de contato continua demonstrativo.
 
 ## Executar localmente
 
-Na raiz do repositório:
+Na raiz do projeto, com Python instalado:
 
-```bash
-python3 -m http.server 8000
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+Copy-Item .env.example .env
+# Preencha SECRET_KEY no .env com uma chave aleat?ria antes de continuar.
+.\.venv\Scripts\python.exe app.py
 ```
 
-Acesse `http://localhost:8000`. Abrir os arquivos com duplo clique (`file://`) mostra o conteúdo, mas os
-módulos JavaScript não carregam; use sempre um servidor estático.
+Se `.venv` ou `.env` já existirem, reutilize-os sem sobrescrever sua configuração. Acesse `http://localhost:5000`. O comando `python app.py` inicia o servidor de desenvolvimento com depuração; não deve ser usado como servidor de produção.
 
-## Publicar no GitHub Pages
+No ambiente portátil já preparado nesta pasta, o executável Python pode estar em `.venv/python.exe`, em vez de `.venv/Scripts/python.exe`.
 
-O site fica na raiz do repositório, então basta, em **Settings → Pages**, escolher a branch `main` e a pasta
-`/ (root)`. Todos os caminhos são relativos e funcionam também em `usuario.github.io/sembarreiras-pet/`.
+### Configuração do banco e da sessão
 
-## Google Maps (opcional)
+Configure no `.env`:
 
-Com a chave vazia em `config.js` (padrão), a página "Como funciona" mostra o endereço do abrigo em texto.
-Para desenhar o mapa:
+- `DATABASE_URL`: conexão PostgreSQL no formato `postgresql+psycopg2://USUARIO:SENHA@HOST:5432/BANCO`.
+- `SECRET_KEY`: valor aleatório e secreto para assinar sessões. O valor de desenvolvimento não serve para produção.
+- `SB_AUTO_INIT_DB=0`: desativa a criação automática de tabelas e dados ao carregar a aplicação. Por padrão, a inicialização está habilitada.
 
-1. No Google Cloud Console, ative a **Maps JavaScript API** e crie uma chave de navegador.
-2. Restrinja a chave por **HTTP referrer** (ex.: `http://localhost:8000/*` e o domínio do GitHub Pages) e por API.
-3. Preencha `googleMapsApiKey` em `config.js` (raiz do site).
+Para usar SQLite explicitamente em desenvolvimento, configure `DATABASE_URL=sqlite:///sembarreiras.db`. Com a configuração padrão apontando para PostgreSQL local, `config.py` usa SQLite na raiz do projeto se a porta local do PostgreSQL estiver indisponível. Isso não comprova conexão com PostgreSQL.
 
-Chaves de navegador ficam visíveis para quem acessa o site (é assim que o Google Maps funciona), por isso
-`config.js` é versionado e publicado junto com o site; a proteção está nas restrições acima. Nunca use ali
-uma chave sem restrição nem chaves de outras APIs.
+Não versione `.env` ou bancos locais. Alterar a chave de sessão invalida cookies assinados com a chave anterior.
 
-## Acessibilidade
+### Inicializar tabelas e dados
 
-O protótipo segue como meta o nível AA da WCAG 2.2 e inclui:
+A inicialização está centralizada em `seed.py` e pode ser acionada pelo Flask:
 
-- HTML semântico com `header`, `nav`, `main`, `section`, `article`, `footer`, `fieldset` e `legend`.
-- Skip link para o conteúdo principal e um único `h1` por página, com hierarquia de headings sem saltos.
-- Relação explícita entre todos os `label` e seus campos por meio de `for`/`id`.
-- Campos obrigatórios com `required` e indicação textual acessível.
-- Textos de auxílio e mensagens de erro conectados com `aria-describedby`; erros marcados com `aria-invalid`, foco no primeiro campo inválido.
-- Mensagens de envio em região `aria-live`.
-- Texto alternativo contextual para imagens informativas; ilustrações decorativas ocultas de leitores de tela.
-- Contraste de cores definido no design system; estados que não dependem só de cor (texto, ícone, borda).
-- Foco visível por `:focus-visible`, sem remover `outline`.
-- FAQ com `<details>`/`<summary>` nativos, sem JavaScript.
-- Menu e conteúdo essencial funcionam sem JavaScript (aprimoramento progressivo). Sem JS, login e cadastro
-  usam a validação nativa do navegador e não enviam nada.
-- Unidades relativas, layout responsivo sem rolagem horizontal a partir de 320 px (equivalente a 1280 px com zoom de 400%).
-- Respeito a `prefers-reduced-motion`.
+```powershell
+$env:SB_AUTO_INIT_DB = '0'
+python -m flask --app app init-db
+```
 
-## Limitações atuais e próximos passos
+Use o Python do seu ambiente virtual. Também existe a entrada `python seed.py`. A variável acima evita a inicialização automática antes da execução explícita.
 
-- Sem back-end: login, cadastro e solicitação de visita apenas validam os campos e mostram um aviso honesto
-  de demonstração. Não há recuperação de senha, "lembrar acesso" real, login social nem política de privacidade publicada.
-- Sem catálogo real: "Encontrar um pet" aponta temporariamente para `index.html#pets-destaque`
-  (procure por `TEMPORÁRIO` nos HTML) até existir `pages/catalogo.html`.
-- O abrigo da página "Como funciona" está fixo no HTML (demonstração).
-- As fotos são do Unsplash (licença livre, salvas no repositório; créditos em `assets/img/CREDITOS.md`) e
-  devem ser trocadas por fotos enviadas pelas ONGs quando o catálogo real existir.
-- O painel "Acompanhe seu pedido" (etapa 4) é um exemplo estático.
+A rotina cria as tabelas ausentes e insere uma política de privacidade com seis seções, o pet Nina e uma conta demonstrativa quando esses registros não existem. Repetir a rotina preserva os registros existentes. `db.create_all()` não migra a estrutura de tabelas já criadas.
 
-Próximos passos sugeridos: back-end com autenticação, política de privacidade, catálogo com filtros e
-painel da ONG para confirmar visitas.
+`setup_db.py` e `atualizar_textos.py` foram removidos: suas funções de criação de tabelas e inserção inicial da política já estão em `seed.py`. A antiga operação que apagava e substituía todas as seções não foi mantida; revisões de políticas existentes exigem atualização deliberada dos dados.
+
+## API
+
+| Método | Rota | Função |
+| --- | --- | --- |
+| GET | `/api/status` | Diagnóstico de conexão com o banco |
+| GET | `/api/privacidade` | Política ativa e suas seções |
+| GET | `/api/pets` | Pets cadastrados; aceita `especie` e `porte` |
+| GET | `/api/pets/<id>` | Ficha de um pet cadastrado |
+| POST | `/api/auth/cadastro` | Cadastro e início da sessão |
+| POST | `/api/auth/login` | Autenticação |
+| GET | `/api/auth/me` | Consulta da sessão |
+| POST | `/api/auth/logout` | Encerramento da sessão no navegador |
+| POST | `/api/agendamentos` | Solicitação de visita vinculada ao usuário autenticado |
+
+As operações POST recebem JSON. Prefira servir frontend e API na mesma origem, mantendo `apiBaseUrl` vazio em `config.js`; a validação de origem atual bloqueia operações de escrita provenientes de outra origem.
+
+## Prévia estática
+
+```powershell
+python -m http.server 8000
+```
+
+Acesse `http://localhost:8000`. Essa opção permite visualizar as páginas, mas não executa a API: cadastro, login e gravação de visitas dependem do Flask. Evite abrir os HTML por `file://`, pois os módulos JavaScript precisam de um servidor HTTP.
+
+## Implantação
+
+O repositório inclui `vercel.json` e `api/index.py` para encaminhar `/api/*` ao Flask, além de um `Procfile` com `gunicorn app:app` para ambientes compatíveis. GitHub Pages serve apenas a parte estática.
+
+Antes de publicar, configure o banco e a chave de sessão no ambiente de hospedagem, revise a criação automática da conta demonstrativa e valide sessão e persistência. A implementação atual ainda possui chave padrão de desenvolvimento e cria uma conta com credencial fixa no seed; esses pontos precisam ser tratados para produção.
+
+Esta documentação descreve o código local. Não confirma o funcionamento da implantação remota.
+
+## Google Maps opcional
+
+Preencha `googleMapsApiKey` em `config.js` para habilitar o mapa. Sem chave, a página mostra o endereço em texto. Use uma chave de navegador restrita ao domínio e à Maps JavaScript API; nunca coloque segredos de servidor nesse arquivo público.
+
+## Validação
+
+```powershell
+python -m unittest discover -s tests
+node --test tests/pet-data.test.mjs
+```
+
+Os testes Python usam SQLite em memória, com inicialização automática desativada antes de importar a aplicação. Os cenários de navegador estão em `tests/browser_security.cjs` e exigem o ambiente Playwright descrito no próprio script.
+
+## Acessibilidade e pesquisa
+
+O frontend tem como meta WCAG 2.2 AA e inclui HTML semântico, links para pular ao conteúdo, campos com rótulos, mensagens de erro acessíveis, foco visível e tratamento de movimento reduzido. Esses recursos não equivalem a uma certificação de conformidade.
+
+A persona Camila Souza, a jornada e a pesquisa em `IHC/` orientam as etapas de adoção e os conteúdos sobre custos e adaptação. As referências visuais estão em `inspiracoes/`; o projeto também consultou exemplos do Mobbin. Os créditos das fotos locais estão em `assets/img/CREDITOS.md`.
+
+## Limitações e próximos passos
+
+- Implementar catálogo completo e painel da ONG para avaliar solicitações.
+- Implementar recuperação de senha, notificações e acompanhamento real da adoção.
+- Contato e painel de acompanhamento ainda são demonstrações.
+- Revisar os textos da política no banco: há descrições de recursos planejados que ainda não estão implementados, como exclusão pelo perfil e notificações por e-mail.
+- Preparar autenticação e inicialização para produção e validar o backend remoto.
+- Substituir dados e fotos demonstrativos por registros autorizados das ONGs.
 
 ## Autoria das telas
 
-| Arquivo | Responsável |
+| Arquivo ou área | Responsável |
 | --- | --- |
-| `assets/css/global.css` | José Paulo (design system base) |
-| `pages/login.html` / `login.css` | José Paulo |
-| `pages/cadastro.html` / `cadastro.css` | Ana Clara |
-| `index.html` / `home.css` (antigo `index.css`) | Lucas |
-| `IHC/` | Persona, jornada e pesquisa documental (jornada e pesquisa levantadas por Victor Seixas) |
-
-## Referências de pesquisa
-
-As decisões de fluxo foram comparadas com referências do Mobbin para telas de login, cadastro e seções com imagens de pets. A identidade visual, o conteúdo e a estrutura foram adaptados às inspirações locais do projeto (`inspiracoes/`) e às regras de acessibilidade, sem copiar interfaces literalmente.
-
-## Organização das páginas
-
-Login e cadastro têm uma única versão, em `pages/`, com estilos em `assets/css/`. As versões antigas da raiz e seus estilos exclusivos foram removidos; os campos de cadastro foram preservados na versão integrada.
-
-`privacidade.html` funciona diretamente no site estático, sem Flask ou PostgreSQL, e descreve o protótipo atual. Seu estilo está em `assets/css/privacidade.css`.
-
-`app.py` é um servidor Flask opcional para os mesmos arquivos (requer Flask instalado). Para uso normal, prefira o servidor estático acima. Os scripts `setup_db.py` e `atualizar_textos.py` são experimentos antigos de PostgreSQL, preservados como trabalho único; não são usados pelo site e não devem ser executados para publicá-lo.
-
-Validação dos caminhos locais: `python -m unittest discover -s tests`.
+| `assets/css/global.css` | José Paulo |
+| Login | José Paulo |
+| Cadastro | Ana Clara |
+| Início | Lucas |
+| `IHC/` | Pesquisa e jornada levantadas por Victor Seixas |

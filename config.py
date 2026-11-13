@@ -17,7 +17,7 @@ def _is_local_postgres_available(host="localhost", port=5432, timeout=0.3):
         return False
 
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY', 'sembarreiras-pet-chave-secreta-dev')
+    SECRET_KEY = os.getenv('SECRET_KEY', '')
     
     raw_url = os.getenv(
         'DATABASE_URL',

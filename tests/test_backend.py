@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 
@@ -7,6 +8,10 @@ if str(ROOT) not in sys.path:
 
 import unittest
 from datetime import date
+# Definido antes do import: a aplicação global também fica isolada do banco real.
+os.environ['DATABASE_URL'] = 'sqlite:///:memory:'
+os.environ['SB_AUTO_INIT_DB'] = '0'
+os.environ['SECRET_KEY'] = 'chave-aleatoria-exclusiva-dos-testes-123456'
 from app import create_app
 
 from database import db
@@ -31,7 +36,25 @@ class BackendIntegrationTest(unittest.TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+        db.engine.dispose()
         self.app_context.pop()
+
+    def test_seed_repetido_preserva_dados_existentes(self):
+        politica = PoliticaPrivacidade.query.first()
+        secao = SecaoPrivacidade.query.filter_by(politica_id=politica.id, ordem=1).one()
+        secao.conteudo = 'Texto revisado pela equipe.'
+        nina = db.session.get(Pet, 'nina')
+        nina.resumo = 'Resumo revisado pela equipe.'
+        db.session.commit()
+        contagens = [modelo.query.count() for modelo in
+                     (PoliticaPrivacidade, SecaoPrivacidade, Usuario, Pet)]
+
+        self.assertTrue(inicializar_banco(self.app))
+
+        self.assertEqual(contagens, [modelo.query.count() for modelo in
+                         (PoliticaPrivacidade, SecaoPrivacidade, Usuario, Pet)])
+        self.assertEqual(secao.conteudo, 'Texto revisado pela equipe.')
+        self.assertEqual(nina.resumo, 'Resumo revisado pela equipe.')
 
     def test_status_endpoint(self):
         response = self.client.get('/api/status')
@@ -63,7 +86,7 @@ class BackendIntegrationTest(unittest.TestCase):
             'email': 'joao@exemplo.com',
             'telefone': '(11) 99999-8888',
             'senha': 'senhaSuperSegura123',
-            'tipo_moradia': 'casa'
+            'tipo_moradia': 'casa', 'consentimento': True
         })
         self.assertEqual(resp_cad.status_code, 201)
 
@@ -82,6 +105,11 @@ class BackendIntegrationTest(unittest.TestCase):
         self.assertEqual(resp_fail.status_code, 401)
 
     def test_agendamento_endpoint(self):
+        self.client.post('/api/auth/cadastro', json={
+            'nome': 'Pessoa Teste', 'email': 'visita@example.test',
+            'telefone': '(11) 91234-5678', 'senha': 'CredencialFicticia123!',
+            'tipo_moradia': 'casa', 'consentimento': True,
+        })
         response = self.client.post('/api/agendamentos', json={
             'pet_id': 'nina',
             'data': '2026-12-01',

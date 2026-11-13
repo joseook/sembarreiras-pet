@@ -86,10 +86,9 @@
         <p class="auth-intro">Leva poucos minutos. Você poderá completar outras informações depois.</p>
         <p class="auth-legenda-obrigatorio"><span class="auth-obrigatorio" aria-hidden="true">*</span> Campo obrigatório</p>
 
-        <!-- Demonstração: ainda não há back-end. method="dialog" fora de um
+        <!-- Envio controlado pelo JavaScript. method="dialog" fora de um
              <dialog> não envia nem recarrega; o JS mostra uma mensagem honesta. -->
-        <form class="auth-form" method="dialog" aria-labelledby="titulo-cadastro" data-auth-demo
-              data-demo-mensagem="O cadastro real será disponibilizado em uma próxima etapa do projeto.">
+        <form class="auth-form" method="dialog" aria-labelledby="titulo-cadastro" data-auth-form="cadastro">
           <div class="field">
             <label for="nome">Nome completo <span class="auth-obrigatorio" aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>
             <input id="nome" name="nome" type="text" autocomplete="name" required
@@ -152,7 +151,7 @@
 
           <div class="auth-status" role="status" aria-live="polite" data-form-status></div>
           <noscript>
-            <p class="field__ajuda">Demonstração: o cadastro real será disponibilizado em uma próxima etapa do projeto. Nenhum dado é enviado.</p>
+            <p class="field__ajuda">Ative o JavaScript para criar sua conta.</p>
           </noscript>
         </form>
 
@@ -167,7 +166,7 @@
     <p>&copy; 2026 Sem Barreiras Pet. Projeto acadêmico de IHC.</p>
     <p id="politica-privacidade" tabindex="-1">
       <a href="../privacidade.html">Privacidade no protótipo</a>:
-      nesta fase, nenhum dado digitado é enviado ou salvo.
+      o cadastro utiliza a API para registrar sua conta; a senha é armazenada como hash no servidor.
     </p>
   </footer>
 </body>
