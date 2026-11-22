@@ -1,0 +1,27 @@
+.pets-filtros { margin-top: 1.5rem; }
+.pets-grade { grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+.pet-cartao { display: flex; flex-direction: column; gap: .7rem; }
+.pet-cartao > img { width: 100%; height: 13rem; object-fit: cover; border-radius: .6rem; }
+.pet-cartao .agenda-acoes { margin-top: auto; }
+.pet-editor { width: min(95vw, 52rem); max-height: 90vh; padding: 1.5rem; border: 1px solid var(--t-borda); border-radius: 1rem; background: var(--t-papel); color: var(--t-tinta); overflow-y: auto; }
+.pet-editor::backdrop { background: rgb(42 33 28 / 65%); }
+.pet-editor-cabecalho h2 { min-width: 0; overflow-wrap: anywhere; }
+.pet-editor-cabecalho, .pet-editor-rodape { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-block: .3rem 1rem; }
+.pet-editor h3 { margin-top: 1.5rem; margin-bottom: .7rem; }
+.pet-editor fieldset { border: 0; margin: 1.5rem 0; padding: 0; min-width: 0; }
+.pet-editor legend { font-weight: 700; margin-bottom: 1rem; }
+.pet-campos { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+.pet-campo { min-width: 0; margin-bottom: 1rem; }
+.pet-campo label { display: block; margin-bottom: .35rem; font-weight: 600; }
+.pet-campo input, .pet-campo textarea, .pet-campo select { width: 100%; padding: .65rem; border: 1px solid var(--t-suave); border-radius: .4rem; background: white; color: var(--t-tinta); font: inherit; }
+.pet-campo textarea { resize: vertical; }
+.pet-ajuda { font-size: .9rem; color: var(--t-suave); margin-block: .4rem; }
+.pet-erro, .pet-erros { color: var(--t-erro); font-weight: 600; }
+.pet-erros { padding: 1rem; background: var(--t-erro-claro); border-radius: .5rem; margin-top: 1rem; }
+.pet-editor [aria-invalid="true"] { border: 2px solid var(--t-erro); }
+.pet-editor button:not(.t-btn), #painel button:not(.t-btn) { padding: .6rem 1rem; border: 1px solid var(--t-borda); border-radius: .5rem; background: var(--t-papel); color: var(--t-tinta); font: inherit; cursor: pointer; }
+#painel button.pet-excluir { color: var(--t-erro); border-color: var(--t-erro); }
+.pet-foto { border: 1px solid var(--t-borda); border-radius: .6rem; margin-block: .8rem; padding: 1rem; }
+.pet-foto img { width: 8rem; height: 6rem; object-fit: cover; border-radius: .4rem; margin-bottom: .6rem; }
+.pet-editor-rodape { position: sticky; bottom: -1.5rem; padding-block: 1rem; margin-bottom: -1.5rem; background: var(--t-papel); border-top: 1px solid var(--t-borda); }
+@media(max-width: 540px) { .pet-campos { grid-template-columns: 1fr; } .pet-editor { padding: 1rem; } .pet-editor-cabecalho h2 { font-size: 1.5rem; } .pet-editor-rodape { bottom: -1rem; margin-bottom: -1rem; } .agenda-header nav { flex-wrap: wrap; } }

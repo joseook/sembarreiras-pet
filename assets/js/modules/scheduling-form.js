@@ -1,43 +1,26 @@
-/**
- * Formulário "Solicitar visita" — Sem Barreiras Pet
- * Integração com API REST e Fallback gracioso.
- *
- * Se a API estiver ativa, registra o agendamento no banco de dados.
- * Se estiver no Vercel (modo estático), exibe a confirmação amigável de prévia.
- */
+import { requestApi } from './api.js';
+import { linkAcesso } from './destino.js';
 
 const LIMITE_MENSAGEM = 1000;
 
 function hojeLocalISO() {
   const agora = new Date();
-  const local = new Date(agora.getTime() - agora.getTimezoneOffset() * 60000);
+  const local = new Date(agora.getTime() - 3 * 60 * 60000);
   return local.toISOString().slice(0, 10);
 }
 
-/** Monta "AAAA-MM-DDTHH:MM:00-03:00" com o fuso do navegador. */
+/** Todas as visitas usam o horário de Brasília, independentemente do navegador. */
 function montarDataHora(data, horario) {
-  const momento = new Date(`${data}T${horario}:00`);
-  const offsetMin = -momento.getTimezoneOffset();
-  const sinal = offsetMin >= 0 ? '+' : '-';
-  const abs = Math.abs(offsetMin);
-  const hh = String(Math.floor(abs / 60)).padStart(2, '0');
-  const mm = String(abs % 60).padStart(2, '0');
-  return { momento, iso: `${data}T${horario}:00${sinal}${hh}:${mm}` };
+  const iso = `${data}T${horario}:00-03:00`;
+  return { momento: new Date(iso), iso };
 }
 
 function formatarDataHora(iso) {
   const data = new Date(iso);
   if (Number.isNaN(data.getTime())) return iso;
-  return data.toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'short' });
-}
-
-async function carregarApiBaseUrl() {
-  try {
-    const modulo = await import(new URL('../../../config.js', import.meta.url).href);
-    return (modulo.default && modulo.default.apiBaseUrl) ? modulo.default.apiBaseUrl.replace(/\/+$/, '') : '';
-  } catch {
-    return '';
-  }
+  return data.toLocaleString('pt-BR', {
+    dateStyle: 'full', timeStyle: 'short', timeZone: 'America/Sao_Paulo',
+  }) + ' (horário de Brasília)';
 }
 
 export function initSchedulingForm(form) {
@@ -50,6 +33,27 @@ export function initSchedulingForm(form) {
 
   form.noValidate = true;
   campos.data.min = hojeLocalISO();
+  const petId = new URLSearchParams(window.location.search).get('pet_id') || null;
+  let petNome = '';
+  const selecao = document.querySelector('[data-pet-selecionado]');
+  const chaveRascunho = 'sb_visita_rascunho:' + (petId || 'geral');
+  try {
+    const rascunho = JSON.parse(sessionStorage.getItem(chaveRascunho) || 'null');
+    if (rascunho && Date.now() - rascunho.salvoEm < 30 * 60000) {
+      for (const nome of Object.keys(campos)) if (typeof rascunho[nome] === 'string') campos[nome].value = rascunho[nome];
+    }
+    sessionStorage.removeItem(chaveRascunho);
+  } catch { /* Armazenamento opcional; o formulário continua utilizável. */ }
+  function salvarRascunho() {
+    try {
+      sessionStorage.setItem(chaveRascunho, JSON.stringify({ salvoEm: Date.now(),
+        ...Object.fromEntries(Object.entries(campos).map(([nome, campo]) => [nome, campo.value])) }));
+    } catch { /* Sem armazenamento disponível. */ }
+  }
+  document.addEventListener('click', evento => {
+    const link = evento.target.closest('a');
+    if (link && /\/(login|cadastro)\.html/.test(new URL(link.href).pathname)) salvarRascunho();
+  });
 
   function definirErro(nome, mensagem) {
     const campo = campos[nome];
@@ -88,6 +92,7 @@ export function initSchedulingForm(form) {
 
     if (!data) erros.data = 'Escolha a data da visita.';
     else if (data < hojeLocalISO()) erros.data = 'Escolha uma data a partir de hoje.';
+    else if ([0, 1].includes(new Date(data + 'T12:00:00-03:00').getUTCDay())) erros.data = 'O abrigo recebe visitas de terça a sábado.';
 
     if (!horario) erros.horario = 'Escolha um horário para a visita.';
 
@@ -119,6 +124,7 @@ export function initSchedulingForm(form) {
 
   form.addEventListener('submit', async (evento) => {
     evento.preventDefault();
+    if (form.querySelector('button[type="submit"]').disabled) return;
     limparErros();
 
     const erros = validar();
@@ -142,43 +148,33 @@ export function initSchedulingForm(form) {
         botao.textContent = 'Enviando ao abrigo...';
       }
 
-      const apiBase = await carregarApiBaseUrl();
-      const resposta = await fetch(`${apiBase}/api/agendamentos`, {
+      const resultado = await requestApi('/api/agendamentos', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
+        body: {
           data: campos.data.value,
           horario: campos.horario.value,
           mensagem: campos.mensagem.value.trim() || null,
-        }),
+          pet_id: new URLSearchParams(window.location.search).get('pet_id') || null,
+        },
       });
-
-      const resultado = await resposta.json().catch(() => null);
-
-      if (resposta.ok && resultado) {
-        mostrarStatus('sucesso', [
-          `Solicitação gravada com sucesso no banco de dados para ${formatarDataHora(iso)}!`,
-          'O abrigo parceiro já tem acesso ao seu agendamento para análise e confirmação.',
-        ]);
-        form.reset();
-        return;
-      }
-
-      if (resultado && resultado.erro) {
-        mostrarStatus('erro', [resultado.erro]);
-        return;
-      }
-
-      throw new Error('API_INDISPONIVEL');
-    } catch (err) {
-      console.info('API de agendamentos indisponível no ambiente atual, usando modo prévia:', err.message);
-      mostrarStatus('info', [
-        `Tudo certo com o preenchimento: visita em ${formatarDataHora(iso)}.`,
-        'Como esta é uma prévia do protótipo, a solicitação não foi enviada ao abrigo.',
+      if (!resultado.agendamento) throw new Error('Não foi possível confirmar o registro da visita.');
+      const nome = resultado.agendamento.pet_nome || petNome;
+      mostrarStatus('sucesso', [
+        'Solicitação registrada' + (nome ? ' para conhecer ' + nome : '') + ' em ' + formatarDataHora(iso) + '.',
+        'Aguarde a confirmação da gerência antes de ir à clínica. Consulte o retorno em Minhas visitas.',
       ]);
+      form.reset();
+      try { sessionStorage.removeItem(chaveRascunho); } catch { /* Opcional. */ }
+      const acompanhar = document.createElement('a');
+      acompanhar.href = 'minhas-visitas.html'; acompanhar.textContent = 'Acompanhar minhas visitas';
+      status.append(acompanhar);
+    } catch (erro) {
+      mostrarStatus('erro', [erro.message]);
+      if (erro.status === 401) {
+        const acesso = document.createElement('a');
+        acesso.href = linkAcesso(); acesso.textContent = 'Entrar e continuar esta solicitação';
+        status.append(acesso);
+      }
     } finally {
       if (botao) {
         botao.disabled = false;
@@ -186,4 +182,33 @@ export function initSchedulingForm(form) {
       }
     }
   });
+  if (petId) {
+    const botao = form.querySelector('button[type="submit"]');
+    botao.disabled = true;
+    requestApi('/api/pets/' + encodeURIComponent(petId)).then(pet => {
+      if (pet.status !== 'disponivel') throw new Error('Este pet não está disponível para visitas.');
+      petNome = pet.nome;
+      if (selecao) {
+        document.querySelectorAll('[data-pet-nome]').forEach(elemento => { elemento.textContent = pet.nome; });
+        document.title = `Visita para conhecer ${pet.nome} | Sem Barreiras Pet`;
+        const ficha = selecao.querySelector('[data-pet-ficha]');
+        ficha.href = 'pet.html?id=' + encodeURIComponent(pet.id); ficha.hidden = false;
+        const foto = selecao.querySelector('img');
+        if (pet.fotos?.[0]?.src) {
+          foto.src = pet.fotos[0].src; foto.alt = pet.fotos[0].alt || `Foto de ${pet.nome}`; foto.hidden = false;
+          foto.addEventListener('error', () => { foto.hidden = true; }, { once: true });
+        }
+        const resumo = selecao.querySelector('[data-pet-resumo]');
+        resumo.textContent = [pet.especie, pet.raca, pet.idade].filter(Boolean).join(' · ');
+      }
+      botao.disabled = false;
+    }).catch(erro => {
+      if (selecao) selecao.querySelector('[data-pet-resumo]').textContent = 'Não foi possível selecionar este pet. Volte à página inicial para escolher outro.';
+      mostrarStatus('erro', [erro.status === 404 ? 'Este pet não está cadastrado para visitas. Escolha um pet disponível no início.' : erro.message]);
+    });
+  } else if (selecao) {
+    selecao.querySelector('[data-pet-resumo]').textContent = 'Selecione um animal na página inicial.';
+    form.querySelector('button[type="submit"]').disabled = true;
+    mostrarStatus('erro', ['Escolha um pet na página inicial para agendar uma visita.']);
+  }
 }

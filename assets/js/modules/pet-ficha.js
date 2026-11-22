@@ -5,7 +5,7 @@
  * Tudo é criado com createElement + textContent (nunca innerHTML com dados),
  * então um texto vindo de API no futuro não consegue injetar HTML.
  */
-import { PETS, buscarPet } from '../data/pets.js';
+import { normalizarPet } from './pet-data.js';
 
 async function carregarApiBaseUrl() {
   try {
@@ -20,12 +20,14 @@ const STATUS_VACINA = {
   'em-dia': { texto: 'Em dia', classe: 'p-selo--ok' },
   pendente: { texto: 'Pendente', classe: 'p-selo--alerta' },
   'nao-se-aplica': { texto: 'Não indicada', classe: 'p-selo--neutro' },
+  'nao-informado': { texto: 'Não informado', classe: 'p-selo--neutro' },
 };
 
 const CONVIVENCIA = {
   sim: { texto: 'Convive bem', classe: 'p-conv--sim', simbolo: '✓' },
   nao: { texto: 'Não recomendado', classe: 'p-conv--nao', simbolo: '✕' },
   'nao-testado': { texto: 'Ainda não testado', classe: 'p-conv--talvez', simbolo: '?' },
+  'nao-informado': { texto: 'Não informado', classe: 'p-conv--talvez', simbolo: '?' },
 };
 
 /** Cria um elemento com classe e texto (opcionais). */
@@ -43,12 +45,13 @@ function anexar(pai, ...filhos) {
 
 /** "2026-03-12" -> "12/03/2026" */
 function formatarData(iso) {
-  if (!iso) return '—';
+  if (typeof iso !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return '—';
   const [ano, mes, dia] = iso.split('-');
   return `${dia}/${mes}/${ano}`;
 }
 
 function sim(valor) {
+  if (typeof valor !== 'boolean') return 'Não informado';
   return valor ? 'Sim' : 'Não';
 }
 
@@ -67,6 +70,7 @@ function montarGaleria(pet) {
   const galeria = el('div', 'p-galeria');
   galeria.setAttribute('role', 'group');
   galeria.setAttribute('aria-label', `Fotos de ${pet.nome}`);
+  if (!pet.fotos.length) return anexar(galeria, el('p', 'p-aviso', 'Foto não cadastrada.'));
 
   const principal = el('div', 'p-foto-principal');
   const img = document.createElement('img');
@@ -79,7 +83,7 @@ function montarGaleria(pet) {
   function mostrar(indice) {
     const foto = pet.fotos[indice];
     img.src = foto.src;
-    img.alt = foto.alt;
+    img.alt = typeof foto.alt === 'string' ? foto.alt : `Foto de ${pet.nome}`;
     miniaturas.querySelectorAll('button').forEach((botao, i) => {
       botao.setAttribute('aria-pressed', String(i === indice));
     });
@@ -117,15 +121,20 @@ function montarCartaoAcao(pet) {
   const vacinasPendentes = pet.vacinas.filter((v) => v.status === 'pendente').length;
   const resumo = el('ul', 'p-cartao-resumo');
   [
-    pet.castrado ? 'Castração feita' : 'Castração a fazer (abrigo cobre)',
-    vacinasPendentes === 0 ? 'Vacinas em dia' : `${vacinasPendentes} vacina(s) pendente(s)`,
-    pet.doencasAtuais.length === 0 ? 'Sem doença atual' : 'Tem condição de saúde: veja os detalhes',
+    pet.castrado === null ? 'Castração não informada' : pet.castrado ? 'Castração feita' : 'Castração a fazer',
+    !pet.informado.vacinas || !pet.vacinas.length ? 'Vacinação não informada' :
+      vacinasPendentes > 0 ? `${vacinasPendentes} vacina(s) pendente(s)` :
+      pet.vacinas.every(v => ['em-dia', 'nao-se-aplica'].includes(v.status)) ? 'Vacinas em dia' : 'Situação vacinal não informada',
+    !pet.informado.doencasAtuais ? 'Condição de saúde não informada' :
+      pet.doencasAtuais.length === 0 ? 'Sem doença atual' : 'Tem condição de saúde: veja os detalhes',
   ].forEach((texto) => resumo.append(el('li', null, texto)));
 
-  const agendar = el('a', 't-btn t-btn--terracota', 'Agendar visita');
-  agendar.href = 'como-funciona.html#etapa-visita';
+  const disponivel = pet.status === 'disponivel';
+  const agendar = disponivel ? el('a', 't-btn t-btn--terracota', 'Agendar visita')
+    : el('p', 'p-aviso', 'Este pet não está disponível para novas visitas.');
+  if (disponivel) agendar.href = `agendar-visita.html?pet_id=${encodeURIComponent(pet.id)}`;
 
-  const conta = el('a', 't-btn t-btn--contorno', 'Criar conta para adotar');
+  const conta = el('a', 't-btn t-btn--cadastro', 'Criar conta para adotar');
   conta.href = 'cadastro.html';
 
   const nota = el(
@@ -220,7 +229,7 @@ function montarVacinas(pet) {
 
   const corpo = el('tbody');
   pet.vacinas.forEach((vacina) => {
-    const info = STATUS_VACINA[vacina.status];
+    const info = STATUS_VACINA[vacina.status] || STATUS_VACINA['nao-informado'];
     const linha = el('tr');
     const nome = el('th', null, vacina.nome);
     nome.scope = 'row';
@@ -257,7 +266,9 @@ function montarVacinas(pet) {
 function montarDoencas(pet) {
   const atuais = el('div', 'p-bloco');
   atuais.append(el('h3', 'p-sub', 'Condição de saúde atual'));
-  if (pet.doencasAtuais.length === 0) {
+  if (!pet.informado.doencasAtuais) {
+    atuais.append(el('p', 'p-texto', 'Condição de saúde atual não informada. Confirme com o abrigo.'));
+  } else if (pet.doencasAtuais.length === 0) {
     const ok = el('p', 'p-aviso p-aviso--ok', `Nenhuma doença diagnosticada no momento. ${pet.alergias === 'Nenhuma conhecida.' ? 'Sem alergias conhecidas.' : ''}`.trim());
     atuais.append(ok);
   } else {
@@ -280,7 +291,9 @@ function montarDoencas(pet) {
 
   const passadas = el('div', 'p-bloco');
   passadas.append(el('h3', 'p-sub', 'Histórico de doenças'));
-  if (pet.doencasPassadas.length === 0) {
+  if (!pet.informado.doencasPassadas) {
+    passadas.append(el('p', 'p-texto', 'Histórico de doenças não informado.'));
+  } else if (pet.doencasPassadas.length === 0) {
     passadas.append(el('p', 'p-texto', 'Nenhuma doença anterior registrada.'));
   } else {
     const lista = el('ul', 'p-historico');
@@ -341,15 +354,15 @@ function montarCuidados(pet) {
 function montarAbrigo(pet) {
   const aviso = el('p', 'p-aviso p-aviso--info');
   aviso.append(
-    'Dados de exemplo. Antes da adoção, o abrigo entrega a carteira de vacinação e os laudos originais. ',
+    'Para informações sobre a visita e os cuidados do animal, ',
     (() => {
-      const link = el('a', null, 'Veja o passo a passo da adoção');
-      link.href = 'como-funciona.html';
+      const link = el('a', null, 'entre em contato com a equipe');
+      link.href = 'contato.html';
       return link;
     })(),
     '.',
   );
-  return secao('abrigo', 'Abrigo responsável', el('p', 'p-texto', `${pet.nome} está no ${pet.abrigo}.`), aviso);
+  return secao('abrigo', 'Contato da equipe', aviso);
 }
 
 /* ---------------- Página ---------------- */
@@ -421,17 +434,10 @@ function montarNaoEncontrado(container) {
   anexar(
     caixa,
     el('h1', 'p-aviso-titulo', 'Não encontramos esse animal'),
-    el('p', null, 'O endereço pode estar incorreto ou o pet já foi adotado. Escolha um dos animais abaixo:'),
+    el('p', null, 'O endereço pode estar incorreto ou o cadastro não está mais disponível.'),
   );
-  const lista = el('ul', 'p-tags');
-  PETS.forEach((pet) => {
-    const li = el('li');
-    const a = el('a', 't-btn t-btn--contorno t-btn--pequeno', pet.nome);
-    a.href = `pet.html?id=${encodeURIComponent(pet.id)}`;
-    li.append(a);
-    lista.append(li);
-  });
-  caixa.append(lista);
+  const catalogo = el('a', 't-btn t-btn--contorno', 'Ver pets disponíveis');
+  catalogo.href = 'catalogo.html'; caixa.append(catalogo);
   container.append(caixa);
   document.title = 'Animal não encontrado - Sem Barreiras Pet';
 }
@@ -444,19 +450,11 @@ async function iniciar() {
   let pet = null;
 
   if (id) {
-    try {
-      const apiBase = await carregarApiBaseUrl();
-      const resp = await fetch(`${apiBase}/api/pets/${encodeURIComponent(id)}`);
-      if (resp.ok) {
-        pet = await resp.json();
-      }
-    } catch (_) {
-      // Ignora erro de rede e usa fallback estático local
-    }
-
-    if (!pet) {
-      pet = buscarPet(id);
-    }
+    const apiBase = await carregarApiBaseUrl();
+    const resp = await fetch(`${apiBase}/api/pets/${encodeURIComponent(id)}`, { cache: 'no-store', signal: AbortSignal.timeout(15000) });
+    if (resp.status === 404 || resp.status === 410) { montarNaoEncontrado(container); return; }
+    if (!resp.ok) throw new Error('Consulta indisponível');
+    pet = await resp.json();
   }
 
   if (!pet) {
@@ -464,8 +462,17 @@ async function iniciar() {
     return;
   }
 
+  pet = normalizarPet(pet);
   container.replaceChildren(montarFicha(pet));
   document.title = `${pet.nome}, ${pet.raca} - Sem Barreiras Pet`;
 }
 
-iniciar();
+iniciar().catch(() => {
+  const container = document.querySelector('[data-ficha]');
+  if (!container) return;
+  const aviso = el('div', 'p-aviso p-aviso--erro');
+  aviso.setAttribute('role', 'alert');
+  anexar(aviso, el('h1', 'p-aviso-titulo', 'Não foi possível carregar a ficha'),
+    el('p', null, 'Os dados recebidos são inválidos ou o serviço está indisponível. Tente novamente.'));
+  container.replaceChildren(aviso);
+});

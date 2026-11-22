@@ -1,3 +1,6 @@
+import { currentSession, requestApi } from './modules/api.js';
+import { linkAcesso } from './modules/destino.js';
+
 /**
  * Sem Barreiras Pet — main.js
  * Ponto de entrada compartilhado pelas páginas públicas.
@@ -60,48 +63,64 @@ async function iniciarModulos() {
   }
 }
 
-function atualizarNavegacaoUsuario() {
-  const usuarioSalvo = localStorage.getItem('sb_usuario_atual');
-  if (!usuarioSalvo) return;
+async function atualizarNavegacaoUsuario() {
+  document.querySelectorAll('.t-nav-entrar a').forEach(link => { link.href = new URL('../../pages/' + linkAcesso(), import.meta.url).href; });
+  let sessao;
+  try { sessao = await currentSession(); } catch { return; }
+  if (sessao.autenticado !== true || typeof sessao.usuario?.nome !== 'string') return;
 
-  try {
-    const usuario = JSON.parse(usuarioSalvo);
-    if (!usuario || !usuario.nome) return;
-
-    const primeiroNome = usuario.nome.split(' ')[0];
-    const itensEntrar = document.querySelectorAll('.t-nav-entrar');
-
-    itensEntrar.forEach((item) => {
-      item.innerHTML = `
-        <span class="t-nav-usuario" style="font-weight: 600; margin-right: 0.5rem;">Olá, ${primeiroNome}</span>
-        <button type="button" class="t-btn-logout" style="background: none; border: none; color: inherit; cursor: pointer; text-decoration: underline; font: inherit;" aria-label="Sair da conta">Sair</button>
-      `;
-
-      const btnLogout = item.querySelector('.t-btn-logout');
-      if (btnLogout) {
-        btnLogout.addEventListener('click', async () => {
-          localStorage.removeItem('sb_usuario_atual');
-          try {
-            await fetch('/api/auth/logout', { method: 'POST' });
-          } catch {
-            // Fallback caso backend esteja offline
-          }
-          window.location.reload();
-        });
+  const nome = sessao.usuario.nome.trim().split(/\s+/)[0];
+  document.querySelectorAll('.t-nav-entrar').forEach(item => {
+    const saudacao = document.createElement('span');
+    saudacao.className = 't-nav-usuario';
+    saudacao.textContent = 'Olá, ' + nome;
+    saudacao.style.fontWeight = '600';
+    saudacao.style.marginRight = '0.5rem';
+    const botao = document.createElement('button');
+    botao.type = 'button';
+    botao.className = 't-btn-logout';
+    botao.textContent = 'Sair';
+    botao.setAttribute('aria-label', 'Sair da conta');
+    Object.assign(botao.style, {
+      background: 'none', border: 'none', color: 'inherit', cursor: 'pointer',
+      textDecoration: 'underline', font: 'inherit',
+    });
+    const status = document.createElement('span');
+    status.setAttribute('role', 'alert');
+    item.replaceChildren(saudacao, botao, status);
+    const visitas = document.createElement('a');
+    visitas.href = new URL('../../pages/minhas-visitas.html', import.meta.url).href;
+    visitas.textContent = 'Minhas visitas';
+    visitas.style.marginRight = '1rem';
+    item.prepend(visitas);
+    if (sessao.usuario.gerente) {
+      const agenda = document.createElement('a');
+      agenda.href = new URL('../../pages/gerencia.html', import.meta.url).href;
+      agenda.textContent = 'Agenda da clínica';
+      agenda.style.marginRight = '1rem';
+      item.prepend(agenda);
+    }
+    botao.addEventListener('click', async () => {
+      if (botao.disabled) return;
+      botao.disabled = true;
+      status.textContent = '';
+      try {
+        await requestApi('/api/auth/logout', { method: 'POST', body: {} });
+        if ((await currentSession()).autenticado) throw new Error('A sessão continua ativa.');
+        window.location.reload();
+      } catch (erro) {
+        status.textContent = ' Não foi possível sair. ' + erro.message;
+        botao.disabled = false;
       }
     });
-
-    document.querySelectorAll('a[href$="cadastro.html"].t-btn').forEach((btn) => {
-      const li = btn.closest('li');
-      if (li && !li.classList.contains('t-nav-entrar')) {
-        li.style.display = 'none';
-      }
-    });
-  } catch (e) {
-    console.warn('Erro ao ler dados do usuário:', e);
-  }
+  });
+  document.querySelectorAll('a[href$="cadastro.html"].t-btn').forEach(botao => {
+    const item = botao.closest('li');
+    if (item && !item.classList.contains('t-nav-entrar')) item.style.display = 'none';
+  });
 }
 
 iniciarMenu();
 atualizarNavegacaoUsuario();
 iniciarModulos();
+if (document.querySelector('.h-pets-grade')) import('./modules/catalogo.js');

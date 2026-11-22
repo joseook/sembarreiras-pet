@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow"><title>Alterar senha | Sem Barreiras Pet</title>
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/css/global.css"><link rel="stylesheet" href="../assets/css/tema.css">
+  <link rel="stylesheet" href="../assets/css/auth.css">
+  <script type="module" src="../assets/js/modules/alterar-senha.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para alteração de senha</a>
+  <main id="conteudo" class="t-container" style="max-width:36rem;padding-block:3rem">
+    <a class="t-marca" href="../index.html">♥ Sem Barreiras Pet</a>
+    <h1 style="margin-block:2rem 1rem">Defina sua nova senha</h1>
+    <p>Troque a senha temporária antes de acessar a agenda. A nova senha deve ter entre 8 e 128 caracteres.</p>
+    <form id="form-senha" class="auth-form" style="margin-top:1.5rem">
+      <div class="field"><label for="senha-atual">Senha atual ou temporária</label><input id="senha-atual" name="senha_atual" type="password" autocomplete="current-password" required maxlength="128"></div>
+      <div class="field"><label for="nova-senha">Nova senha</label><input id="nova-senha" name="nova_senha" type="password" autocomplete="new-password" required minlength="8" maxlength="128"></div>
+      <div class="field"><label for="confirmacao">Repita a nova senha</label><input id="confirmacao" name="confirmacao" type="password" autocomplete="new-password" required minlength="8" maxlength="128"></div>
+      <button type="submit" class="t-btn t-btn--terracota">Salvar nova senha</button>
+    </form>
+    <p id="status" role="status" aria-live="polite" style="margin-top:1rem"></p>
+    <p style="margin-top:1.5rem"><a href="login.html">Voltar ao login</a></p>
+  </main>
+</body>
+</html>

@@ -1,4 +1,4 @@
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timezone, timedelta
 import json
 from database import db
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -67,11 +67,25 @@ class Usuario(db.Model):
     
     agendamentos = db.relationship('Agendamento', backref='usuario', lazy=True)
     
-    def set_senha(self, senha: str):
-        self.senha_hash = generate_password_hash(senha)
+    @property
+    def senha_temporaria(self):
+        return self.senha_hash.startswith('temporaria$')
+
+    def set_senha(self, senha: str, temporaria=False):
+        valor = generate_password_hash(senha)
+        if temporaria:
+            expira = int((agora_utc() + timedelta(hours=48)).timestamp())
+            valor = f'temporaria${expira}${valor}'
+        self.senha_hash = valor
         
     def check_senha(self, senha: str) -> bool:
-        return check_password_hash(self.senha_hash, senha)
+        valor = self.senha_hash
+        if self.senha_temporaria:
+            partes = valor.split('$', 2)
+            if len(partes) != 3 or not partes[1].isdigit() or int(partes[1]) <= agora_utc().timestamp():
+                return False
+            valor = partes[2]
+        return check_password_hash(valor, senha)
         
     def to_dict(self):
         return {
@@ -80,6 +94,7 @@ class Usuario(db.Model):
             'email': self.email,
             'telefone': self.telefone,
             'tipo_moradia': self.tipo_moradia,
+            'trocar_senha': self.senha_temporaria,
             'criado_em': self.criado_em.isoformat() if self.criado_em else None
         }
 
@@ -117,6 +132,7 @@ class Pet(db.Model):
     criado_em = db.Column(db.DateTime, default=agora_utc)
     
     agendamentos = db.relationship('Agendamento', backref='pet', lazy=True)
+    midia = db.relationship('PetMidia', uselist=False, cascade='all, delete-orphan')
     
     def to_dict(self):
         return {
@@ -136,14 +152,16 @@ class Pet(db.Model):
             'rotina': self.rotina,
             'apartamento': self.apartamento,
             'temperamento': self.temperamento or [],
-            'vacinas': self.vacinas or [],
-            'doencasPassadas': self.doencas_passadas or [],
-            'doencasAtuais': self.doencas_atuais or [],
-            'exames': self.exames or [],
+            # Ausência de registro não significa vacinação em dia ou ausência de doença.
+            'vacinas': self.vacinas,
+            'doencasPassadas': self.doencas_passadas,
+            'doencasAtuais': self.doencas_atuais,
+            'exames': self.exames,
             'vermifugo': self.vermifugo,
             'antiparasitario': self.antiparasitario,
             'alergias': self.alergias,
-            'status': self.status
+            'status': self.status,
+            'fotos': self.midia.fotos if self.midia else []
         }
 
 
@@ -164,9 +182,45 @@ class Agendamento(db.Model):
             'id': self.id,
             'usuario_id': self.usuario_id,
             'pet_id': self.pet_id,
+            'pet_nome': self.pet.nome if self.pet else None,
             'data_visita': self.data_visita.isoformat() if self.data_visita else None,
             'horario': self.horario,
             'mensagem': self.mensagem,
             'status': self.status,
             'criado_em': self.criado_em.isoformat() if self.criado_em else None
         }
+
+
+class SessaoUsuario(db.Model):
+    __tablename__ = 'sessoes_usuarios'
+    token_hash = db.Column(db.String(64), primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id', ondelete='CASCADE'), nullable=False, index=True)
+    expira_em = db.Column(db.DateTime, nullable=False, index=True)
+
+
+class TentativaAcesso(db.Model):
+    __tablename__ = 'tentativas_acesso'
+    id = db.Column(db.Integer, primary_key=True)
+    chave = db.Column(db.String(64), nullable=False, index=True)
+    criado_em = db.Column(db.DateTime, nullable=False, default=agora_utc, index=True)
+
+
+class PetMidia(db.Model):
+    __tablename__ = 'pet_midias'
+    pet_id = db.Column(db.String(50), db.ForeignKey('pets.id', ondelete='CASCADE'), primary_key=True)
+    fotos = db.Column(db.JSON, nullable=False, default=list)
+
+
+class MensagemContato(db.Model):
+    __tablename__ = 'mensagens_contato'
+    id = db.Column(db.String(32), primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(254), nullable=False)
+    assunto = db.Column(db.String(30), nullable=False)
+    mensagem = db.Column(db.Text, nullable=False)
+    criado_em = db.Column(db.DateTime, nullable=False, default=agora_utc)
+
+    def to_dict(self):
+        return {'protocolo': self.id, 'nome': self.nome, 'email': self.email,
+                'assunto': self.assunto, 'mensagem': self.mensagem,
+                'criado_em': self.criado_em.isoformat()}

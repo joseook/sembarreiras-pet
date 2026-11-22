@@ -1,150 +1,243 @@
-# Sem Barreiras Pet
+﻿# Sem Barreiras Pet
 
-Plataforma acadêmica de adoção responsável que aproxima pessoas interessadas em adotar de ONGs e abrigos.
-Nesta fase é um **site estático** (HTML semântico, CSS e JavaScript puro), publicado no GitHub Pages:
-não há back-end, banco de dados, API nem autenticação.
-
-## O problema
-
-ONGs e abrigos independentes enfrentam caos na triagem de adotantes, no controle de vacinas e na divulgação de animais para feiras de adoção. Ao mesmo tempo, adotantes de primeira viagem precisam de informação confiável para reduzir a ansiedade e tomar uma decisão responsável.
-
-## Oportunidade em IHC
-
-O projeto trabalha com personas de alto apelo emocional: o adotante de primeira viagem, que sente dúvidas e responsabilidade, e o voluntário sobrecarregado, que precisa organizar informações e reduzir tarefas repetitivas. Esses perfis ajudam a construir mapas de empatia ricos e uma jornada que considera descoberta, filtros, perfil do animal, pré-adoção, avaliação, aprovação e acompanhamento posterior.
-
-A página "Como funciona" responde diretamente à persona Camila Souza e à jornada em `IHC/`: explica as etapas sem pressa, deixa claro que a ONG avalia cada pedido, fala de custos e adaptação (as principais dificuldades citadas na pesquisa) e inclui, nos exemplos de pets, um animal idoso e um com deficiência, perfis que a pesquisa aponta como os mais preteridos.
-
-## Escopo da plataforma (visão completa)
-
-- Catálogo público com filtros por porte, espécie, temperamento e necessidades especiais.
-- Formulário de pré-adoção e triagem com dados pessoais, moradia e contato.
-- Painel administrativo da ONG para aprovar ou reprovar cadastros e atualizar o status da adoção.
-- Perfis de animais com informações de saúde, vacinas, comportamento e histórico.
-- Agendamento de visitas aos abrigos, com localização no mapa.
-- Orientação para adaptação e suporte pós-adoção.
+Plataforma acadêmica de adoção responsável que aproxima adotantes de ONGs e abrigos. O frontend usa HTML, CSS e JavaScript puro; o backend usa Flask, SQLAlchemy e PostgreSQL, com alternativa SQLite para desenvolvimento local.
 
 ## Estado atual
 
-| Área | Situação |
+| Área | Implementação no código local |
 | --- | --- |
-| Home (`index.html`) | Tema creme + terracota (`assets/css/tema.css`). Pets linkam para a ficha |
-| Ficha do pet (`pages/pet.html?id=nina`) | Raça, idade, vacinas, doenças atuais e passadas, exames, convivência e cuidados. Dados fictícios em `assets/js/data/pets.js` |
-| Login e cadastro (`pages/login.html`, `pages/cadastro.html`) | Cartão em duas colunas (painel institucional + formulário). Validam os campos com mensagens acessíveis e mostram um aviso de **demonstração**: não autenticam, não enviam e não salvam dados |
-| Como funciona (`pages/como-funciona.html`) | Etapas, prévia de catálogo, agendamento, FAQ |
-| Formulário de visita | **Modo prévia**: valida e confirma o preenchimento, mas não envia ao abrigo |
-| Mapa do abrigo | Desenhado só se houver chave do Google Maps em `config.js`; sem chave, mostra o endereço em texto |
-| Autenticação, catálogo real, filtros, painel da ONG, back-end | **Ainda não implementados** |
+| Início | Pets disponíveis consultados na API, com busca e atalhos às funções reais |
+| Login e cadastro | Senhas com hash, sessões revogáveis de até oito horas e limite persistente de tentativas |
+| Ficha do pet | Consulta somente registros da API; cadastro ausente ou falha mostra mensagem explícita |
+| Visitas | Solicitação, acompanhamento pelo adotante, confirmação pela gerência, cancelamento e remarcação |
+| Contato | Mensagens gravadas com protocolo e consulta restrita à gerência |
+| Navegação | Acesso direto ao catálogo, ficha e agendamento; página antiga redireciona sem tutorial |
+| Privacidade | HTML e API descrevem os fluxos reais; versões antigas no banco são preservadas |
+| Catálogo | Página própria e busca por nome/raça, espécie e porte, também disponível no início |
+| Gerência de pets | CRUD completo: cadastro, consulta, edição, exclusão física, arquivamento e reativação |
 
-Todos os abrigos, endereços e pets de exemplo são **fictícios** e aparecem marcados como "Dados demonstrativos".
+O seed acadêmico insere Nina com dados fictícios, quando ausente. `assets/js/data/pets.json` é fonte dos dados de seed e testes; as páginas exibem somente pets cadastrados no banco. Não há ficha local simulada quando a API falha ou o pet não existe.
 
 ## Estrutura
 
-```
-sembarreiras-pet/
-├── index.html                 landing page
-├── config.js                  configuração pública (chave do Google Maps, vazia por padrão)
-├── pages/                     login, cadastro, como-funciona, contato, pet
-├── assets/
-│   ├── css/
-│   │   ├── global.css         base: foco visível, skip link, .sr-only, .back-link
-│   │   ├── tema.css           tokens do tema creme + terracota, cabeçalho, botões, rodapé
-│   │   ├── auth.css           componente compartilhado de login e cadastro
-│   │   ├── components.css     base da página "Como funciona" (apelidos dos tokens do tema)
-│   │   └── home.css, login.css, cadastro.css, como-funciona.css, pet.css
-│   ├── js/
-│   │   ├── main.js            menu mobile + carrega módulos sob demanda
-│   │   ├── data/pets.js       pets fictícios da ficha
-│   │   └── modules/           auth-demo, maps, pet-ficha, scheduling-form
-│   └── img/                   fotos locais (créditos em assets/img/CREDITOS.md)
-├── IHC/                       persona, jornada e pesquisa documental
-└── inspiracoes/               referências visuais
+```text
+app.py                     aplicação Flask, arquivos públicos e rotas de API
+api/index.py               entrada serverless para o Vercel
+config.py                  configuração do backend e conexão com o banco
+config.js                  configuração pública do frontend e Google Maps
+database.py                instância compartilhada do SQLAlchemy
+models.py                  modelos e serialização dos dados
+seed.py                    criação de tabelas e inserção dos dados iniciais
+seguranca.py               sessões revogáveis e limite persistente de tentativas
+regras.py                  validação de contatos, disponibilidade e atendimento
+preparacao.py              preparação aditiva e proteção das tabelas de suporte
+politica.py                texto atual e publicação de nova versão da política
+index.html                 página inicial
+privacidade.html           política apresentada no site
+pages/                     páginas públicas, minhas-visitas.html e gerencia.html
+assets/css/                estilos compartilhados e de cada página
+assets/js/main.js          navegação e carregamento dos módulos
+assets/js/data/pets.json    dados fictícios compartilhados; pets.js exporta a consulta
+assets/js/modules/         API, formulários, ficha, mapas e agendamento
+tests/                     testes Python, JavaScript e navegador
+IHC/                       pesquisa documental, persona e jornada
+inspiracoes/               referências visuais
 ```
 
-Ordem dos estilos: `global.css` → `tema.css` → `<página>.css` (login e cadastro carregam `auth.css`
-antes do CSS da página; "Como funciona" carrega `components.css` antes de `tema.css`).
+`auth-demo.js` mantém o nome histórico, mas login, cadastro e contato usam a API real.
 
 ## Executar localmente
 
-Na raiz do repositório:
+Na raiz do projeto, com Python instalado:
 
-```bash
-python3 -m http.server 8000
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+Copy-Item .env.example .env
+# Preencha SECRET_KEY no .env com uma chave aleat?ria antes de continuar.
+.\.venv\Scripts\python.exe -m flask --app app init-db
+.\.venv\Scripts\python.exe app.py
 ```
 
-Acesse `http://localhost:8000`. Abrir os arquivos com duplo clique (`file://`) mostra o conteúdo, mas os
-módulos JavaScript não carregam; use sempre um servidor estático.
+Se `.venv` ou `.env` já existirem, reutilize-os sem sobrescrever sua configuração. Acesse `http://localhost:5000`. O comando `python app.py` inicia o servidor de desenvolvimento com depuração; não deve ser usado como servidor de produção.
 
-## Publicar no GitHub Pages
+No ambiente portátil já preparado nesta pasta, o executável Python pode estar em `.venv/python.exe`, em vez de `.venv/Scripts/python.exe`.
 
-O site fica na raiz do repositório, então basta, em **Settings → Pages**, escolher a branch `main` e a pasta
-`/ (root)`. Todos os caminhos são relativos e funcionam também em `usuario.github.io/sembarreiras-pet/`.
+### Configuração do banco e da sessão
 
-## Google Maps (opcional)
+Configure no `.env`:
 
-Com a chave vazia em `config.js` (padrão), a página "Como funciona" mostra o endereço do abrigo em texto.
-Para desenhar o mapa:
+- `DATABASE_URL`: conexão PostgreSQL no formato `postgresql+psycopg2://USUARIO:SENHA@HOST:5432/BANCO`.
+- `SECRET_KEY`: chave aleatória estável de pelo menos 32 caracteres; não existe chave pública padrão.
+- `SB_AUTO_INIT_DB=0`: valor padrão; tabelas e dados não são criados ao carregar a aplicação. Use os comandos explícitos de preparação.
+- `FLASK_ENV=production`: ativa cookies Secure para HTTPS; na Vercel, `VERCEL=1` também os ativa. Cookies são HttpOnly e SameSite=Lax.
 
-1. No Google Cloud Console, ative a **Maps JavaScript API** e crie uma chave de navegador.
-2. Restrinja a chave por **HTTP referrer** (ex.: `http://localhost:8000/*` e o domínio do GitHub Pages) e por API.
-3. Preencha `googleMapsApiKey` em `config.js` (raiz do site).
+Para usar SQLite explicitamente em desenvolvimento, configure `DATABASE_URL=sqlite:///sembarreiras.db`. Com a configuração padrão apontando para PostgreSQL local, `config.py` usa SQLite na raiz do projeto se a porta local do PostgreSQL estiver indisponível. Isso não comprova conexão com PostgreSQL.
 
-Chaves de navegador ficam visíveis para quem acessa o site (é assim que o Google Maps funciona), por isso
-`config.js` é versionado e publicado junto com o site; a proteção está nas restrições acima. Nunca use ali
-uma chave sem restrição nem chaves de outras APIs.
+Não versione `.env` ou bancos locais. Alterar a chave invalida cookies assinados com a chave anterior. Sessões são verificadas no banco a cada requisição protegida; sair e tentar outro login revogam a sessão atual e suas cópias. Cookies antigos que continham somente usuario_id deixam de autorizar acesso. O limite é de dez tentativas por identificador e 60 por IP/ação em 15 minutos, incluindo tentativas bem-sucedidas; os identificadores são protegidos por HMAC. PostgreSQL usa locks transacionais para serializar a reserva das tentativas. JSON tem limite de 32 KiB.
 
-## Acessibilidade
+### Inicializar tabelas e dados
 
-O protótipo segue como meta o nível AA da WCAG 2.2 e inclui:
+A inicialização está centralizada em `seed.py` e pode ser acionada pelo Flask:
 
-- HTML semântico com `header`, `nav`, `main`, `section`, `article`, `footer`, `fieldset` e `legend`.
-- Skip link para o conteúdo principal e um único `h1` por página, com hierarquia de headings sem saltos.
-- Relação explícita entre todos os `label` e seus campos por meio de `for`/`id`.
-- Campos obrigatórios com `required` e indicação textual acessível.
-- Textos de auxílio e mensagens de erro conectados com `aria-describedby`; erros marcados com `aria-invalid`, foco no primeiro campo inválido.
-- Mensagens de envio em região `aria-live`.
-- Texto alternativo contextual para imagens informativas; ilustrações decorativas ocultas de leitores de tela.
-- Contraste de cores definido no design system; estados que não dependem só de cor (texto, ícone, borda).
-- Foco visível por `:focus-visible`, sem remover `outline`.
-- FAQ com `<details>`/`<summary>` nativos, sem JavaScript.
-- Menu e conteúdo essencial funcionam sem JavaScript (aprimoramento progressivo). Sem JS, login e cadastro
-  usam a validação nativa do navegador e não enviam nada.
-- Unidades relativas, layout responsivo sem rolagem horizontal a partir de 320 px (equivalente a 1280 px com zoom de 400%).
-- Respeito a `prefers-reduced-motion`.
+```powershell
+$env:SB_AUTO_INIT_DB = '0'
+python -m flask --app app init-db
+```
 
-## Limitações atuais e próximos passos
+Use o Python do seu ambiente virtual. Também existe a entrada `python seed.py`. A variável acima evita a inicialização automática antes da execução explícita.
 
-- Sem back-end: login, cadastro e solicitação de visita apenas validam os campos e mostram um aviso honesto
-  de demonstração. Não há recuperação de senha, "lembrar acesso" real, login social nem política de privacidade publicada.
-- Sem catálogo real: "Encontrar um pet" aponta temporariamente para `index.html#pets-destaque`
-  (procure por `TEMPORÁRIO` nos HTML) até existir `pages/catalogo.html`.
-- O abrigo da página "Como funciona" está fixo no HTML (demonstração).
-- As fotos são do Unsplash (licença livre, salvas no repositório; créditos em `assets/img/CREDITOS.md`) e
-  devem ser trocadas por fotos enviadas pelas ONGs quando o catálogo real existir.
-- O painel "Acompanhe seu pedido" (etapa 4) é um exemplo estático.
+A rotina cria tabelas ausentes e insere a política atual e Nina com fotos demonstrativas quando ausentes. Não cria contas nem troca credenciais. Repetir preserva registros existentes. `db.create_all()` não altera colunas de tabelas já criadas.
 
-Próximos passos sugeridos: back-end com autenticação, política de privacidade, catálogo com filtros e
-painel da ONG para confirmar visitas.
+Para um banco existente, use `python -m flask --app app prepare-db`: acrescenta as tabelas `sessoes_usuarios`, `tentativas_acesso`, `pet_midias` e `mensagens_contato`, além da versão 2026.11 da política. Não apaga nem altera usuários, visitas, pets ou políticas anteriores. As quatro tabelas novas usam RLS no PostgreSQL e têm acesso direto revogado para os papéis Supabase `anon` e `authenticated`, quando presentes; o backend precisa conectar com um papel proprietário/BYPASSRLS. Não use a chave pública do Supabase no lugar das credenciais de servidor.
+
+Para associar as imagens locais aos exemplos antigos reconhecidos, execute deliberadamente `python -m flask --app app importar-fotos-exemplo` após preparar o banco. Mídias existentes são preservadas. Fotos reais devem ser cadastradas em `pet_midias`; a API lê essas fotos sem preencher dados clínicos ausentes com exemplos.
+
+Confira o plano de preparação e as validações em `CORRECOES_2026-11-17.md` antes de aplicar no ambiente compartilhado.
+
+`setup_db.py` e `atualizar_textos.py` foram removidos: suas funções de criação de tabelas e inserção inicial da política já estão em `seed.py`. A antiga operação que apagava e substituía todas as seções não foi mantida; revisões de políticas existentes exigem atualização deliberada dos dados.
+
+## API
+
+### Agenda dos gerentes
+
+O painel em `pages/gerencia.html` permite consultar solicitações por status e data, ver
+pet e contato do solicitante e confirmar visitas pendentes. Exibe 25 registros por
+página, com horários de Brasília. A confirmação atualiza `agendamentos.status` para
+`confirmado`; não envia e-mail ou mensagem automaticamente. Horários passados e
+solicitações canceladas não podem ser confirmados.
+
+O acesso usa o login existente e uma lista de IDs autorizados **no servidor**:
+
+```dotenv
+GERENTES_IDS=12,34
+```
+
+Os números acima são exemplos. Primeiro cadastre as contas normalmente e confira os
+IDs reais no banco (`SELECT id, email FROM usuarios`). Configure somente os IDs das
+pessoas autorizadas no `.env` local e nas variáveis da hospedagem; reinicie a aplicação
+após alterar. Lista vazia bloqueia todos. Não coloque essa configuração em `config.js`.
+O cadastro público não pode conceder permissão de gerente. O login de uma conta
+autorizada abre o painel, e a navegação passa a mostrar “Agenda da clínica”.
+
+Senhas administrativas temporárias são hashes com marcador de expiração de 48 horas
+no campo existente, sem coluna nova. O login exige troca em `pages/alterar-senha.html`
+antes de liberar consultas/alterações da agenda. `POST /api/auth/senha` exige senha
+atual, nova senha e confirmação; a troca revoga todas as sessões anteriores da conta.
+Senhas e IDs reais ficam somente no ambiente; não são incluídos na documentação.
+
+Esta versão atende uma única clínica e exige as tabelas de suporte descritas acima.
+Instalações com várias clínicas precisam de vínculos e isolamento por unidade antes
+de compartilhar o painel. Não há bloqueio de capacidade por horário: duas solicitações
+podem ser confirmadas no mesmo horário, conforme avaliação do gerente.
+
+Rotas protegidas: `GET /api/gerencia/agendamentos` (filtros `status`, `data`, `pagina`)
+e `POST /api/gerencia/agendamentos/<id>/confirmar` (corpo JSON `{}`).
+
+Verificação do painel: `python -m unittest discover -s tests` e
+`node tests/browser_gerencia.cjs` (requer Playwright; `PYTHON_EXE` e
+`PLAYWRIGHT_MODULE` permitem reutilizar instalações existentes). O teste de navegador
+cria dados fictícios em SQLite em memória, sem usar o Supabase.
+
+| Método | Rota | Função |
+| --- | --- | --- |
+| GET | `/api/status` | Diagnóstico de conexão com o banco |
+| GET | `/api/privacidade` | Política ativa e suas seções |
+| GET | `/api/pets` | Pets cadastrados; aceita `especie` e `porte` |
+| GET | `/api/pets/<id>` | Ficha de um pet cadastrado |
+| POST | `/api/auth/cadastro` | Cadastro e início da sessão |
+| POST | `/api/auth/login` | Autenticação |
+| GET | `/api/auth/me` | Consulta da sessão |
+| POST | `/api/auth/logout` | Encerramento da sessão no navegador |
+| POST | `/api/agendamentos` | Solicitação de visita vinculada ao usuário autenticado |
+| GET | `/api/agendamentos` | Somente as visitas da conta atual, com paginação |
+| POST | `/api/agendamentos/<id>/cancelar` | Cancelamento pelo dono ou gerente |
+| POST | `/api/agendamentos/<id>/remarcar` | Nova data/horário; volta a pendente |
+| POST | `/api/contato` | Registro da mensagem com protocolo |
+| GET | `/api/gerencia/contatos` | Consulta de mensagens por gerente |
+| GET / POST | `/api/gerencia/pets` | Listagem com busca/filtro/paginação e criação de pets |
+| GET / PUT / DELETE | `/api/gerencia/pets/<id>` | Consulta, edição e exclusão física do pet |
+
+O gerente acessa o CRUD pelo link **Gerenciar pets** da agenda, em
+`pages/gerencia-pets.html`. O formulário inclui identificação, características,
+história, cuidados e até seis fotos por endereço. Dados clínicos estruturados já
+existentes são preservados. Fotos possuem descrição e prévia; não há serviço de
+upload de arquivos. A busca pública na página inicial filtra nome/raça, espécie e porte.
+
+Pets sem visitas podem ser excluídos fisicamente, junto de sua mídia. Quando há
+histórico, o DELETE retorna uma orientação para arquivar; o histórico e seus vínculos
+são preservados. Arquivados saem da consulta pública e podem ser reativados.
+Antes de retirar a disponibilidade, visitas pendentes/confirmadas a partir de hoje
+precisam ser resolvidas. O CRUD usa as tabelas já preparadas, sem migração adicional.
+
+Visitas são aceitas de terça a sábado, entre 09:00 e 15:00, exceto 12:00–13:00, no horário de Brasília. O formulário sugere horas inteiras; a API aceita minutos dentro da faixa. Pets precisam estar disponíveis tanto na solicitação quanto na confirmação/remarcação. Repetir uma solicitação ativa para a mesma conta, pet e horário devolve o registro existente. A remarcação exige nova confirmação. Usuários só consultam/alteram suas próprias visitas; gerentes autorizados gerenciam a agenda. A interface Minhas visitas verifica atualizações a cada 30 segundos enquanto visível. Notificações ficam no sistema; não há envio automático externo.
+
+O botão **Agendar visita** da ficha abre diretamente
+`pages/agendar-visita.html?pet_id=<id>`, com nome e foto do animal, sem passar pelo
+tutorial. O pet e o preenchimento são preservados ao entrar na conta. A solicitação
+e a confirmação da gerência mencionam o nome do pet; o retorno aparece em Minhas
+visitas. QR Code não faz parte do fluxo.
+
+As operações POST recebem JSON. Prefira servir frontend e API na mesma origem, mantendo `apiBaseUrl` vazio em `config.js`; a validação de origem atual bloqueia operações de escrita provenientes de outra origem.
+
+## Prévia estática
+
+```powershell
+python -m http.server 8000
+```
+
+Acesse `http://localhost:8000`. Essa opção permite visualizar as páginas, mas não executa a API: cadastro, login e gravação de visitas dependem do Flask. Evite abrir os HTML por `file://`, pois os módulos JavaScript precisam de um servidor HTTP.
+
+## Implantação
+
+O repositório inclui `vercel.json` e `api/index.py` para encaminhar `/api/*` ao Flask, além de um `Procfile` com `gunicorn app:app` para ambientes compatíveis. GitHub Pages serve apenas a parte estática.
+
+Antes de publicar, prepare as tabelas de suporte, configure SECRET_KEY e DATABASE_URL, defina GERENTES_IDS e valide sessão e persistência na hospedagem. Não use o servidor de depuração em produção. Use HTTPS. O colega responsável pela hospedagem deve validar a integração após a preparação; esta entrega não publica mudanças automaticamente.
+
+Esta documentação descreve o código local. Não confirma o funcionamento da implantação remota.
+
+## Fluxo direto
+
+Tutoriais, painéis ilustrativos, formulário de visita duplicado e mapa fictício
+foram retirados da navegação. `pages/catalogo.html` consulta o banco e usa os mesmos
+filtros da página inicial. O endereço antigo `pages/como-funciona.html` redireciona
+ao catálogo, ou ao formulário direto quando recebe `pet_id`. Mensagens de validação
+e ajuda dos campos permanecem para orientar o preenchimento real.
+
+## Validação
+
+Para a apresentação de IHC e WEB I, consulte `ENTREGA_ACADEMICA.md` e
+`IHC/Checklist-validacao.md`. A suíte inclui o CRUD completo, exclusão com/sem
+histórico, busca, correção de erros, navegação por teclado e telas pequenas.
+
+```powershell
+python -m unittest discover -s tests
+node --test tests/pet-data.test.mjs
+```
+
+Os testes Python usam SQLite em memória, com inicialização automática desativada antes de importar a aplicação. Os cenários de navegador estão em `tests/browser_security.cjs` e exigem o ambiente Playwright descrito no próprio script.
+
+## Acessibilidade e pesquisa
+
+O frontend tem como meta WCAG 2.2 AA e inclui HTML semântico, links para pular ao conteúdo, campos com rótulos, mensagens de erro acessíveis, foco visível e tratamento de movimento reduzido. Esses recursos não equivalem a uma certificação de conformidade.
+
+A persona Camila Souza, a jornada e a pesquisa em `IHC/` orientam as etapas de adoção e os conteúdos sobre custos e adaptação. As referências visuais estão em `inspiracoes/`; o projeto também consultou exemplos do Mobbin. Os créditos das fotos locais estão em `assets/img/CREDITOS.md`.
+
+## Limitações e próximos passos
+
+- Recuperação de senha e acompanhamento da adoção após as visitas continuam fora desta versão.
+- Envio de e-mail/SMS/WhatsApp requer escolha e configuração de um provedor; a confirmação já aparece em Minhas visitas.
+- Capacidade simultânea por horário e feriados precisam ser definidos pela clínica; não se presume capacidade de uma visita.
+- Várias clínicas exigem isolamento por unidade.
+- Definir contas gerentes e validar o backend remoto antes de publicar.
+- Substituir dados e fotos demonstrativos por registros autorizados das ONGs.
 
 ## Autoria das telas
 
-| Arquivo | Responsável |
+| Arquivo ou área | Responsável |
 | --- | --- |
-| `assets/css/global.css` | José Paulo (design system base) |
-| `pages/login.html` / `login.css` | José Paulo |
-| `pages/cadastro.html` / `cadastro.css` | Ana Clara |
-| `index.html` / `home.css` (antigo `index.css`) | Lucas |
-| `IHC/` | Persona, jornada e pesquisa documental (jornada e pesquisa levantadas por Victor Seixas) |
-
-## Referências de pesquisa
-
-As decisões de fluxo foram comparadas com referências do Mobbin para telas de login, cadastro e seções com imagens de pets. A identidade visual, o conteúdo e a estrutura foram adaptados às inspirações locais do projeto (`inspiracoes/`) e às regras de acessibilidade, sem copiar interfaces literalmente.
-
-## Organização das páginas
-
-Login e cadastro têm uma única versão, em `pages/`, com estilos em `assets/css/`. As versões antigas da raiz e seus estilos exclusivos foram removidos; os campos de cadastro foram preservados na versão integrada.
-
-`privacidade.html` funciona diretamente no site estático, sem Flask ou PostgreSQL, e descreve o protótipo atual. Seu estilo está em `assets/css/privacidade.css`.
-
-`app.py` é um servidor Flask opcional para os mesmos arquivos (requer Flask instalado). Para uso normal, prefira o servidor estático acima. Os scripts `setup_db.py` e `atualizar_textos.py` são experimentos antigos de PostgreSQL, preservados como trabalho único; não são usados pelo site e não devem ser executados para publicá-lo.
-
-Validação dos caminhos locais: `python -m unittest discover -s tests`.
+| `assets/css/global.css` | José Paulo |
+| Login | José Paulo |
+| Cadastro | Ana Clara |
+| Início | Lucas |
+| `IHC/` | Pesquisa e jornada levantadas por Victor Seixas |

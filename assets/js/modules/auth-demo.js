@@ -1,15 +1,12 @@
-/**
- * Sem Barreiras Pet — auth-demo.js
- * Formulários de login e cadastro com suporte à API Flask e Fallback Local Inteligente.
- *
- * Funcionamento:
- * 1. Valida todos os campos com foco na acessibilidade (WCAG 2.2 AA).
- * 2. Tenta enviar os dados para a API REST (/api/auth/cadastro ou /api/auth/login).
- * 3. Se a API estiver ativa (Flask + PostgreSQL/Supabase), salva os dados no banco.
- * 4. Se a API estiver offline (ex: site estático no GitHub Pages ou Vercel),
- *    ativa o armazenamento local via localStorage para que o cadastro e o login
- *    funcionem perfeitamente para qualquer visitante.
- */
+import { requestApi } from './api.js';
+import { destinoSeguro } from './destino.js';
+
+const destino = destinoSeguro(new URLSearchParams(window.location.search).get('next'));
+if (destino) {
+  document.querySelectorAll('a[href="login.html"], a[href="cadastro.html"]').forEach(link => {
+    link.href += '?next=' + encodeURIComponent(destino);
+  });
+}
 
 const MENSAGENS = {
   obrigatorio: 'Preencha este campo.',
@@ -18,15 +15,6 @@ const MENSAGENS = {
   email: 'Informe um e-mail válido, por exemplo nome@exemplo.com.',
   formato: 'Confira o formato deste campo.',
 };
-
-async function carregarApiBaseUrl() {
-  try {
-    const modulo = await import(new URL('../../../config.js', import.meta.url).href);
-    return (modulo.default && modulo.default.apiBaseUrl) ? modulo.default.apiBaseUrl.replace(/\/+$/, '') : '';
-  } catch {
-    return '';
-  }
-}
 
 function mensagemDeErro(campo) {
   const { validity } = campo;
@@ -126,153 +114,33 @@ function iniciarFormulario(form) {
     }
 
     const botao = form.querySelector('button[type="submit"]');
-    const textoOriginalBotao = botao ? botao.textContent : '';
+    if (botao.disabled) return;
+    const textoOriginal = botao.textContent;
+    const tipo = form.dataset.authForm;
+    const dados = Object.fromEntries(new FormData(form));
+    if (tipo === 'cadastro') dados.consentimento = form.elements.consentimento.checked;
 
-    // Identifica se é formulário de cadastro ou login
-    const isCadastro = Boolean(form.elements.nome);
-    const apiBase = await carregarApiBaseUrl();
-    const endpoint = `${apiBase}${isCadastro ? '/api/auth/cadastro' : '/api/auth/login'}`;
-
-    // Prepara os dados
-    const formData = new FormData(form);
-    const dados = Object.fromEntries(formData.entries());
-    if (isCadastro) {
-      dados.consentimento = form.elements.consentimento ? form.elements.consentimento.checked : true;
-    }
-
+    botao.disabled = true;
+    botao.textContent = tipo === 'contato' ? 'Enviando...' : tipo === 'cadastro' ? 'Cadastrando...' : 'Entrando...';
+    let concluido = false;
     try {
-      if (botao) {
-        botao.disabled = true;
-        botao.textContent = isCadastro ? 'Cadastrando...' : 'Entrando...';
-      }
-
-      // Tenta enviar para a API REST
-      const resposta = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(dados)
-      });
-
-      const resultado = await resposta.json().catch(() => null);
-
-      if (resposta.ok && resultado) {
-        const destaque = document.createElement('strong');
-        destaque.textContent = 'Sucesso! ';
-
-        if (isCadastro) {
-          if (resultado.usuario) {
-            localStorage.setItem('sb_usuario_atual', JSON.stringify(resultado.usuario));
-          }
-          anunciar(status, [
-            destaque,
-            `${resultado.mensagem || 'Usuário cadastrado com sucesso!'} Bem-vindo(a), ${resultado.usuario?.nome || ''}. Redirecionando para o login...`
-          ]);
-          form.reset();
-          setTimeout(() => {
-            window.location.href = 'login.html';
-          }, 1800);
-        } else {
-          if (resultado.usuario) {
-            localStorage.setItem('sb_usuario_atual', JSON.stringify(resultado.usuario));
-          }
-          anunciar(status, [
-            destaque,
-            `${resultado.mensagem || 'Login realizado com sucesso!'} Redirecionando para o início...`
-          ]);
-          setTimeout(() => {
-            window.location.href = '../index.html';
-          }, 1200);
-        }
-        return;
-      }
-
-      // Se a API retornou erro de negócio (ex: e-mail já existe ou senha inválida)
-      if (resultado && resultado.erro) {
-        anunciar(status, [resultado.erro], 'erro');
-        return;
-      }
-
-      // Se a rota não respondeu (ex: 404 no GitHub Pages)
-      throw new Error('API_INDISPONIVEL');
-
-    } catch (err) {
-      // Fallback inteligente com LocalStorage para ambientes estáticos (ex: GitHub Pages)
-      console.info('API remota não disponível, operando em modo local:', err.message);
-
-      if (isCadastro) {
-        const usuariosLocais = JSON.parse(localStorage.getItem('sb_usuarios_locais') || '[]');
-        const jaExiste = usuariosLocais.some((u) => u.email === dados.email);
-
-        if (jaExiste) {
-          anunciar(status, ['Este e-mail já está cadastrado no sistema.'], 'erro');
-          return;
-        }
-
-        const novoUsuario = {
-          id: Date.now(),
-          nome: dados.nome,
-          email: dados.email,
-          telefone: dados.telefone,
-          tipo_moradia: dados.tipo_moradia || 'casa',
-          consentimento: dados.consentimento,
-          senha: dados.senha,
-          criado_em: new Date().toISOString()
-        };
-
-        usuariosLocais.push(novoUsuario);
-        localStorage.setItem('sb_usuarios_locais', JSON.stringify(usuariosLocais));
-        localStorage.setItem('sb_usuario_atual', JSON.stringify({
-          id: novoUsuario.id,
-          nome: novoUsuario.nome,
-          email: novoUsuario.email,
-          tipo_moradia: novoUsuario.tipo_moradia
-        }));
-
-        const destaque = document.createElement('strong');
-        destaque.textContent = 'Sucesso! ';
-        anunciar(status, [
-          destaque,
-          `Usuário cadastrado com sucesso! Bem-vindo(a), ${novoUsuario.nome}. Redirecionando para o login...`
-        ]);
+      const resultado = await requestApi(tipo === 'contato' ? '/api/contato' : '/api/auth/' + tipo, { method: 'POST', body: dados });
+      if (tipo === 'contato') {
+        anunciar(status, [`${resultado.mensagem} Protocolo: ${resultado.protocolo}. A equipe consultará a mensagem no sistema; não há envio automático de e-mail.`]);
         form.reset();
-        setTimeout(() => {
-          window.location.href = 'login.html';
-        }, 1800);
         return;
-      } else {
-        const usuariosLocais = JSON.parse(localStorage.getItem('sb_usuarios_locais') || '[]');
-        const ehAdminDemo = (dados.email === 'admin@sembarreiras.pet' && dados.senha === 'senha1234');
-        const usuarioEncontrado = usuariosLocais.find((u) => u.email === dados.email && u.senha === dados.senha);
-
-        if (ehAdminDemo || usuarioEncontrado) {
-          const usuarioSessao = usuarioEncontrado
-            ? { id: usuarioEncontrado.id, nome: usuarioEncontrado.nome, email: usuarioEncontrado.email, tipo_moradia: usuarioEncontrado.tipo_moradia }
-            : { id: 1, nome: 'Adotante Teste', email: 'admin@sembarreiras.pet', tipo_moradia: 'casa' };
-
-          localStorage.setItem('sb_usuario_atual', JSON.stringify(usuarioSessao));
-
-          const destaque = document.createElement('strong');
-          destaque.textContent = 'Sucesso! ';
-          anunciar(status, [
-            destaque,
-            `Login realizado com sucesso! Bem-vindo(a), ${usuarioSessao.nome}. Redirecionando para o início...`
-          ]);
-          setTimeout(() => {
-            window.location.href = '../index.html';
-          }, 1200);
-          return;
-        } else {
-          anunciar(status, ['Credenciais inválidas. Verifique seu e-mail e senha.'], 'erro');
-          return;
-        }
       }
+      if (!resultado.usuario) throw new Error('Não foi possível confirmar o acesso. Tente novamente.');
+      concluido = true;
+      anunciar(status, [resultado.mensagem + ' Redirecionando...']);
+      form.reset();
+      window.location.assign(resultado.usuario.trocar_senha ? 'alterar-senha.html' : destino || (resultado.usuario.gerente ? 'gerencia.html' : '../index.html'));
+    } catch (erro) {
+      anunciar(status, [erro.message], 'erro');
     } finally {
-      if (botao) {
+      if (!concluido) {
         botao.disabled = false;
-        botao.textContent = textoOriginalBotao;
+        botao.textContent = textoOriginal;
       }
     }
   });
@@ -286,4 +154,4 @@ function iniciarFormulario(form) {
   form.addEventListener('change', revalidar);
 }
 
-document.querySelectorAll('form[data-auth-demo]').forEach(iniciarFormulario);
+document.querySelectorAll('form[data-auth-form]').forEach(iniciarFormulario);

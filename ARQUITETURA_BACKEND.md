@@ -1,3 +1,10 @@
+# Atualização de 17/11/2026
+
+O backend agora usa sessões revogáveis persistentes, limites de tentativas,
+pet_midias e mensagens_contato; a agenda permite acompanhamento, confirmação,
+cancelamento e remarcação. A preparação e o contrato atuais estão em README.md e
+CORRECOES_2026-11-17.md. O conteúdo abaixo preserva a documentação anterior.
+
 # Documentação Técnica do Back-end Python (Flask + PostgreSQL)
 ### Projeto: Sem Barreiras Pet
 
@@ -151,7 +158,7 @@ erDiagram
 ```
 
 #### Principais Destaques dos Modelos:
-1. **`PoliticaPrivacidade` e `SecaoPrivacidade`:** Mantêm fidelidade total ao modelo que já havia sido planejado nos seus scripts `setup_db.py` e `atualizar_textos.py`, com chave estrangeira em cascata (`ondelete='CASCADE'`).
+1. **`PoliticaPrivacidade` e `SecaoPrivacidade`:** A inicialização das tabelas e da política está centralizada em `seed.py`, com chave estrangeira em cascata (`ondelete='CASCADE'`). Os scripts antigos `setup_db.py` e `atualizar_textos.py` foram removidos por redundância.
 2. **`Usuario` (Segurança):** 
    - A senha crua **nunca** é gravada no banco. O método `set_senha(senha)` gera um hash unidirecional (ex.: `pbkdf2:sha256:...`).
    - O método `check_senha(senha)` compara a senha fornecida com o hash de forma resistente a ataques de temporização (*timing attacks*).

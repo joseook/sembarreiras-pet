@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Agenda da clínica | Sem Barreiras Pet</title>
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/tema.css">
+  <link rel="stylesheet" href="../assets/css/gerencia.css">
+  <script type="module" src="../assets/js/modules/gerencia.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para a agenda</a>
+  <header class="agenda-header">
+    <a class="t-marca" href="../index.html">♥ Sem Barreiras Pet</a>
+    <nav aria-label="Navegação da gerência">
+      <a href="gerencia-pets.html">Gerenciar pets</a>
+      <a href="../index.html">Voltar ao site</a>
+      <button id="sair" type="button" hidden>Sair</button>
+    </nav>
+  </header>
+  <main id="conteudo" class="agenda">
+    <p class="t-sobretitulo">Área da gerência</p>
+    <h1>Agenda da <em class="t-destaque">clínica</em></h1>
+    <p class="agenda-intro">Confira as solicitações e confirme as próximas visitas. Horários de Brasília.</p>
+    <p id="feedback" role="status" aria-live="polite">Verificando seu acesso…</p>
+    <p id="acesso" hidden><a href="login.html">Entrar na minha conta</a></p>
+    <section id="painel" aria-label="Agendamentos" hidden>
+      <form id="filtros" class="agenda-filtros">
+        <div><label for="status">Status</label>
+          <select id="status" name="status">
+            <option value="pendente">Pendentes</option>
+            <option value="confirmado">Confirmados</option>
+            <option value="cancelado">Cancelados</option>
+            <option value="todos">Todos</option>
+          </select>
+        </div>
+        <div><label for="data">Data da visita</label><input id="data" name="data" type="date"></div>
+        <button class="t-btn t-btn--terracota" type="submit">Atualizar agenda</button>
+      </form>
+      <p class="agenda-aviso">O solicitante acompanha os status em Minhas visitas. Se necessário, entre em contato: não há envio automático de e-mail, SMS ou WhatsApp.</p>
+      <h2 id="resumo" tabindex="-1">Solicitações</h2>
+      <ul id="lista" class="agenda-lista" aria-labelledby="resumo"></ul>
+      <nav class="agenda-paginacao" aria-label="Páginas da agenda">
+        <button id="anterior" type="button">Anterior</button>
+        <span id="pagina"></span>
+        <button id="proxima" type="button">Próxima</button>
+      </nav>
+      <details id="contatos"><summary>Mensagens de contato</summary>
+        <p id="contatos-status" role="status"></p>
+        <ul id="contatos-lista" class="agenda-lista"></ul>
+        <nav class="agenda-paginacao" aria-label="Páginas dos contatos"><button id="contatos-anterior" type="button">Anterior</button><span id="contatos-pagina"></span><button id="contatos-proxima" type="button">Próxima</button></nav>
+      </details>
+    </section>
+    <noscript>Ative o JavaScript para consultar e confirmar os agendamentos.</noscript>
+  </main>
+</body>
+</html>

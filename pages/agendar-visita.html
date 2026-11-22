@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agendar visita | Sem Barreiras Pet</title>
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/css/global.css"><link rel="stylesheet" href="../assets/css/tema.css">
+  <link rel="stylesheet" href="../assets/css/gerencia.css"><link rel="stylesheet" href="../assets/css/visita.css">
+  <script type="module" src="../assets/js/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para agendamento</a>
+  <header class="agenda-header"><a class="t-marca" href="../index.html">♥ Sem Barreiras Pet</a>
+    <nav class="visita-nav" aria-label="Navegação"><ul><li><a href="../index.html#pets-destaque">Ver pets</a></li><li class="t-nav-entrar"><a href="login.html">Entrar</a></li></ul></nav>
+  </header>
+  <main id="conteudo" class="agenda visita-pagina">
+    <p class="t-sobretitulo">Vamos nos conhecer?</p><h1>Agendar <em class="t-destaque">visita</em></h1>
+    <section class="visita-pet" data-pet-selecionado aria-labelledby="pet-titulo">
+      <img hidden width="120" height="120" alt="">
+      <div><h2 id="pet-titulo">Conhecer <span data-pet-nome>o pet selecionado</span></h2><p data-pet-resumo>Consultando a ficha…</p><a data-pet-ficha hidden>Voltar à ficha do pet</a></div>
+    </section>
+    <form id="form-visita" class="visita-form" method="dialog" data-scheduling-form aria-labelledby="visita-titulo">
+      <h2 id="visita-titulo">Escolha a data e o horário</h2>
+      <p>Solicite uma visita para conhecer <strong data-pet-nome>o animal escolhido</strong>. Campos com * são obrigatórios.</p>
+      <div class="visita-campos">
+        <div class="cf-campo"><label for="visita-data">Data *</label><input id="visita-data" name="data" type="date" required aria-describedby="visita-data-dica visita-data-erro"><p id="visita-data-dica">De terça a sábado, a partir de hoje.</p><p id="visita-data-erro" data-erro-de="data" hidden></p></div>
+        <div class="cf-campo"><label for="visita-horario">Horário *</label><select id="visita-horario" name="horario" required aria-describedby="visita-horario-dica visita-horario-erro"><option value="">Selecione</option><option>09:00</option><option>10:00</option><option>11:00</option><option>13:00</option><option>14:00</option><option>15:00</option></select><p id="visita-horario-dica">Horário de Brasília.</p><p id="visita-horario-erro" data-erro-de="horario" hidden></p></div>
+      </div>
+      <div class="cf-campo"><label for="visita-mensagem">Mensagem para a clínica (opcional)</label><textarea id="visita-mensagem" name="mensagem" rows="3" maxlength="1000" aria-describedby="visita-mensagem-dica visita-mensagem-erro"></textarea><p id="visita-mensagem-dica">Conte se precisa de algum recurso de acessibilidade. Até 1.000 caracteres.</p><p id="visita-mensagem-erro" data-erro-de="mensagem" hidden></p></div>
+      <p class="visita-nota">A solicitação fica pendente até a confirmação da gerência. Você acompanha a resposta em Minhas visitas.</p>
+      <button type="submit" class="t-btn t-btn--terracota">Solicitar visita</button>
+      <div class="cf-form-status" data-form-status role="status" aria-live="polite"></div>
+    </form>
+    <noscript>Ative o JavaScript para consultar o pet e solicitar a visita.</noscript>
+  </main>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Minhas visitas | Sem Barreiras Pet</title>
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/tema.css">
+  <link rel="stylesheet" href="../assets/css/gerencia.css">
+  <script type="module" src="../assets/js/modules/minhas-visitas.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para minhas visitas</a>
+  <header class="agenda-header"><a class="t-marca" href="../index.html">♥ Sem Barreiras Pet</a>
+    <nav aria-label="Navegação"><a href="../index.html">Voltar ao site</a><button id="sair" type="button" hidden>Sair</button></nav>
+  </header>
+  <main id="conteudo" class="agenda">
+    <p class="t-sobretitulo">Sua conta</p><h1>Minhas <em class="t-destaque">visitas</em></h1>
+    <p class="agenda-intro">Acompanhe as confirmações, cancele ou solicite outro horário. Horários de Brasília.</p>
+    <p id="feedback" role="status" aria-live="polite">Consultando suas visitas…</p>
+    <p id="acesso" hidden><a href="login.html?next=%2Fpages%2Fminhas-visitas.html">Entrar para acompanhar</a></p>
+    <section id="painel" hidden aria-label="Minhas solicitações">
+      <button id="atualizar" class="t-btn t-btn--terracota" type="button">Atualizar visitas</button>
+      <p class="agenda-aviso">A lista verifica atualizações a cada 30 segundos enquanto esta aba estiver visível. Não há envio automático de e-mail, SMS ou WhatsApp.</p>
+      <ul id="lista" class="agenda-lista"></ul>
+      <nav class="agenda-paginacao" aria-label="Páginas das visitas"><button id="anterior" type="button">Anterior</button><span id="pagina"></span><button id="proxima" type="button">Próxima</button></nav>
+    </section>
+    <noscript>Ative o JavaScript para acompanhar suas visitas.</noscript>
+  </main>
+</body>
+</html>
