@@ -193,7 +193,7 @@ class SecurityTest(unittest.TestCase):
 
     def test_erro_de_cadastro_nao_expoe_detalhes_da_conexao(self):
         credencial_ficticia = 'marcador-sensivel-apenas-do-teste'
-        with patch.object(db.session, 'commit', side_effect=RuntimeError(credencial_ficticia)):
+        with patch('app.limitar_acao', return_value=False), patch.object(db.session, 'commit', side_effect=RuntimeError(credencial_ficticia)):
             response = self.client.post('/api/auth/cadastro', json={
                 'nome': 'Outra Pessoa', 'email': 'outra@example.test',
                 'telefone': '11912345678', 'senha': self.password, 'consentimento': True,

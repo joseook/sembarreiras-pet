@@ -21,6 +21,12 @@ class LocalReferences(HTMLParser):
 
 
 class PagesPublishingTest(unittest.TestCase):
+    def test_pagina_antiga_nao_contem_formulario_ou_tutorial(self):
+        pagina = (ROOT / 'pages/como-funciona.html').read_text(encoding='utf-8-sig')
+        self.assertNotIn('<form', pagina)
+        self.assertNotIn('cf-tutorial', pagina)
+        self.assertIn('catalogo.html', pagina)
+
     def test_home_and_local_assets_are_published(self):
         home = ROOT / "index.html"
         self.assertTrue(home.is_file(), "GitHub Pages needs index.html at the root")

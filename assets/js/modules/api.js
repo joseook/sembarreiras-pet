@@ -14,7 +14,7 @@ try {
   localStorage.removeItem('sb_usuario_atual');
 } catch { /* O navegador pode bloquear armazenamento local. */ }
 
-export async function requestApi(path, { method = 'GET', body } = {}) {
+export async function requestApi(path, { method = 'GET', body, aceitarLista = false } = {}) {
   const options = {
     method, credentials: 'include', cache: 'no-store',
     headers: { Accept: 'application/json' },
@@ -31,9 +31,11 @@ export async function requestApi(path, { method = 'GET', body } = {}) {
     throw new Error('Não foi possível conectar ao serviço. Confira sua conexão e tente novamente.');
   }
   const data = await response.json().catch(() => null);
-  if (!response.ok || !data || typeof data !== 'object' || Array.isArray(data)) {
+  if (!response.ok || !data || typeof data !== 'object' || (Array.isArray(data) && !aceitarLista)) {
+    if (data?.codigo === 'TROCAR_SENHA') window.location.assign(new URL('../../../pages/alterar-senha.html', import.meta.url).href);
     const error = new Error(data?.erro || 'Serviço temporariamente indisponível. Tente novamente.');
     error.status = response.status;
+    error.campos = data?.campos || {};
     throw error;
   }
   return data;

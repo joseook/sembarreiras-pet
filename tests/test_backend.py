@@ -120,6 +120,8 @@ class BackendIntegrationTest(unittest.TestCase):
         data = response.get_json()
         self.assertIn('agendamento', data)
         self.assertEqual(data['agendamento']['pet_id'], 'nina')
+        self.assertEqual(data['agendamento']['pet_nome'], 'Nina')
+        self.assertIn('Nina', data['mensagem'])
 
 if __name__ == '__main__':
     unittest.main()

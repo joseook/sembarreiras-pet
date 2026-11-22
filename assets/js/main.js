@@ -1,4 +1,5 @@
 import { currentSession, requestApi } from './modules/api.js';
+import { linkAcesso } from './modules/destino.js';
 
 /**
  * Sem Barreiras Pet — main.js
@@ -63,6 +64,7 @@ async function iniciarModulos() {
 }
 
 async function atualizarNavegacaoUsuario() {
+  document.querySelectorAll('.t-nav-entrar a').forEach(link => { link.href = new URL('../../pages/' + linkAcesso(), import.meta.url).href; });
   let sessao;
   try { sessao = await currentSession(); } catch { return; }
   if (sessao.autenticado !== true || typeof sessao.usuario?.nome !== 'string') return;
@@ -86,6 +88,18 @@ async function atualizarNavegacaoUsuario() {
     const status = document.createElement('span');
     status.setAttribute('role', 'alert');
     item.replaceChildren(saudacao, botao, status);
+    const visitas = document.createElement('a');
+    visitas.href = new URL('../../pages/minhas-visitas.html', import.meta.url).href;
+    visitas.textContent = 'Minhas visitas';
+    visitas.style.marginRight = '1rem';
+    item.prepend(visitas);
+    if (sessao.usuario.gerente) {
+      const agenda = document.createElement('a');
+      agenda.href = new URL('../../pages/gerencia.html', import.meta.url).href;
+      agenda.textContent = 'Agenda da clínica';
+      agenda.style.marginRight = '1rem';
+      item.prepend(agenda);
+    }
     botao.addEventListener('click', async () => {
       if (botao.disabled) return;
       botao.disabled = true;
@@ -109,3 +123,4 @@ async function atualizarNavegacaoUsuario() {
 iniciarMenu();
 atualizarNavegacaoUsuario();
 iniciarModulos();
+if (document.querySelector('.h-pets-grade')) import('./modules/catalogo.js');

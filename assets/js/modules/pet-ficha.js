@@ -5,7 +5,6 @@
  * Tudo é criado com createElement + textContent (nunca innerHTML com dados),
  * então um texto vindo de API no futuro não consegue injetar HTML.
  */
-import { PETS, buscarPet } from '../data/pets.js';
 import { normalizarPet } from './pet-data.js';
 
 async function carregarApiBaseUrl() {
@@ -130,10 +129,12 @@ function montarCartaoAcao(pet) {
       pet.doencasAtuais.length === 0 ? 'Sem doença atual' : 'Tem condição de saúde: veja os detalhes',
   ].forEach((texto) => resumo.append(el('li', null, texto)));
 
-  const agendar = el('a', 't-btn t-btn--terracota', 'Agendar visita');
-  agendar.href = `como-funciona.html?pet_id=${encodeURIComponent(pet.id)}#etapa-visita`;
+  const disponivel = pet.status === 'disponivel';
+  const agendar = disponivel ? el('a', 't-btn t-btn--terracota', 'Agendar visita')
+    : el('p', 'p-aviso', 'Este pet não está disponível para novas visitas.');
+  if (disponivel) agendar.href = `agendar-visita.html?pet_id=${encodeURIComponent(pet.id)}`;
 
-  const conta = el('a', 't-btn t-btn--contorno', 'Criar conta para adotar');
+  const conta = el('a', 't-btn t-btn--cadastro', 'Criar conta para adotar');
   conta.href = 'cadastro.html';
 
   const nota = el(
@@ -353,15 +354,15 @@ function montarCuidados(pet) {
 function montarAbrigo(pet) {
   const aviso = el('p', 'p-aviso p-aviso--info');
   aviso.append(
-    'Dados de exemplo. Antes da adoção, o abrigo entrega a carteira de vacinação e os laudos originais. ',
+    'Para informações sobre a visita e os cuidados do animal, ',
     (() => {
-      const link = el('a', null, 'Veja o passo a passo da adoção');
-      link.href = 'como-funciona.html';
+      const link = el('a', null, 'entre em contato com a equipe');
+      link.href = 'contato.html';
       return link;
     })(),
     '.',
   );
-  return secao('abrigo', 'Abrigo responsável', el('p', 'p-texto', `${pet.nome} está no ${pet.abrigo}.`), aviso);
+  return secao('abrigo', 'Contato da equipe', aviso);
 }
 
 /* ---------------- Página ---------------- */
@@ -433,17 +434,10 @@ function montarNaoEncontrado(container) {
   anexar(
     caixa,
     el('h1', 'p-aviso-titulo', 'Não encontramos esse animal'),
-    el('p', null, 'O endereço pode estar incorreto ou o pet já foi adotado. Escolha um dos animais abaixo:'),
+    el('p', null, 'O endereço pode estar incorreto ou o cadastro não está mais disponível.'),
   );
-  const lista = el('ul', 'p-tags');
-  PETS.forEach((pet) => {
-    const li = el('li');
-    const a = el('a', 't-btn t-btn--contorno t-btn--pequeno', pet.nome);
-    a.href = `pet.html?id=${encodeURIComponent(pet.id)}`;
-    li.append(a);
-    lista.append(li);
-  });
-  caixa.append(lista);
+  const catalogo = el('a', 't-btn t-btn--contorno', 'Ver pets disponíveis');
+  catalogo.href = 'catalogo.html'; caixa.append(catalogo);
   container.append(caixa);
   document.title = 'Animal não encontrado - Sem Barreiras Pet';
 }
@@ -456,19 +450,11 @@ async function iniciar() {
   let pet = null;
 
   if (id) {
-    try {
-      const apiBase = await carregarApiBaseUrl();
-      const resp = await fetch(`${apiBase}/api/pets/${encodeURIComponent(id)}`);
-      if (resp.ok) {
-        pet = await resp.json();
-      }
-    } catch (_) {
-      // Ignora erro de rede e usa fallback estático local
-    }
-
-    if (!pet) {
-      pet = buscarPet(id);
-    }
+    const apiBase = await carregarApiBaseUrl();
+    const resp = await fetch(`${apiBase}/api/pets/${encodeURIComponent(id)}`, { cache: 'no-store', signal: AbortSignal.timeout(15000) });
+    if (resp.status === 404 || resp.status === 410) { montarNaoEncontrado(container); return; }
+    if (!resp.ok) throw new Error('Consulta indisponível');
+    pet = await resp.json();
   }
 
   if (!pet) {

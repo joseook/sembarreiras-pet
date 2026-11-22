@@ -1,5 +1,9 @@
 # Correções locais de segurança e estabilidade
 
+> Relatório histórico anterior a 17/11/2026. O estado atual está em
+> `CORRECOES_2026-11-17.md` e no README; as pendências abaixo não descrevem todas
+> as correções posteriores. Conteúdo original preservado para rastreabilidade.
+
 ## Estado da entrega
 
 - Base: main em `9aebe1f9ce6235b6696ccba93eb3c74c6d702c76`.

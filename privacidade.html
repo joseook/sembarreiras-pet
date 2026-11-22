@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Privacidade | Sem Barreiras Pet</title>
+  <script type="module" src="assets/js/modules/privacidade.js"></script>
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/css/global.css">
   <link rel="stylesheet" href="assets/css/tema.css">
@@ -20,22 +21,25 @@
     </div>
   </header>
   <main class="t-container privacidade" id="conteudo-principal">
-    <h1>Privacidade no protótipo</h1>
-    <p>Este é um projeto acadêmico demonstrativo. Estas informações descrevem o funcionamento atual do site.</p>
+    <h1>Privacidade e uso dos dados</h1>
+    <p>Versão 2026.11, atualizada em 17/11/2026. Projeto acadêmico: use dados fictícios durante a demonstração.</p>
+    <div id="politica-secoes">
     <section aria-labelledby="dados">
       <h2 id="dados">Dados nos formulários</h2>
-      <p>Login, cadastro, contato e agendamento são demonstrações. Os campos são validados no navegador; os dados digitados não são enviados nem salvos pelo projeto. Não existe uma conta real ou um banco de dados conectado ao site publicado.</p>
-      <p>Use dados fictícios para experimentar os formulários.</p>
+      <p>Cadastro, contato e agendamento enviam dados à API e os armazenam no banco. O cadastro registra nome, e-mail, telefone, moradia e consentimento; a senha é protegida por hash. As visitas registram pet, data, horário, mensagem e status.</p>
+      <p>Gerentes autorizados consultam solicitações e contatos para atender as pessoas.</p>
     </section>
     <section aria-labelledby="servicos">
       <h2 id="servicos">Hospedagem e serviços externos</h2>
-      <p>O site é publicado no GitHub Pages. O serviço de hospedagem pode processar informações técnicas de acesso conforme suas próprias condições.</p>
+      <p>A hospedagem e o banco processam dados necessários ao serviço. Algumas imagens de Quem somos são carregadas de serviço externo.</p>
       <p>Se uma chave do Google Maps estiver configurada, a página Como funciona carrega o mapa do Google. Nesse caso, o navegador se conecta a esse serviço externo.</p>
     </section>
     <section aria-labelledby="futuro">
-      <h2 id="futuro">Antes do cadastro real</h2>
-      <p>Uma política de privacidade completa deverá ser publicada antes da implementação de contas e do envio de dados reais, explicando o tratamento de dados, os responsáveis e os canais de atendimento.</p>
+      <h2 id="futuro">Acompanhamento e solicitações</h2>
+      <p>O cookie identifica uma sessão revogável de até oito horas. Sair encerra a sessão atual. As atualizações aparecem em Minhas visitas; não há envio automático de e-mail, SMS ou WhatsApp.</p>
+      <p>Para solicitar correção ou exclusão dos seus dados, use Contato. A equipe verificará a identidade e tratará o pedido. Não há exclusão automática pelo perfil nem recuperação automática de senha nesta versão.</p>
     </section>
+    </div>
     <p><a class="t-btn t-btn--contorno" href="pages/cadastro.html">Voltar ao cadastro</a></p>
   </main>
   <footer class="t-footer"><div class="t-container"><p>© 2026 Sem Barreiras Pet. Projeto acadêmico de IHC.</p></div></footer>

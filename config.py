@@ -18,6 +18,12 @@ def _is_local_postgres_available(host="localhost", port=5432, timeout=0.3):
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', '')
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_SECURE = os.getenv('VERCEL') == '1' or os.getenv('FLASK_ENV') == 'production'
+    MAX_CONTENT_LENGTH = 32 * 1024
+    # IDs de contas existentes autorizadas a gerenciar a agenda (somente servidor).
+    GERENTES_IDS = os.getenv('GERENTES_IDS', '')
     
     raw_url = os.getenv(
         'DATABASE_URL',
@@ -45,6 +51,7 @@ class Config:
         SQLALCHEMY_ENGINE_OPTIONS = {
             'pool_pre_ping': True,
             'pool_recycle': 300,
+            'connect_args': {'connect_timeout': 10, **({} if is_local_pg else {'sslmode': 'require'})},
         }
     else:
         SQLALCHEMY_ENGINE_OPTIONS = {}

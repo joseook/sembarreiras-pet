@@ -1,4 +1,12 @@
 import { requestApi } from './api.js';
+import { destinoSeguro } from './destino.js';
+
+const destino = destinoSeguro(new URLSearchParams(window.location.search).get('next'));
+if (destino) {
+  document.querySelectorAll('a[href="login.html"], a[href="cadastro.html"]').forEach(link => {
+    link.href += '?next=' + encodeURIComponent(destino);
+  });
+}
 
 const MENSAGENS = {
   obrigatorio: 'Preencha este campo.',
@@ -105,12 +113,6 @@ function iniciarFormulario(form) {
       return;
     }
 
-    // Contato permanece demonstrativo: valida, mas não chama nenhuma API.
-    if (form.hasAttribute('data-contact-demo')) {
-      anunciar(status, [form.dataset.demoMensagem]);
-      return;
-    }
-
     const botao = form.querySelector('button[type="submit"]');
     if (botao.disabled) return;
     const textoOriginal = botao.textContent;
@@ -119,15 +121,20 @@ function iniciarFormulario(form) {
     if (tipo === 'cadastro') dados.consentimento = form.elements.consentimento.checked;
 
     botao.disabled = true;
-    botao.textContent = tipo === 'cadastro' ? 'Cadastrando...' : 'Entrando...';
+    botao.textContent = tipo === 'contato' ? 'Enviando...' : tipo === 'cadastro' ? 'Cadastrando...' : 'Entrando...';
     let concluido = false;
     try {
-      const resultado = await requestApi('/api/auth/' + tipo, { method: 'POST', body: dados });
+      const resultado = await requestApi(tipo === 'contato' ? '/api/contato' : '/api/auth/' + tipo, { method: 'POST', body: dados });
+      if (tipo === 'contato') {
+        anunciar(status, [`${resultado.mensagem} Protocolo: ${resultado.protocolo}. A equipe consultará a mensagem no sistema; não há envio automático de e-mail.`]);
+        form.reset();
+        return;
+      }
       if (!resultado.usuario) throw new Error('Não foi possível confirmar o acesso. Tente novamente.');
       concluido = true;
-      anunciar(status, [resultado.mensagem + ' Redirecionando para o início...']);
+      anunciar(status, [resultado.mensagem + ' Redirecionando...']);
       form.reset();
-      window.location.assign('../index.html');
+      window.location.assign(resultado.usuario.trocar_senha ? 'alterar-senha.html' : destino || (resultado.usuario.gerente ? 'gerencia.html' : '../index.html'));
     } catch (erro) {
       anunciar(status, [erro.message], 'erro');
     } finally {
@@ -147,4 +154,4 @@ function iniciarFormulario(form) {
   form.addEventListener('change', revalidar);
 }
 
-document.querySelectorAll('form[data-auth-form], form[data-contact-demo]').forEach(iniciarFormulario);
+document.querySelectorAll('form[data-auth-form]').forEach(iniciarFormulario);

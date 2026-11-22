@@ -184,6 +184,27 @@ a:hover { color: var(--t-tinta); }
 .t-btn--contorno:hover { border-color: var(--t-tinta); color: var(--t-tinta); }
 .t-btn--pequeno { padding: 0.5rem 1.15rem; font-size: 0.9rem; }
 
+/* Cadastro: paleta terracota e foco com duas bordas contrastantes. */
+.t-btn--cadastro {
+  background: var(--t-terracota);
+  color: #fff;
+  border-color: var(--t-terracota);
+  border-radius: .8rem;
+}
+.t-btn--cadastro:hover {
+  background: var(--t-terracota-esc);
+  border-color: var(--t-terracota-esc);
+  color: #fff;
+}
+.t-btn--cadastro:focus-visible {
+  background: var(--t-terracota-esc);
+  border-color: var(--t-terracota-esc);
+  color: #fff;
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--t-terracota-esc);
+}
+
 .t-link-seta {
   display: inline-flex;
   align-items: center;

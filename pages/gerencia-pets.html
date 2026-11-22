@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow"><title>Gerenciar pets | Sem Barreiras Pet</title>
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/css/global.css"><link rel="stylesheet" href="../assets/css/tema.css">
+  <link rel="stylesheet" href="../assets/css/gerencia.css"><link rel="stylesheet" href="../assets/css/gerencia-pets.css">
+  <script type="module" src="../assets/js/modules/gerencia-pets.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para gestão de pets</a>
+  <header class="agenda-header"><a class="t-marca" href="../index.html">♥ Sem Barreiras Pet</a>
+    <nav aria-label="Gerência"><a href="gerencia.html">Agendamentos</a><a href="../index.html">Ver site</a><button id="sair" type="button" hidden>Sair</button></nav>
+  </header>
+  <main id="conteudo" class="agenda">
+    <p class="t-sobretitulo">Área da gerência</p><h1>Gerenciar <em class="t-destaque">pets</em></h1>
+    <p class="agenda-intro">Cadastre animais, atualize as fichas e acompanhe a disponibilidade para visitas.</p>
+    <p id="feedback" role="status" aria-live="polite">Verificando seu acesso…</p>
+    <p id="acesso" hidden><a href="login.html?next=%2Fpages%2Fgerencia-pets.html">Entrar para gerenciar pets</a></p>
+    <section id="painel" aria-label="Cadastro de pets" hidden>
+      <button id="novo-pet" type="button" class="t-btn t-btn--terracota">Cadastrar pet</button>
+      <form id="filtros" class="agenda-filtros pets-filtros">
+        <div><label for="busca">Buscar por nome ou raça</label><input id="busca" name="q" type="search" maxlength="120" placeholder="Ex.: Nina"></div>
+        <div><label for="filtro-status">Disponibilidade</label><select id="filtro-status" name="status"><option value="todos">Todos</option><option value="disponivel">Disponíveis</option><option value="em-adocao">Em adoção</option><option value="adotado">Adotados</option><option value="arquivado">Arquivados</option></select></div>
+        <button type="submit" class="t-btn t-btn--terracota">Buscar pets</button><button type="reset">Limpar filtros</button>
+      </form>
+      <p class="agenda-aviso">Arquivar retira o pet da consulta pública e preserva seu histórico. Excluir apaga definitivamente e só é permitido quando não há agendamentos vinculados.</p>
+      <h2 id="resumo" tabindex="-1">Pets cadastrados</h2>
+      <ul id="lista" class="agenda-lista pets-grade" aria-labelledby="resumo"></ul>
+      <nav class="agenda-paginacao" aria-label="Páginas dos pets"><button id="anterior" type="button">Anterior</button><span id="pagina"></span><button id="proxima" type="button">Próxima</button></nav>
+    </section>
+    <noscript>Ative o JavaScript para cadastrar e gerenciar pets.</noscript>
+  </main>
+
+  <dialog id="editor" class="pet-editor" aria-labelledby="editor-titulo" aria-describedby="editor-ajuda">
+    <form id="form-pet">
+      <header class="pet-editor-cabecalho"><h2 id="editor-titulo">Cadastrar pet</h2><button id="fechar-editor" type="button" aria-label="Fechar formulário">Fechar</button></header>
+      <p id="editor-ajuda">Campos com * são obrigatórios. As informações salvas aparecem na ficha pública, exceto quando o pet está arquivado.</p>
+      <div id="form-erro" class="pet-erros" role="alert" tabindex="-1" hidden></div>
+      <fieldset id="editor-campos">
+        <legend>Identificação e disponibilidade</legend>
+        <div class="pet-campos">
+          <div class="pet-campo"><label for="pet-nome">Nome *</label><input id="pet-nome" name="nome" required maxlength="100" autocomplete="off"><p id="erro-nome" class="pet-erro" hidden></p></div>
+          <div class="pet-campo"><label for="pet-especie">Espécie *</label><select id="pet-especie" name="especie" required><option value="">Selecione</option><option>Cachorro</option><option>Gato</option><option>Outro</option></select><p id="erro-especie" class="pet-erro" hidden></p></div>
+          <div class="pet-campo"><label for="pet-sexo">Sexo *</label><select id="pet-sexo" name="sexo" required><option value="">Selecione</option><option>Fêmea</option><option>Macho</option><option>Não informado</option></select><p id="erro-sexo" class="pet-erro" hidden></p></div>
+          <div class="pet-campo"><label for="pet-status">Disponibilidade *</label><select id="pet-status" name="status" required aria-describedby="status-ajuda"><option value="disponivel">Disponível para visitas</option><option value="em-adocao">Em adoção</option><option value="adotado">Adotado</option><option value="arquivado">Arquivado</option></select><p id="status-ajuda" class="pet-ajuda">Resolva as visitas ativas antes de retirar a disponibilidade.</p><p id="erro-status" class="pet-erro" hidden></p></div>
+          <div class="pet-campo"><label for="pet-raca">Raça</label><input id="pet-raca" name="raca" maxlength="100" placeholder="Ex.: SRD"><p id="erro-raca" class="pet-erro" hidden></p></div>
+          <div class="pet-campo"><label for="pet-idade">Idade aproximada</label><input id="pet-idade" name="idade" maxlength="50" placeholder="Ex.: 2 anos"><p id="erro-idade" class="pet-erro" hidden></p></div>
+          <div class="pet-campo"><label for="pet-porte">Porte</label><select id="pet-porte" name="porte"><option value="">Não informado</option><option>Pequeno</option><option>Médio</option><option>Grande</option></select><p id="erro-porte" class="pet-erro" hidden></p></div>
+          <div class="pet-campo"><label for="pet-peso">Peso aproximado</label><input id="pet-peso" name="peso" maxlength="20" placeholder="Ex.: 11 kg"><p id="erro-peso" class="pet-erro" hidden></p></div>
+          <div class="pet-campo"><label for="pet-cor">Pelagem ou cor</label><input id="pet-cor" name="cor" maxlength="50"><p id="erro-cor" class="pet-erro" hidden></p></div>
+          <div class="pet-campo"><label for="pet-castrado">Castrado?</label><select id="pet-castrado" name="castrado"><option value="">Não informado</option><option value="sim">Sim</option><option value="nao">Não</option></select><p id="erro-castrado" class="pet-erro" hidden></p></div>
+          <div class="pet-campo"><label for="pet-microchip">Possui microchip?</label><select id="pet-microchip" name="microchip"><option value="">Não informado</option><option value="sim">Sim</option><option value="nao">Não</option></select><p id="erro-microchip" class="pet-erro" hidden></p></div>
+        </div>
+        <h3>História e cuidados</h3>
+        <div class="pet-campo"><label for="pet-resumo">Apresentação curta</label><textarea id="pet-resumo" name="resumo" rows="2" maxlength="255"></textarea><p id="erro-resumo" class="pet-erro" hidden></p></div>
+        <div class="pet-campo"><label for="pet-historia">História</label><textarea id="pet-historia" name="historia" rows="4" maxlength="6000"></textarea><p id="erro-historia" class="pet-erro" hidden></p></div>
+        <div class="pet-campo"><label for="pet-rotina">Rotina e necessidades</label><textarea id="pet-rotina" name="rotina" rows="3" maxlength="6000"></textarea><p id="erro-rotina" class="pet-erro" hidden></p></div>
+        <div class="pet-campo"><label for="pet-temperamento">Temperamento</label><input id="pet-temperamento" name="temperamento" maxlength="610" aria-describedby="temperamento-ajuda"><p id="temperamento-ajuda" class="pet-ajuda">Separe até 12 características por vírgula. Ex.: calmo, carinhoso.</p><p id="erro-temperamento" class="pet-erro" hidden></p></div>
+        <div class="pet-campo"><label for="pet-apartamento">Adaptação a apartamento</label><input id="pet-apartamento" name="apartamento" maxlength="100" placeholder="Informe apenas o que foi avaliado"><p id="erro-apartamento" class="pet-erro" hidden></p></div>
+        <div class="pet-campos">
+          <div class="pet-campo"><label for="pet-vermifugo">Vermífugo</label><input id="pet-vermifugo" name="vermifugo" maxlength="255"><p id="erro-vermifugo" class="pet-erro" hidden></p></div>
+          <div class="pet-campo"><label for="pet-antiparasitario">Antiparasitário</label><input id="pet-antiparasitario" name="antiparasitario" maxlength="255"><p id="erro-antiparasitario" class="pet-erro" hidden></p></div>
+        </div>
+        <div class="pet-campo"><label for="pet-alergias">Alergias conhecidas</label><input id="pet-alergias" name="alergias" maxlength="255"><p id="erro-alergias" class="pet-erro" hidden></p></div>
+        <p class="pet-ajuda">Deixe em branco o que não foi informado. Registros de vacinas, doenças e exames já cadastrados são preservados.</p>
+        <h3>Fotos</h3><p id="fotos-ajuda" class="pet-ajuda">Até seis imagens. Informe um endereço de imagem (HTTP/HTTPS ou assets do projeto) e uma descrição para quem usa leitor de tela. Não é necessário enviar arquivos.</p>
+        <div id="fotos" aria-describedby="fotos-ajuda"></div><p id="erro-fotos" class="pet-erro" hidden></p>
+        <button id="adicionar-foto" type="button">Adicionar foto</button>
+      </fieldset>
+      <footer class="pet-editor-rodape"><button id="cancelar-editor" type="button">Cancelar</button><button id="salvar-pet" class="t-btn t-btn--terracota" type="submit">Cadastrar pet</button></footer>
+    </form>
+  </dialog>
+</body>
+</html>

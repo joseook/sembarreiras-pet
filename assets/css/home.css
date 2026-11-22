@@ -195,45 +195,11 @@
 .h-pet-cta { flex-basis: 100%; font-weight: 700; color: var(--t-terracota-esc); }
 .h-pet-link:hover .h-pet-cta { text-decoration: underline; text-underline-offset: 0.25em; }
 
-.h-demo-nota { margin-top: 1.5rem; font-size: 0.85rem; color: var(--t-suave); }
+.h-catalogo-status { margin-top: 1.5rem; font-size: 0.85rem; color: var(--t-suave); }
 
 @media (prefers-reduced-motion: reduce) {
   .h-pet-link { transition: none; }
   .h-pet-link:hover { transform: none; }
-}
-
-/* ---------- O caminho (seção escura) ---------- */
-.h-caminho { background: var(--t-tinta); color: #F3E9D8; padding: 4.5rem 0; }
-
-.h-caminho-grade { display: grid; gap: 2.5rem; align-items: start; }
-
-.h-caminho h2 { color: #fff; font-size: clamp(1.9rem, 4.5vw, 3rem); margin-bottom: 1rem; }
-.h-caminho .t-sobretitulo { color: #F0B79F; }
-.h-caminho .t-destaque { color: #F0A585; }
-.h-caminho-texto > p:not(.t-sobretitulo) { max-width: 26rem; margin-bottom: 1.75rem; color: #E1D4C0; }
-
-.h-passos { display: grid; gap: 0.9rem; }
-.h-passos li {
-  display: flex;
-  gap: 1.25rem;
-  padding: 1.35rem 1.5rem;
-  border: 1px solid rgba(243, 233, 216, 0.16);
-  border-radius: var(--t-raio-pequeno);
-  background: rgba(243, 233, 216, 0.05);
-}
-.h-passo-num {
-  flex: none;
-  font-family: var(--t-fonte-titulo);
-  font-size: 1.6rem;
-  line-height: 1.2;
-  color: #F0A585;
-}
-.h-passos h3 { color: #fff; font-size: 1.15rem; margin-bottom: 0.3rem; }
-.h-passos p { color: #D9CBB6; font-size: 0.95rem; }
-
-@media (min-width: 56rem) {
-  .h-caminho { padding: 6rem 0; }
-  .h-caminho-grade { grid-template-columns: 0.85fr 1.15fr; gap: 4rem; }
 }
 
 /* ---------- Acessibilidade ---------- */
@@ -273,3 +239,11 @@
 @media (min-width: 56rem) {
   .h-acesso-caixa { grid-template-columns: 1fr 1fr; padding: 3.25rem 3.5rem; gap: 3.5rem; }
 }
+.h-catalogo-filtros { display: flex; flex-wrap: wrap; align-items: end; gap: .8rem; margin: 1.5rem 0; padding: 1rem; border: 1px solid var(--t-borda); border-radius: var(--t-raio); background: var(--t-papel); }
+.h-catalogo-filtros > div { flex: 1 1 10rem; min-width: 0; }
+.h-catalogo-filtros label { display: block; font-weight: 600; margin-bottom: .35rem; }
+.h-catalogo-filtros input, .h-catalogo-filtros select { width: 100%; padding: .65rem; min-height: 2.75rem; font: inherit; color: var(--t-tinta); background: white; border: 1px solid var(--t-suave); border-radius: .4rem; }
+.catalogo-pagina { padding-block: 3rem; }
+.catalogo-pagina h1 { font-size: clamp(2.3rem, 5vw, 3.75rem); }
+.catalogo-intro { margin-top: 1rem; color: var(--t-suave); }
+.catalogo-pagina .h-catalogo-status { margin-block: 1.5rem; }

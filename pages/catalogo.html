@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Consulte os pets disponíveis e agende uma visita.">
+  <title>Pets para adoção | Sem Barreiras Pet</title>
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="../assets/css/global.css"><link rel="stylesheet" href="../assets/css/tema.css"><link rel="stylesheet" href="../assets/css/home.css">
+  <script type="module" src="../assets/js/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo-principal">Pular para o catálogo</a>
+  <header class="t-header"><div class="t-container t-header-inner">
+    <a class="t-marca" href="../index.html"><span class="t-marca-icone" aria-hidden="true">♥</span>Sem Barreiras Pet</a>
+    <button type="button" class="t-menu-toggle" id="botao-menu" aria-expanded="false" aria-controls="menu-principal"><span>Menu</span><span class="menu-toggle-icone" aria-hidden="true"></span></button>
+    <nav class="t-nav" id="menu-principal" aria-label="Navegação principal"><ul>
+      <li><a href="../index.html">Início</a></li><li><a href="catalogo.html" aria-current="page">Pets para adoção</a></li>
+      <li><a href="quem-somos.html">Quem somos</a></li><li><a href="contato.html">Contato</a></li>
+      <li class="t-nav-entrar"><a href="login.html">Entrar</a></li><li><a href="cadastro.html" class="t-btn t-btn--cadastro t-btn--pequeno">Criar conta</a></li>
+    </ul></nav>
+  </div></header>
+  <main id="conteudo-principal" class="t-container catalogo-pagina">
+    <p class="t-sobretitulo">Encontre seu companheiro</p><h1>Pets para <em class="t-destaque">adoção</em></h1>
+    <p class="catalogo-intro">Consulte os animais disponíveis e escolha quem você quer conhecer.</p>
+    <form id="filtros-pets" class="h-catalogo-filtros" aria-label="Buscar pets disponíveis">
+      <div><label for="catalogo-busca">Nome ou raça</label><input id="catalogo-busca" name="q" type="search" maxlength="120" placeholder="Ex.: Nina"></div>
+      <div><label for="catalogo-especie">Espécie</label><select id="catalogo-especie" name="especie"><option value="">Todas</option><option value="Cachorro">Cães</option><option value="Gato">Gatos</option><option value="Outro">Outros</option></select></div>
+      <div><label for="catalogo-porte">Porte</label><select id="catalogo-porte" name="porte"><option value="">Todos</option><option>Pequeno</option><option>Médio</option><option>Grande</option></select></div>
+      <button class="t-btn t-btn--terracota" type="submit">Buscar pets</button><button class="t-btn t-btn--contorno" type="reset">Limpar</button>
+    </form>
+    <p class="h-catalogo-status" role="status" aria-live="polite">Consultando animais disponíveis…</p>
+    <ul class="h-pets-grade" aria-label="Pets encontrados"></ul>
+    <noscript>Ative o JavaScript para consultar os animais cadastrados e usar os filtros.</noscript>
+  </main>
+  <footer class="t-footer"><div class="t-container"><a href="minhas-visitas.html">Minhas visitas</a> · <a href="contato.html">Contato</a> · <a href="../privacidade.html">Privacidade</a></div></footer>
+</body>
+</html>
