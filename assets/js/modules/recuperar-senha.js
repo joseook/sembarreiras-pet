@@ -1,5 +1,9 @@
 import { requestApi } from './api.js';
 
+window.addEventListener('hashchange', () => {
+  if (window.location.hash) window.location.reload();
+});
+
 const token = window.location.hash.slice(1);
 const form = document.getElementById(token ? 'redefinir' : 'solicitar');
 const status = document.getElementById('status');
