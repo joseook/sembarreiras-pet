@@ -241,3 +241,14 @@ A persona Camila Souza, a jornada e a pesquisa em `IHC/` orientam as etapas de a
 | Cadastro | Ana Clara |
 | Início | Lucas |
 | `IHC/` | Pesquisa e jornada levantadas por Victor Seixas |
+
+## Recuperação de senha
+
+O link **Esqueci minha senha** no login envia uma mensagem ao endereço cadastrado.
+O link de redefinição expira em 30 minutos. Ao redefinir a senha, os links emitidos
+para a senha anterior perdem a validade e as sessões dessa conta são encerradas.
+
+No ambiente do backend, configure `SB_PUBLIC_URL` com a origem HTTPS do site
+(sem caminho), `SMTP_HOST` e `SMTP_FROM` com um remetente autorizado pelo provedor.
+O envio usa SMTP com STARTTLS na porta 587. Para um provedor autenticado, defina
+também `SMTP_USER` e `SMTP_PASSWORD` nas variáveis privadas do ambiente.

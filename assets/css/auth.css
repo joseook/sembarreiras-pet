@@ -188,6 +188,7 @@
 
 /* ---------- Campos ---------- */
 .auth-form { display: grid; gap: 1.15rem; container-type: inline-size; }
+.auth-form[hidden] { display: none; }
 
 .field { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
 

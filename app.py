@@ -1,11 +1,14 @@
 """Servidor Flask com suporte a PostgreSQL e rotas estáticas para o Sem Barreiras Pet."""
 import os
+import hmac
 import secrets
 import re
+import smtplib
 import unicodedata
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from flask import Flask, send_from_directory, request, jsonify, session, abort, redirect
+from itsdangerous import BadData
 from urllib.parse import urlencode
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import joinedload
@@ -16,6 +19,7 @@ from models import PoliticaPrivacidade, SecaoPrivacidade, Usuario, Pet, PetMidia
 from pet_form import validar_pet, STATUS as STATUS_PET
 from seguranca import usuario_autenticado, iniciar_sessao, revogar_sessao, limitar_acao
 from regras import email_valido, telefone_valido, validar_visita, BRASILIA
+from recuperacao import email_configurado, enviar_recuperacao, serializador, versao_senha
 
 ROOT = Path(__file__).resolve().parent
 
@@ -375,7 +379,7 @@ def create_app(config_class=Config):
         if limitar_acao('login', email):
             return excesso_tentativas()
             
-        usuario = Usuario.query.filter_by(email=email).first()
+        usuario = Usuario.query.filter_by(email=email).with_for_update().first()
         if not usuario or not usuario.check_senha(senha):
             return jsonify({'erro': 'Credenciais inválidas. Verifique seu e-mail e senha.'}), 401
             
@@ -401,6 +405,61 @@ def create_app(config_class=Config):
         revogar_sessao()
         db.session.commit()
         return jsonify({'mensagem': 'Logout efetuado com sucesso.'})
+
+    @app.post('/api/auth/recuperar-senha')
+    def recuperar_senha():
+        dados = request.get_json(silent=True)
+        email = dados.get('email') if isinstance(dados, dict) else None
+        if not isinstance(email, str) or not email_valido(email.strip().lower()):
+            return jsonify({'erro': 'Informe um e-mail válido.'}), 400
+        if not email_configurado():
+            return jsonify({'erro': 'A recuperação por e-mail está temporariamente indisponível.'}), 503
+        email = email.strip().lower()
+        if limitar_acao('recuperar-senha', email, limite=3):
+            return excesso_tentativas()
+        usuario = Usuario.query.filter_by(email=email).first()
+        if usuario:
+            try:
+                enviar_recuperacao(usuario)
+            except (OSError, smtplib.SMTPException, ValueError):
+                app.logger.warning('Falha de envio do e-mail de recuperação.')
+        return jsonify({'mensagem': 'Se o e-mail estiver cadastrado, você receberá um link de recuperação.'}), 202
+
+    @app.post('/api/auth/redefinir-senha')
+    def redefinir_senha():
+        dados = request.get_json(silent=True)
+        if not isinstance(dados, dict) or any(not isinstance(dados.get(campo), str)
+                for campo in ('token', 'nova_senha', 'confirmacao')):
+            return jsonify({'erro': 'Confira os campos de senha.'}), 400
+        nova = dados['nova_senha']
+        if not 8 <= len(nova) <= 128 or nova != dados['confirmacao']:
+            return jsonify({'erro': 'Use de 8 a 128 caracteres e repita a nova senha corretamente.'}), 400
+        if limitar_acao('redefinir-senha'):
+            return excesso_tentativas()
+        invalido = jsonify({'erro': 'Este link é inválido, foi usado ou expirou. Solicite outro link.'}), 400
+        if not 1 <= len(dados['token']) <= 512:
+            return invalido
+        try:
+            usuario_id, versao = serializador().loads(dados['token'], max_age=1800)
+        except (BadData, TypeError, ValueError):
+            return invalido
+        usuario = Usuario.query.filter_by(id=usuario_id).with_for_update().first()
+        if not usuario or not hmac.compare_digest(versao, versao_senha(usuario)):
+            return invalido
+        hash_anterior = usuario.senha_hash
+        usuario.set_senha(nova)
+        novo_hash = usuario.senha_hash
+        # A condição também protege contra reuso em bancos sem bloqueio por linha.
+        db.session.expire(usuario, ['senha_hash'])
+        alterados = Usuario.query.filter_by(id=usuario_id, senha_hash=hash_anterior).update(
+            {Usuario.senha_hash: novo_hash}, synchronize_session=False
+        )
+        if not alterados:
+            return invalido
+        SessaoUsuario.query.filter_by(usuario_id=usuario_id).delete()
+        db.session.commit()
+        session.clear()
+        return jsonify({'mensagem': 'Senha redefinida. Entre com sua nova senha.'})
 
     @app.post('/api/auth/senha')
     def alterar_senha():

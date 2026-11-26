@@ -24,6 +24,11 @@ class Config:
     MAX_CONTENT_LENGTH = 32 * 1024
     # IDs de contas existentes autorizadas a gerenciar a agenda (somente servidor).
     GERENTES_IDS = os.getenv('GERENTES_IDS', '')
+    SB_PUBLIC_URL = os.getenv('SB_PUBLIC_URL', '')
+    SMTP_HOST = os.getenv('SMTP_HOST', '')
+    SMTP_FROM = os.getenv('SMTP_FROM', '')
+    SMTP_USER = os.getenv('SMTP_USER', '')
+    SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', '')
     
     raw_url = os.getenv(
         'DATABASE_URL',

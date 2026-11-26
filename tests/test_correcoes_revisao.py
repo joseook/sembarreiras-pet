@@ -1,8 +1,10 @@
 """Regressões dos achados de 17/11; banco exclusivo em memória."""
 import os
+import time
 from datetime import date, datetime, timedelta
 import unittest
 from unittest.mock import patch
+from urllib.parse import urlsplit
 
 os.environ['DATABASE_URL'] = 'sqlite:///:memory:'
 os.environ['SB_AUTO_INIT_DB'] = '0'
@@ -65,6 +67,39 @@ class CorrecoesTest(unittest.TestCase):
         self.assertFalse(copia.get('/api/auth/me').json['autenticado'])
         self.assertEqual(copia.get('/api/gerencia/agendamentos').status_code, 401)
         self.assertEqual(copia.post('/api/agendamentos', json=self.dados).status_code, 401)
+
+    def test_recuperacao_por_email_redefine_senha_e_revoga_sessoes(self):
+        self.login()
+        visitante = self.app.test_client()
+        solicitar = '/api/auth/recuperar-senha'
+        with visitante.get('/pages/login.html') as pagina:
+            self.assertIn('esqueci-senha.html', pagina.get_data(as_text=True))
+        with visitante.get('/pages/esqueci-senha.html') as pagina:
+            self.assertEqual(pagina.status_code, 200)
+        self.assertEqual(visitante.post(solicitar, json={'email': 'adotante@example.test'}).status_code, 503)
+        self.app.config.update(SB_PUBLIC_URL='https://pets.example.test', SMTP_HOST='smtp.example.test',
+                               SMTP_FROM='pets@example.test')
+        with patch('recuperacao.smtplib.SMTP') as smtp:
+            existente = visitante.post(solicitar, json={'email': 'Adotante@example.test'})
+            ausente = visitante.post(solicitar, json={'email': 'ausente@example.test'})
+            self.assertEqual(existente.status_code, 202)
+            self.assertEqual(existente.json, ausente.json)
+            envio = smtp.return_value.__enter__.return_value.send_message
+            envio.assert_called_once()
+            mensagem = envio.call_args.args[0]
+        self.assertEqual(mensagem['To'], 'adotante@example.test')
+        link = urlsplit(mensagem.get_content().splitlines()[2])
+        self.assertEqual(link.netloc, 'pets.example.test')
+        self.assertEqual(link.path, '/pages/esqueci-senha.html')
+        redefinir = '/api/auth/redefinir-senha'
+        payload = {'token': link.fragment, 'nova_senha': 'nova-senha-segura', 'confirmacao': 'nova-senha-segura'}
+        with patch('itsdangerous.timed.time.time', return_value=time.time() + 1801):
+            self.assertEqual(visitante.post(redefinir, json=payload).status_code, 400)
+        self.assertEqual(visitante.post(redefinir, json=payload).status_code, 200)
+        self.assertEqual(visitante.post(redefinir, json=payload).status_code, 400)
+        self.assertFalse(self.client.get('/api/auth/me').json['autenticado'])
+        self.assertEqual(visitante.post('/api/auth/login', json={
+            'email': 'adotante@example.test', 'senha': 'nova-senha-segura'}).status_code, 200)
 
     def test_login_invalido_revoga_conta_anterior_e_cookie_copiado(self):
         for payload in [{'email': 'outro@example.test', 'senha': 'errada'}, []]:

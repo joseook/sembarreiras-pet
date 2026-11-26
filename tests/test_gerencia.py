@@ -39,8 +39,11 @@ class GerenciaTest(unittest.TestCase):
         pet = Pet(id='teste', nome='Pet teste', especie='Gato', sexo='Macho')
         db.session.add_all([self.gerente, self.comum, pet])
         db.session.flush()
+        data_visita = date.today() + timedelta(days=10)
+        while data_visita.weekday() in {0, 6}:
+            data_visita += timedelta(days=1)
         self.visita = Agendamento(usuario_id=self.comum.id, pet_id=pet.id,
-            data_visita=date.today() + timedelta(days=10), horario='14:30', mensagem='<script>teste</script>')
+            data_visita=data_visita, horario='14:30', mensagem='<script>teste</script>')
         db.session.add(self.visita)
         db.session.commit()
         self.app.config['GERENTES_IDS'] = str(self.gerente.id)

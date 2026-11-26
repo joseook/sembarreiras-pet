@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Recuperar senha | Sem Barreiras Pet</title>
+  <link rel="stylesheet" href="../assets/css/tema.css">
+  <link rel="stylesheet" href="../assets/css/auth.css">
+  <script type="module" src="../assets/js/modules/recuperar-senha.js"></script>
+</head>
+<body>
+  <main id="conteudo" class="auth-conteudo">
+    <div class="auth-conteudo-interno">
+      <h1 id="titulo">Recuperar senha</h1>
+      <p id="orientacao" class="auth-intro">Informe o e-mail que você usou no cadastro.</p>
+      <form id="solicitar" class="auth-form" method="dialog" aria-labelledby="titulo" hidden>
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" autocomplete="email" required maxlength="120">
+        </div>
+        <button class="t-btn t-btn--terracota" type="submit">Enviar link de recuperação</button>
+      </form>
+      <form id="redefinir" class="auth-form" method="dialog" aria-labelledby="titulo" hidden>
+        <div class="field">
+          <label for="nova-senha">Nova senha</label>
+          <input id="nova-senha" name="nova_senha" type="password" autocomplete="new-password" required minlength="8" maxlength="128">
+        </div>
+        <div class="field">
+          <label for="confirmacao">Repita a nova senha</label>
+          <input id="confirmacao" name="confirmacao" type="password" autocomplete="new-password" required minlength="8" maxlength="128">
+        </div>
+        <button class="t-btn t-btn--terracota" type="submit">Salvar nova senha</button>
+      </form>
+      <p id="status" class="auth-status" role="status"></p>
+      <noscript><p>Ative o JavaScript para recuperar sua senha.</p></noscript>
+      <p><a id="novo-link" href="esqueci-senha.html" hidden>Solicitar outro link</a></p>
+      <p><a href="login.html">Voltar para o login</a></p>
+    </div>
+  </main>
+</body>
+</html>
