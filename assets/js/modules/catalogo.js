@@ -25,7 +25,10 @@ async function carregar() {
       if (pet.fotos?.[0]?.src) {
         const img = document.createElement('img');
         img.src = new URL(pet.fotos[0].src, urlFicha).href;
-        img.alt = pet.fotos[0].alt || `Foto de ${pet.nome}`;
+        img.alt = '';
+        const descricao = document.createElement('span'); descricao.hidden = true;
+        descricao.id = `foto-${pet.id}`; descricao.textContent = 'Foto: ' + (pet.fotos[0].alt || pet.nome);
+        link.setAttribute('aria-describedby', descricao.id); item.append(descricao);
         img.width = 900; img.height = 1125; img.loading = 'lazy';
         img.addEventListener('error', () => { img.replaceWith(document.createTextNode('Foto indisponível')); }, { once: true });
         foto.append(img);
@@ -33,8 +36,8 @@ async function carregar() {
       const corpo = document.createElement('div'); corpo.className = 'h-pet-corpo';
       const titulo = document.createElement('h3'); titulo.textContent = pet.nome;
       const resumo = document.createElement('p'); resumo.textContent = [pet.especie, pet.idade, pet.porte].filter(Boolean).join(' · ');
-      const acao = document.createElement('p'); acao.textContent = 'Conhecer ' + pet.nome + ' →';
-      corpo.append(titulo, resumo, acao); link.append(foto, corpo); item.append(link); grade.append(item);
+      const acao = document.createElement('p'); acao.textContent = 'Conhecer ' + pet.nome + ' '; const seta = document.createElement('span'); seta.setAttribute('aria-hidden', 'true'); seta.textContent = '→'; acao.append(seta);
+      corpo.append(titulo, resumo, acao); link.append(foto, corpo); item.prepend(link); grade.append(item);
     }
     const quantidade = pets.length === 1 ? '1 pet encontrado' : `${pets.length} pets encontrados`;
     nota.textContent = pets.length ? `${quantidade}. A visita depende de confirmação.` : 'Nenhum pet encontrado para estes filtros. Tente outra busca ou limpe os filtros.';

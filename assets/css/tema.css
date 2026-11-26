@@ -102,6 +102,8 @@ a:hover { color: var(--t-tinta); }
 
 .t-nav ul { display: flex; align-items: center; gap: 1.75rem; }
 .t-nav a {
+  display: inline-block;
+  padding-block: 0.4rem;
   color: var(--t-texto);
   text-decoration: none;
   font-size: 0.95rem;
@@ -228,4 +230,12 @@ button[aria-disabled="true"] { opacity: .7; cursor: progress; }
 
 @media (prefers-reduced-motion: reduce) {
   .t-header { backdrop-filter: none; }
+}
+
+.auth-conteudo-interno > p > a { display: inline-block; padding-block: 0.35rem; }
+
+@media (forced-colors: active) {
+  button, .t-btn, .campo-senha__mostrar, .t-btn-logout { border: 1px solid ButtonText !important; }
+  :focus-visible { outline: 3px solid Highlight; outline-offset: 2px; }
+  .t-marca-icone, .p-conv-simbolo { forced-color-adjust: auto; }
 }
