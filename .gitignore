@@ -45,3 +45,8 @@ node_modules/
 .claude/
 .vercel
 .env*
+
+# ---------- Documentos .md locais (não versionar; só README e créditos das fotos) ----------
+*.md
+!README.md
+!assets/img/CREDITOS.md
