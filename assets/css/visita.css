@@ -6,6 +6,7 @@
 .visita-pet p, .visita-pet a { display: block; margin-top: .5rem; }
 .visita-form { padding: 1.5rem; background: var(--t-papel); border: 1px solid var(--t-borda); border-radius: var(--t-raio); }
 .visita-form > p { margin-block: 1rem; }
+.visita-form > .visita-aviso-acesso { padding: .85rem 1rem; border-left: .3rem solid var(--t-terracota-esc); border-radius: .5rem; background: var(--t-creme-2); color: var(--t-tinta); }
 .visita-campos { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
 .cf-campo { margin-block: 1.25rem; }
 .cf-campo label { display: block; margin-bottom: .4rem; font-weight: 600; }

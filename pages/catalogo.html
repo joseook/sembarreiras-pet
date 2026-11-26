@@ -30,9 +30,25 @@
       <button class="t-btn t-btn--terracota" type="submit">Buscar pets</button><button class="t-btn t-btn--contorno" type="reset">Limpar</button>
     </form>
     <p class="h-catalogo-status" role="status" aria-live="polite">Consultando animais disponíveis…</p>
-    <ul class="h-pets-grade" aria-label="Pets encontrados"></ul>
+    <h2 id="titulo-resultados" class="sr-only">Pets encontrados</h2>
+    <ul class="h-pets-grade" aria-labelledby="titulo-resultados"></ul>
     <noscript>Ative o JavaScript para consultar os animais cadastrados e usar os filtros.</noscript>
   </main>
-  <footer class="t-footer"><div class="t-container"><a href="minhas-visitas.html">Minhas visitas</a> · <a href="contato.html">Contato</a> · <a href="../privacidade.html">Privacidade</a></div></footer>
+  <footer class="t-footer">
+    <div class="t-footer-inner">
+      <a href="../index.html" class="t-marca" aria-label="Sem Barreiras Pet, página inicial">
+        <span class="t-marca-icone" aria-hidden="true">♥</span>
+        Sem Barreiras Pet
+      </a>
+      <nav aria-label="Links do rodapé">
+        <ul>
+          <li><a href="minhas-visitas.html">Minhas visitas</a></li>
+          <li><a href="contato.html">Contato</a></li>
+          <li><a href="../privacidade.html">Privacidade</a></li>
+        </ul>
+      </nav>
+      <p class="t-footer-copy">© 2026 Sem Barreiras Pet. Projeto acadêmico de IHC.</p>
+    </div>
+  </footer>
 </body>
 </html>

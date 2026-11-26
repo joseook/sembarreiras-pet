@@ -1,4 +1,5 @@
 import { requestApi } from './api.js';
+import { iniciarMostrarSenha, mensagem, ocupado, ocupar } from './form-feedback.js';
 
 window.addEventListener('hashchange', () => {
   if (window.location.hash) window.location.reload();
@@ -7,7 +8,7 @@ window.addEventListener('hashchange', () => {
 const token = window.location.hash.slice(1);
 const form = document.getElementById(token ? 'redefinir' : 'solicitar');
 const status = document.getElementById('status');
-const botao = form.querySelector('button');
+const botao = form.querySelector('button[type="submit"]');
 
 if (token) {
   window.history.replaceState(null, '', window.location.pathname);
@@ -19,26 +20,29 @@ if (token) {
 
 form.addEventListener('submit', async evento => {
   evento.preventDefault();
-  if (botao.disabled) return;
+  if (ocupado(botao)) return;
   const dados = Object.fromEntries(new FormData(form));
   if (token && dados.nova_senha !== dados.confirmacao) {
-    status.textContent = 'A nova senha e a confirmação precisam ser iguais.';
+    mensagem(status, 'A nova senha e a confirmação precisam ser iguais.', { erro: true });
     return;
   }
   if (token) dados.token = token;
-  botao.disabled = true;
-  status.textContent = token ? 'Salvando nova senha…' : 'Solicitando link…';
+  // aria-disabled em vez de disabled: o foco continua no botão durante o envio
+  ocupar(botao, true);
+  mensagem(status, token ? 'Salvando nova senha…' : 'Solicitando link…');
   try {
     const rota = token ? 'redefinir-senha' : 'recuperar-senha';
     const resposta = await requestApi('/api/auth/' + rota, { method: 'POST', body: dados });
     form.reset();
-    status.textContent = resposta.mensagem;
+    // Ao esconder o formulário, o foco vai para a mensagem para não cair no <body>
+    mensagem(status, resposta.mensagem, { focar: Boolean(token) });
     if (token) form.hidden = true;
   } catch (erro) {
-    status.textContent = erro.message;
+    mensagem(status, erro.message, { erro: true });
   } finally {
-    botao.disabled = false;
+    ocupar(botao, false);
   }
 });
 
 form.hidden = false;
+iniciarMostrarSenha(form);

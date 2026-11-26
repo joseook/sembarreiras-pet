@@ -120,7 +120,23 @@ async function atualizarNavegacaoUsuario() {
   });
 }
 
+/** WCAG 2.2.2: botão visível para pausar/retomar a faixa animada da home. */
+function iniciarPausaFaixa() {
+  const faixa = document.querySelector('.h-faixa');
+  if (!faixa) return;
+  const botao = document.createElement('button');
+  botao.type = 'button';
+  botao.className = 'h-faixa-pausa';
+  botao.textContent = 'Pausar faixa';
+  botao.addEventListener('click', () => {
+    const pausada = faixa.classList.toggle('h-faixa--pausada');
+    botao.textContent = pausada ? 'Retomar faixa' : 'Pausar faixa';
+  });
+  faixa.prepend(botao);
+}
+
 iniciarMenu();
+iniciarPausaFaixa();
 atualizarNavegacaoUsuario();
 iniciarModulos();
 if (document.querySelector('.h-pets-grade')) import('./modules/catalogo.js');

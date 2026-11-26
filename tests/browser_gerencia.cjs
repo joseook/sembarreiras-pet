@@ -75,13 +75,13 @@ app.run(host='127.0.0.1',port=${port},use_reloader=False)
   await page.locator('#proxima').click();
   await page.waitForFunction(() => document.querySelectorAll('.agenda-card').length === 1);
   page.once('dialog', dialog => dialog.accept());
-  await page.getByRole('button', { name: /^Confirmar solicitação/ }).click();
+  await page.getByRole('button', { name: /^Confirmar visita: solicitação/ }).click();
   await page.waitForFunction(() => document.querySelector('#feedback').textContent.includes('Agendamento confirmado') && !document.querySelector('#painel').hasAttribute('aria-busy'));
   assert.ok((await page.locator('#pagina').textContent()).includes('Página 1 de 1'));
   await page.locator('#status').selectOption('confirmado');
   await page.locator('#filtros button').click();
   await page.waitForFunction(() => document.querySelectorAll('.agenda-status--confirmado').length === 1);
-  assert.equal(await page.getByRole('button', { name: /^Confirmar solicitação/ }).count(), 0);
+  assert.equal(await page.getByRole('button', { name: /^Confirmar visita: solicitação/ }).count(), 0);
   console.log('OK paginação, confirmação persistida, filtro e retorno à página válida');
   for (const width of [1440, 768, 390, 320]) {
     await page.setViewportSize({ width, height: 1000 });

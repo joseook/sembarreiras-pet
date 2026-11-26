@@ -1,4 +1,11 @@
 import { requestApi } from './api.js';
+import { ocupado, ocupar } from './form-feedback.js';
+
+/** A lista é refeita após a ação: o foco vai ao resumo/mensagem (tabindex="-1") em vez de cair no <body>. */
+function focarResumo(erro = false) {
+  const resumo = !erro && document.getElementById('resumo');
+  (resumo && !resumo.closest('[hidden]') ? resumo : document.getElementById('feedback'))?.focus();
+}
 
 export function acoesVisita(visita, aoAtualizar, aoErro, podeIniciar = () => true) {
   const grupo = document.createElement('div');
@@ -7,13 +14,14 @@ export function acoesVisita(visita, aoAtualizar, aoErro, podeIniciar = () => tru
   const cancelar = document.createElement('button');
   cancelar.type = 'button'; cancelar.textContent = 'Cancelar visita';
   cancelar.addEventListener('click', async () => {
-    if (!podeIniciar() || !window.confirm(`Cancelar a visita #${visita.id}?`)) return;
-    cancelar.disabled = true;
+    if (ocupado(cancelar) || !podeIniciar() || !window.confirm(`Cancelar a visita #${visita.id}?`)) return;
+    ocupar(cancelar, true);
     try {
       const resultado = await requestApi(`/api/agendamentos/${visita.id}/cancelar`, { method: 'POST', body: {} });
       await aoAtualizar(resultado.mensagem);
-    } catch (erro) { aoErro(erro); }
-    finally { cancelar.disabled = false; }
+      focarResumo();
+    } catch (erro) { aoErro(erro); focarResumo(true); }
+    finally { ocupar(cancelar, false); }
   });
   const detalhes = document.createElement('details');
   const resumo = document.createElement('summary'); resumo.textContent = 'Remarcar visita';
@@ -35,15 +43,16 @@ export function acoesVisita(visita, aoAtualizar, aoErro, podeIniciar = () => tru
   form.append(salvar);
   form.addEventListener('submit', async evento => {
     evento.preventDefault();
-    if (!podeIniciar() || salvar.disabled) return;
-    salvar.disabled = true;
+    if (!podeIniciar() || ocupado(salvar)) return;
+    ocupar(salvar, true);
     try {
       const resultado = await requestApi(`/api/agendamentos/${visita.id}/remarcar`, {
         method: 'POST', body: { data: data.value, horario: horario.value },
       });
       await aoAtualizar(resultado.mensagem);
-    } catch (erro) { aoErro(erro); }
-    finally { salvar.disabled = false; }
+      focarResumo();
+    } catch (erro) { aoErro(erro); focarResumo(true); }
+    finally { ocupar(salvar, false); }
   });
   detalhes.append(resumo, nota, form); grupo.append(cancelar, detalhes);
   return grupo;

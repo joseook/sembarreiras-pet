@@ -1,5 +1,6 @@
 import { requestApi } from './api.js';
 import { destinoSeguro } from './destino.js';
+import { iniciarMostrarSenha, ocupado, ocupar } from './form-feedback.js';
 
 const destino = destinoSeguro(new URLSearchParams(window.location.search).get('next'));
 if (destino) {
@@ -31,6 +32,15 @@ function mensagemDeErro(campo) {
   return campo.validationMessage;
 }
 
+/** Telefone: além dos caracteres permitidos, exige de 10 a 15 dígitos (mesma regra do servidor). */
+function validarDigitos(campo) {
+  if (!campo.dataset.digitos) return;
+  const [minimo, maximo] = campo.dataset.digitos.split('-').map(Number);
+  const total = campo.value.replace(/\D/g, '').length;
+  const fora = campo.value && !campo.validity.patternMismatch && (total < minimo || total > maximo);
+  campo.setCustomValidity(fora ? `Use de ${minimo} a ${maximo} dígitos, com DDD (agora são ${total}).` : '');
+}
+
 /** Rádios do mesmo grupo compartilham um único erro, ligado ao fieldset. */
 function idDoErro(campo) {
   return `${campo.type === 'radio' ? campo.name : campo.id}-erro`;
@@ -51,7 +61,7 @@ function removerDescricao(campo, id) {
   else campo.removeAttribute('aria-describedby');
 }
 
-function mostrarErro(form, campo) {
+function mostrarErro(form, campo, texto) {
   const id = idDoErro(campo);
   let erro = document.getElementById(id);
   if (!erro) {
@@ -60,7 +70,7 @@ function mostrarErro(form, campo) {
     erro.className = 'field__erro';
     campo.closest('.field, .field-check, fieldset').append(erro);
   }
-  erro.textContent = `Erro: ${mensagemDeErro(campo)}`;
+  erro.textContent = `Erro: ${texto || mensagemDeErro(campo)}`;
   camposDoGrupo(form, campo).forEach((item) => {
     item.setAttribute('aria-invalid', 'true');
     adicionarDescricao(item, id);
@@ -76,16 +86,32 @@ function limparErro(form, campo) {
   });
 }
 
-/** Troca o texto da região viva; limpar antes garante novo anúncio por leitores de tela. */
-function anunciar(status, conteudo, tipo) {
+/** Troca o texto da região viva; erros usam role="alert". Limpar antes garante novo anúncio. */
+function anunciar(status, conteudo, tipo, focar = false) {
   status.classList.toggle('auth-status--erro', tipo === 'erro');
+  status.setAttribute('role', tipo === 'erro' ? 'alert' : 'status');
+  status.tabIndex = -1;
   status.replaceChildren();
-  window.setTimeout(() => status.append(...conteudo), 50);
+  window.setTimeout(() => {
+    status.append(...conteudo);
+    if (focar) status.focus();
+  }, 50);
+}
+
+/** Erros do servidor por campo (erro.campos; 409 no cadastro = e-mail já usado). */
+function errosDoServidor(form, tipo, erro) {
+  const campos = { ...(erro.campos || {}) };
+  if (tipo === 'cadastro' && erro.status === 409 && !campos.email) campos.email = erro.message;
+  return Object.entries(campos)
+    .map(([nome, texto]) => [form.elements.namedItem(nome), texto])
+    .filter(([campo]) => campo instanceof HTMLElement && campo.willValidate)
+    .map(([campo, texto]) => { mostrarErro(form, campo, String(texto)); return campo; });
 }
 
 function iniciarFormulario(form) {
   const status = form.querySelector('[data-form-status]');
   form.noValidate = true;
+  iniciarMostrarSenha(form);
 
   form.addEventListener('submit', async (evento) => {
     evento.preventDefault();
@@ -98,6 +124,7 @@ function iniciarFormulario(form) {
         if (gruposVistos.has(campo.name)) return;
         gruposVistos.add(campo.name);
       }
+      validarDigitos(campo);
       if (campo.checkValidity()) {
         limparErro(form, campo);
       } else {
@@ -114,14 +141,13 @@ function iniciarFormulario(form) {
     }
 
     const botao = form.querySelector('button[type="submit"]');
-    if (botao.disabled) return;
-    const textoOriginal = botao.textContent;
+    if (ocupado(botao)) return;
     const tipo = form.dataset.authForm;
     const dados = Object.fromEntries(new FormData(form));
     if (tipo === 'cadastro') dados.consentimento = form.elements.consentimento.checked;
 
-    botao.disabled = true;
-    botao.textContent = tipo === 'contato' ? 'Enviando...' : tipo === 'cadastro' ? 'Cadastrando...' : 'Entrando...';
+    // aria-disabled em vez de disabled: o botão mantém o foco durante o envio
+    ocupar(botao, true, tipo === 'contato' ? 'Enviando...' : tipo === 'cadastro' ? 'Cadastrando...' : 'Entrando...');
     let concluido = false;
     try {
       const resultado = await requestApi(tipo === 'contato' ? '/api/contato' : '/api/auth/' + tipo, { method: 'POST', body: dados });
@@ -136,19 +162,20 @@ function iniciarFormulario(form) {
       form.reset();
       window.location.assign(resultado.usuario.trocar_senha ? 'alterar-senha.html' : destino || (resultado.usuario.gerente ? 'gerencia.html' : '../index.html'));
     } catch (erro) {
-      anunciar(status, [erro.message], 'erro');
+      const comErro = errosDoServidor(form, tipo, erro);
+      anunciar(status, [erro.message], 'erro', !comErro.length);
+      comErro[0]?.focus();
     } finally {
-      if (!concluido) {
-        botao.disabled = false;
-        botao.textContent = textoOriginal;
-      }
+      if (!concluido) ocupar(botao, false);
     }
   });
 
   // Ao corrigir um campo que estava com erro, o aviso some sem esperar novo envio
   const revalidar = (evento) => {
     const campo = evento.target;
-    if (campo.getAttribute('aria-invalid') === 'true' && campo.checkValidity()) limparErro(form, campo);
+    if (campo.getAttribute('aria-invalid') !== 'true') return;
+    validarDigitos(campo);
+    if (campo.checkValidity()) limparErro(form, campo);
   };
   form.addEventListener('input', revalidar);
   form.addEventListener('change', revalidar);

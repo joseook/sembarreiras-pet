@@ -1,4 +1,5 @@
-import { requestApi } from './api.js';
+import { currentSession, requestApi } from './api.js';
+import { ocupado, ocupar } from './form-feedback.js';
 import { linkAcesso } from './destino.js';
 
 const LIMITE_MENSAGEM = 1000;
@@ -74,8 +75,12 @@ export function initSchedulingForm(form) {
     Object.keys(campos).forEach((nome) => definirErro(nome, ''));
   }
 
-  function mostrarStatus(tipo, paragrafos) {
+  function mostrarStatus(tipo, paragrafos, focar = false) {
     status.dataset.tipo = tipo;
+    // Erros usam role="alert"; quando não há campo para focar, o foco vai à mensagem
+    status.setAttribute('role', tipo === 'erro' ? 'alert' : 'status');
+    status.tabIndex = -1;
+    if (focar) window.setTimeout(() => status.focus(), 0);
     status.replaceChildren(
       ...paragrafos.map((texto) => {
         const p = document.createElement('p');
@@ -124,7 +129,8 @@ export function initSchedulingForm(form) {
 
   form.addEventListener('submit', async (evento) => {
     evento.preventDefault();
-    if (form.querySelector('button[type="submit"]').disabled) return;
+    const botaoEnvio = form.querySelector('button[type="submit"]');
+    if (botaoEnvio.disabled || ocupado(botaoEnvio)) return;
     limparErros();
 
     const erros = validar();
@@ -139,14 +145,11 @@ export function initSchedulingForm(form) {
     }
 
     const { iso } = montarDataHora(campos.data.value, campos.horario.value);
-    const botao = form.querySelector('button[type="submit"]');
-    const textoOriginalBotao = botao ? botao.textContent : '';
+    const botao = botaoEnvio;
 
     try {
-      if (botao) {
-        botao.disabled = true;
-        botao.textContent = 'Enviando ao abrigo...';
-      }
+      // aria-disabled em vez de disabled: o foco continua no botão durante o envio
+      ocupar(botao, true, 'Enviando ao abrigo...');
 
       const resultado = await requestApi('/api/agendamentos', {
         method: 'POST',
@@ -168,20 +171,36 @@ export function initSchedulingForm(form) {
       const acompanhar = document.createElement('a');
       acompanhar.href = 'minhas-visitas.html'; acompanhar.textContent = 'Acompanhar minhas visitas';
       status.append(acompanhar);
+      status.focus();
     } catch (erro) {
-      mostrarStatus('erro', [erro.message]);
+      const nomes = Object.keys(erro.campos || {}).filter((nome) => campos[nome]);
+      nomes.forEach((nome) => definirErro(nome, String(erro.campos[nome])));
+      mostrarStatus('erro', [erro.message], !nomes.length);
+      if (nomes.length) campos[nomes[0]].focus();
       if (erro.status === 401) {
         const acesso = document.createElement('a');
         acesso.href = linkAcesso(); acesso.textContent = 'Entrar e continuar esta solicitação';
         status.append(acesso);
       }
     } finally {
-      if (botao) {
-        botao.disabled = false;
-        botao.textContent = textoOriginalBotao;
-      }
+      ocupar(botao, false);
     }
   });
+  // Avisa logo na abertura quando é preciso entrar antes de solicitar a visita
+  currentSession().then((sessao) => {
+    if (sessao.autenticado) return;
+    const aviso = document.createElement('p');
+    aviso.className = 'visita-aviso-acesso';
+    aviso.append('Para enviar a solicitação, entre na sua conta. O que você preencher aqui será mantido. ');
+    const entrar = document.createElement('a');
+    entrar.href = linkAcesso(); entrar.textContent = 'Entrar para agendar';
+    const criar = document.createElement('a');
+    criar.href = linkAcesso('cadastro.html'); criar.textContent = 'criar uma conta';
+    aviso.append(entrar, ' ou ', criar, '.');
+    const titulo = form.querySelector('h2');
+    if (titulo) titulo.after(aviso); else form.prepend(aviso);
+  }).catch(() => { /* Sem sessão verificável: o envio mostra o erro, se houver. */ });
+
   if (petId) {
     const botao = form.querySelector('button[type="submit"]');
     botao.disabled = true;

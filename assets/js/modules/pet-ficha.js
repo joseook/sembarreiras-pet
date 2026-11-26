@@ -30,6 +30,16 @@ const CONVIVENCIA = {
   'nao-informado': { texto: 'Não informado', classe: 'p-conv--talvez', simbolo: '?' },
 };
 
+/** Região rolável acessível pelo teclado (WCAG 2.1.1): focável, com papel e nome. */
+function regiaoRolavel(conteudo, rotulo) {
+  const rolagem = el('div', 'p-tabela-rolagem');
+  rolagem.tabIndex = 0;
+  rolagem.setAttribute('role', 'region');
+  rolagem.setAttribute('aria-label', rotulo);
+  rolagem.append(conteudo);
+  return rolagem;
+}
+
 /** Cria um elemento com classe e texto (opcionais). */
 function el(tag, classe, texto) {
   const no = document.createElement(tag);
@@ -251,8 +261,7 @@ function montarVacinas(pet) {
   anexar(extras, el('li', null, pet.vermifugo), el('li', null, pet.antiparasitario));
 
   // A tabela fica numa região rolável para telas pequenas
-  const rolagem = el('div', 'p-tabela-rolagem');
-  rolagem.append(tabela);
+  const rolagem = regiaoRolavel(tabela, `Carteira de vacinação de ${pet.nome}`);
 
   return anexar(
     el('div', 'p-bloco'),
@@ -335,9 +344,7 @@ function montarExames(pet) {
     corpo.append(linha);
   });
   anexar(tabela, cabeca, corpo);
-  const rolagem = el('div', 'p-tabela-rolagem');
-  rolagem.append(tabela);
-  return rolagem;
+  return regiaoRolavel(tabela, `Exames de ${pet.nome}`);
 }
 
 function montarCuidados(pet) {

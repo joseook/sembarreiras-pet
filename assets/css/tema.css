@@ -242,8 +242,12 @@ a:hover { color: var(--t-tinta); }
 }
 .t-footer .t-marca { color: #fff; }
 .t-footer nav ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
+/* Todo link do rodapé escuro usa o tom claro, mesmo fora de <nav> (contraste AA) */
+.t-footer a { color: #E9DDCB; }
 .t-footer nav a { color: #E9DDCB; text-decoration: none; display: inline-flex; align-items: center; }
 .t-footer nav a:hover { color: #fff; text-decoration: underline; }
+/* Botão ocupado durante envio: continua focável (aria-disabled), só muda a aparência */
+button[aria-disabled="true"] { opacity: .7; cursor: progress; }
 .t-footer-copy { width: 100%; font-size: 0.82rem; color: #C9BBA6; }
 
 @media (prefers-reduced-motion: reduce) {

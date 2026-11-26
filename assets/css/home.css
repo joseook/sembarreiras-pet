@@ -129,10 +129,32 @@
 
 @keyframes h-rolar { to { transform: translateX(-50%); } }
 
+/* WCAG 2.2.2: a faixa pausa com o ponteiro em cima e pelo botão Pausar/Retomar
+   (o trilho não tem itens focáveis; o foco no botão não pausa para o "Retomar" funcionar na hora) */
+.h-faixa { display: flex; align-items: center; }
+.h-faixa-trilho { flex: none; }
+.h-faixa-trilho:hover,
+.h-faixa--pausada .h-faixa-trilho { animation-play-state: paused; }
+.h-faixa-pausa {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  margin-inline: 0.75rem;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--t-tinta);
+  border-radius: 999px;
+  background: var(--t-papel);
+  color: var(--t-tinta);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 /* Quem prefere menos movimento recebe a faixa parada, com quebra de linha */
 @media (prefers-reduced-motion: reduce) {
-  .h-faixa-trilho { animation: none; width: auto; flex-wrap: wrap; justify-content: center; }
+  .h-faixa-trilho { animation: none; width: auto; flex: 1 1 auto; min-width: 0; flex-wrap: wrap; justify-content: center; }
   .h-faixa-trilho li[aria-hidden="true"] { display: none; }
+  .h-faixa-pausa { display: none; }
 }
 
 /* ---------- Pets ---------- */
@@ -242,7 +264,7 @@
 .h-catalogo-filtros { display: flex; flex-wrap: wrap; align-items: end; gap: .8rem; margin: 1.5rem 0; padding: 1rem; border: 1px solid var(--t-borda); border-radius: var(--t-raio); background: var(--t-papel); }
 .h-catalogo-filtros > div { flex: 1 1 10rem; min-width: 0; }
 .h-catalogo-filtros label { display: block; font-weight: 600; margin-bottom: .35rem; }
-.h-catalogo-filtros input, .h-catalogo-filtros select { width: 100%; padding: .65rem; min-height: 2.75rem; font: inherit; color: var(--t-tinta); background: white; border: 1px solid var(--t-suave); border-radius: .4rem; }
+.h-catalogo-filtros input, .h-catalogo-filtros select { width: 100%; padding: .65rem; min-height: 2.75rem; height: 2.75rem; font: inherit; color: var(--t-tinta); background: white; border: 1px solid var(--t-suave); border-radius: .4rem; }
 .catalogo-pagina { padding-block: 3rem; }
 .catalogo-pagina h1 { font-size: clamp(2.3rem, 5vw, 3.75rem); }
 .catalogo-intro { margin-top: 1rem; color: var(--t-suave); }

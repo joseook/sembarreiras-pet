@@ -1,5 +1,6 @@
 import { currentSession, requestApi } from './api.js';
 import { acoesVisita } from './agenda-acoes.js';
+import { ocupar } from './form-feedback.js';
 
 const painel = document.getElementById('painel');
 const feedback = document.getElementById('feedback');
@@ -56,13 +57,13 @@ function card(visita) {
   if (visita.status === 'pendente') {
     const botao = elemento('button', 'Confirmar visita', 't-btn t-btn--terracota');
     botao.type = 'button';
-    botao.setAttribute('aria-label', `Confirmar solicitação ${visita.id}, ${data} às ${visita.horario}`);
+    // O nome acessível começa pelo texto visível (WCAG 2.5.3)
+    botao.setAttribute('aria-label', `Confirmar visita: solicitação ${visita.id}, ${data} às ${visita.horario}`);
     botao.addEventListener('click', async () => {
       if (ocupado) return;
       if (!window.confirm(`Confirmar a visita de ${visita.solicitante?.nome || 'solicitante'} em ${data} às ${visita.horario}?`)) return;
       ocupado = true;
-      botao.disabled = true;
-      botao.textContent = 'Confirmando…';
+      ocupar(botao, true, 'Confirmando…');
       try {
         const resultado = await requestApi(`/api/gerencia/agendamentos/${visita.id}/confirmar`, { method: 'POST', body: {} });
         ocupado = false;
@@ -70,8 +71,8 @@ function card(visita) {
         document.getElementById('resumo').focus();
       } catch (erro) {
         tratarErro(erro);
-        botao.disabled = false;
-        botao.textContent = 'Confirmar visita';
+        ocupar(botao, false);
+        feedback.focus();
       } finally { ocupado = false; }
     });
     item.append(botao);
