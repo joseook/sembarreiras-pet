@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+.playwright-mcp
+.remember
+.claude
+tests
+__pycache__
+*.db
+instance
+inspiracoes
+IHC

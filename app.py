@@ -9,6 +9,7 @@ from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from flask import Flask, send_from_directory, request, jsonify, session, abort, redirect
 from itsdangerous import BadData
+from werkzeug.exceptions import HTTPException
 from urllib.parse import urlencode
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import joinedload
@@ -68,6 +69,26 @@ def create_app(config_class=Config):
         db.session.rollback()
         app.logger.error('Falha de banco em %s (%s).', request.path, type(erro).__name__)
         return jsonify({'erro': 'Serviço temporariamente indisponível. Tente novamente.'}), 503
+
+    @app.errorhandler(HTTPException)
+    def erro_http_api(erro):
+        # Rotas /api sempre respondem JSON com a mensagem certa para o usuário final.
+        if not request.path.startswith('/api/'):
+            return erro
+        mensagens = {
+            404: 'Recurso não encontrado.',
+            405: 'Operação não permitida para este endereço.',
+            413: 'O conteúdo enviado excede o limite permitido.',
+        }
+        return jsonify({'erro': mensagens.get(erro.code, 'Não foi possível concluir a solicitação.')}), erro.code
+
+    @app.errorhandler(Exception)
+    def erro_inesperado(erro):
+        if isinstance(erro, HTTPException):
+            return erro_http_api(erro)
+        db.session.rollback()
+        app.logger.error('Erro inesperado em %s (%s).', request.path, type(erro).__name__)
+        return jsonify({'erro': 'Erro interno no servidor. Tente novamente em instantes.'}), 500
 
     @app.errorhandler(413)
     def corpo_excessivo(erro):
@@ -421,8 +442,10 @@ def create_app(config_class=Config):
         if usuario:
             try:
                 enviar_recuperacao(usuario)
-            except (OSError, smtplib.SMTPException, ValueError):
-                app.logger.warning('Falha de envio do e-mail de recuperação.')
+            except (OSError, smtplib.SMTPException, ValueError) as erro:
+                app.logger.warning('Falha de envio do e-mail de recuperação (%s).', type(erro).__name__)
+                return jsonify({'erro': 'Não foi possível enviar o e-mail de recuperação agora. '
+                                        'Tente novamente em alguns minutos.'}), 503
         return jsonify({'mensagem': 'Se o e-mail estiver cadastrado, você receberá um link de recuperação.'}), 202
 
     @app.post('/api/auth/redefinir-senha')

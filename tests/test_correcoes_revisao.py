@@ -101,6 +101,23 @@ class CorrecoesTest(unittest.TestCase):
         self.assertEqual(visitante.post('/api/auth/login', json={
             'email': 'adotante@example.test', 'senha': 'nova-senha-segura'}).status_code, 200)
 
+    def test_falha_smtp_informa_erro_real_ao_usuario(self):
+        import smtplib
+        self.app.config.update(SB_PUBLIC_URL='https://pets.example.test', SMTP_HOST='smtp.example.test',
+                               SMTP_FROM='pets@example.test')
+        with patch('recuperacao.smtplib.SMTP', side_effect=smtplib.SMTPAuthenticationError(535, b'x')):
+            resposta = self.app.test_client().post('/api/auth/recuperar-senha',
+                                                   json={'email': 'adotante@example.test'})
+        self.assertEqual(resposta.status_code, 503)
+        self.assertIn('Não foi possível enviar', resposta.json['erro'])
+
+    def test_rotas_api_inexistentes_respondem_json(self):
+        cliente = self.app.test_client()
+        self.assertEqual(cliente.get('/api/nao-existe').json, {'erro': 'Recurso não encontrado.'})
+        resposta = cliente.get('/api/auth/logout')
+        self.assertIn(resposta.status_code, (404, 405))
+        self.assertIn('erro', resposta.json)
+
     def test_login_invalido_revoga_conta_anterior_e_cookie_copiado(self):
         for payload in [{'email': 'outro@example.test', 'senha': 'errada'}, []]:
             self.login('gerente')
