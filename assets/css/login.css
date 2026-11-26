@@ -1,11 +1,3 @@
-/* =========================================================
-   Sem Barreiras Pet — login.css
-   Ajustes específicos da tela de login. O layout em duas
-   colunas, campos e mensagens vêm de auth.css.
-   Ordem: global.css -> tema.css -> auth.css -> login.css
-   ========================================================= */
-
-/* No mobile, os benefícios ficam em duas colunas para o painel ser compacto */
 @media (min-width: 30rem) and (max-width: 59.99rem) {
   .auth-pagina--login .auth-lista { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
 }

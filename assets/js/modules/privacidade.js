@@ -8,4 +8,4 @@ try {
     bloco.append(titulo, texto); return bloco;
   });
   document.getElementById('politica-secoes').replaceChildren(...secoes);
-} catch { /* O texto HTML descreve o mesmo funcionamento quando a API está indisponível. */ }
+} catch {  }

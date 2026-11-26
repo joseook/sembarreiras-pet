@@ -1,4 +1,3 @@
-/** Comunicação com a API real. Não cria contas ou sessões no navegador. */
 async function apiBase() {
   try {
     const { default: config } = await import('../../../config.js');
@@ -8,13 +7,11 @@ async function apiBase() {
   }
 }
 
-// Remove o armazenamento inseguro das versões anteriores sem ler as senhas.
 try {
   localStorage.removeItem('sb_usuarios_locais');
   localStorage.removeItem('sb_usuario_atual');
-} catch { /* O navegador pode bloquear armazenamento local. */ }
+} catch {  }
 
-// Usada quando o servidor não devolve JSON (ex.: falha da plataforma de hospedagem).
 function mensagemPorStatus(status) {
   if (status === 401) return 'Sua sessão expirou. Entre novamente.';
   if (status === 403) return 'Você não tem permissão para esta ação.';

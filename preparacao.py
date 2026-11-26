@@ -9,7 +9,6 @@ def preparar_tabelas():
     if db.engine.dialect.name != 'postgresql':
         db.create_all()
         return
-    # DDL e restrições são atômicas: não há janela de tabelas novas desprotegidas.
     with db.engine.begin() as conexao:
         db.metadata.create_all(bind=conexao)
         papeis = set(conexao.execute(text("SELECT rolname FROM pg_roles WHERE rolname IN ('anon', 'authenticated')")).scalars())

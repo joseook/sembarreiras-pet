@@ -1,11 +1,3 @@
-/* =========================================================
-   Sem Barreiras Pet — cadastro.css
-   Ajustes específicos da tela de cadastro. O layout em duas
-   colunas, campos e mensagens vêm de auth.css.
-   Ordem: global.css -> tema.css -> auth.css -> cadastro.css
-   ========================================================= */
-
-/* Jornada em 3 passos: o passo atual tem selo em texto (não só cor) */
 .cadastro-jornada__atual .auth-icone { background: var(--t-terracota-claro); color: var(--t-tinta); }
 
 .cadastro-jornada .auth-icone {
@@ -26,7 +18,6 @@
   vertical-align: 0.1em;
 }
 
-/* Bloco de confiança */
 .cadastro-confianca {
   display: flex;
   align-items: center;
@@ -42,7 +33,6 @@
 }
 .cadastro-confianca .auth-icone { background: var(--t-tinta); color: var(--t-verde-claro); }
 
-/* Consentimento: o link fica numa linha própria, fora do <label> */
 .cadastro-consentimento .field__ajuda a {
   display: inline-block;
   margin-top: 0.15rem;

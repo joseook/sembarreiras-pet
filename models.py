@@ -16,7 +16,6 @@ class PoliticaPrivacidade(db.Model):
     ultima_atualizacao = db.Column(db.Date, nullable=False, default=date.today)
     ativo = db.Column(db.Boolean, default=True)
     
-    # Relacionamento com as seções ordenadas
     secoes = db.relationship(
         'SecaoPrivacidade',
         backref='politica',
@@ -61,7 +60,7 @@ class Usuario(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
     telefone = db.Column(db.String(30), nullable=False)
     senha_hash = db.Column(db.String(255), nullable=False)
-    tipo_moradia = db.Column(db.String(30), nullable=False)  # 'casa' ou 'apartamento'
+    tipo_moradia = db.Column(db.String(30), nullable=False)
     consentimento = db.Column(db.Boolean, default=True, nullable=False)
     criado_em = db.Column(db.DateTime, default=agora_utc)
     
@@ -102,14 +101,14 @@ class Usuario(db.Model):
 class Pet(db.Model):
     __tablename__ = 'pets'
     
-    id = db.Column(db.String(50), primary_key=True)  # ex: 'nina'
+    id = db.Column(db.String(50), primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
-    especie = db.Column(db.String(50), nullable=False)  # 'Cachorro', 'Gato', etc.
-    sexo = db.Column(db.String(20), nullable=False)     # 'Fêmea', 'Macho'
+    especie = db.Column(db.String(50), nullable=False)
+    sexo = db.Column(db.String(20), nullable=False)
     raca = db.Column(db.String(100), nullable=True)
-    idade = db.Column(db.String(50), nullable=True)     # '2 anos'
-    porte = db.Column(db.String(50), nullable=True)     # 'Pequeno', 'Médio', 'Grande'
-    peso = db.Column(db.String(20), nullable=True)      # '11 kg'
+    idade = db.Column(db.String(50), nullable=True)
+    porte = db.Column(db.String(50), nullable=True)
+    peso = db.Column(db.String(20), nullable=True)
     cor = db.Column(db.String(50), nullable=True)
     castrado = db.Column(db.Boolean, default=False)
     microchip = db.Column(db.Boolean, default=False)
@@ -118,7 +117,6 @@ class Pet(db.Model):
     rotina = db.Column(db.Text, nullable=True)
     apartamento = db.Column(db.String(100), nullable=True)
     
-    # Campos estruturados armazenados como JSON para flexibilidade
     temperamento = db.Column(db.JSON, nullable=True)
     vacinas = db.Column(db.JSON, nullable=True)
     doencas_passadas = db.Column(db.JSON, nullable=True)
@@ -128,7 +126,7 @@ class Pet(db.Model):
     vermifugo = db.Column(db.String(255), nullable=True)
     antiparasitario = db.Column(db.String(255), nullable=True)
     alergias = db.Column(db.String(255), nullable=True)
-    status = db.Column(db.String(30), default='disponivel')  # 'disponivel', 'em-adocao', 'adotado'
+    status = db.Column(db.String(30), default='disponivel')
     criado_em = db.Column(db.DateTime, default=agora_utc)
     
     agendamentos = db.relationship('Agendamento', backref='pet', lazy=True)
@@ -152,7 +150,6 @@ class Pet(db.Model):
             'rotina': self.rotina,
             'apartamento': self.apartamento,
             'temperamento': self.temperamento or [],
-            # Ausência de registro não significa vacinação em dia ou ausência de doença.
             'vacinas': self.vacinas,
             'doencasPassadas': self.doencas_passadas,
             'doencasAtuais': self.doencas_atuais,
@@ -174,7 +171,7 @@ class Agendamento(db.Model):
     data_visita = db.Column(db.Date, nullable=False)
     horario = db.Column(db.String(10), nullable=False)
     mensagem = db.Column(db.Text, nullable=True)
-    status = db.Column(db.String(30), default='pendente')  # 'pendente', 'confirmado', 'cancelado'
+    status = db.Column(db.String(30), default='pendente')
     criado_em = db.Column(db.DateTime, default=agora_utc)
     
     def to_dict(self):

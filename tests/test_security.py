@@ -80,7 +80,6 @@ class SecurityTest(unittest.TestCase):
     def test_visitas_rejeitam_passado_e_usam_brasilia(self):
         from datetime import datetime, timezone
         self.login()
-        # 16:00 UTC corresponde a 13:00 em Brasília.
         class Clock(datetime):
             @classmethod
             def now(cls, tz=None):

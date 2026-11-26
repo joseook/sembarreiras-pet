@@ -1,7 +1,6 @@
 import { requestApi } from './api.js';
 import { ocupado, ocupar } from './form-feedback.js';
 
-/** A lista é refeita após a ação: o foco vai ao resumo/mensagem (tabindex="-1") em vez de cair no <body>. */
 function focarResumo(erro = false) {
   const resumo = !erro && document.getElementById('resumo');
   (resumo && !resumo.closest('[hidden]') ? resumo : document.getElementById('feedback'))?.focus();

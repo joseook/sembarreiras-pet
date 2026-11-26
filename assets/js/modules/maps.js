@@ -1,29 +1,9 @@
-/**
- * Mapa do abrigo — Google Maps JavaScript API (carregamento dinâmico).
- *
- * Princípios:
- * - O endereço em texto já está no HTML; o mapa é um complemento, nunca a
- *   única forma de informar a localização.
- * - Sem chave (config.googleMapsApiKey vazio), com chave inválida ou sem rede,
- *   o fallback textual do HTML permanece visível. Nada bloqueia a página.
- * - Usa a API atual: carregamento com `loading=async`, `google.maps.importLibrary`
- *   e `AdvancedMarkerElement` (não usa o `google.maps.Marker` legado).
- *
- * Estrutura esperada no HTML:
- *   <div data-map data-shelter-id data-lat data-lng data-nome data-mock>
- *     <div data-map-canvas hidden></div>
- *     <div data-map-fallback> ... [data-map-status] [data-map-route]
- *         [data-map-lat] [data-map-lng] ... </div>
- *   </div>
- */
-
 const SCRIPT_ID = 'google-maps-js-api';
 const TEMPO_LIMITE_MS = 10000;
 const ZOOM_PADRAO = 15;
 
 let carregamentoMaps = null;
 
-/** Injeta o script do Google Maps uma única vez e resolve quando estiver pronto. */
 function carregarGoogleMaps(chave) {
   if (window.google?.maps?.importLibrary) return Promise.resolve(window.google.maps);
   if (carregamentoMaps) return carregamentoMaps;
@@ -74,7 +54,6 @@ function atualizarFallback(container, abrigo) {
   if (lat) lat.textContent = String(abrigo.latitude);
   if (lng) lng.textContent = String(abrigo.longitude);
 
-  // Link de rota só para abrigos reais: rota para um ponto fictício confundiria a pessoa.
   const rota = container.querySelector('[data-map-route]');
   if (rota && !abrigo.mock && Number.isFinite(abrigo.latitude) && Number.isFinite(abrigo.longitude)) {
     const destino = `${abrigo.latitude},${abrigo.longitude}`;
@@ -92,11 +71,6 @@ function mostrarStatus(container, mensagem) {
   if (status) status.textContent = mensagem;
 }
 
-/**
- * Inicializa o mapa do abrigo.
- * @param {HTMLElement} container elemento com [data-map]
- * @param {{googleMapsApiKey?: string, googleMapsMapId?: string}} config
- */
 export async function initShelterMap(container, config) {
   const canvas = container.querySelector('[data-map-canvas]');
   const fallback = container.querySelector('[data-map-fallback]');
@@ -110,7 +84,6 @@ export async function initShelterMap(container, config) {
     return;
   }
 
-  // Chamado pelo Google quando a chave é recusada (inválida, sem cobrança, referrer bloqueado).
   window.gm_authFailure = () => {
     canvas.hidden = true;
     if (fallback) fallback.hidden = false;
@@ -139,9 +112,6 @@ export async function initShelterMap(container, config) {
     });
     new AdvancedMarkerElement({ map: mapa, position: posicao, title: abrigo.nome });
 
-    // O fallback continua visível (rota e coordenadas). O texto não afirma que o
-    // mapa carregou: com chave inválida o Google às vezes só registra "InvalidKey"
-    // no console, sem chamar gm_authFailure, e não há sinal confiável para detectar.
     mostrarStatus(container, abrigo.mock
       ? 'Mapa com localização de exemplo. Se ele não aparecer, use o endereço em texto acima.'
       : 'Se o mapa não aparecer, use o endereço em texto acima.');

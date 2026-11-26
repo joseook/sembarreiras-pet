@@ -1,27 +1,10 @@
-/* =========================================================
-   Sem Barreiras Pet — components.css
-   Componentes compartilhados pelas páginas públicas (home e
-   "Como funciona"): base tipográfica, skip link, cabeçalho,
-   menu responsivo, botões e rodapé.
-
-   Estes blocos vieram do antigo index.css (entrega da home) e
-   foram centralizados aqui para que todas as páginas públicas
-   tenham a mesma aparência. As cores são apelidos dos tokens
-   de tema.css, que precisa estar carregado na mesma página.
-
-   Ordem de carregamento esperada:
-   global.css -> components.css -> tema.css -> <página>.css
-   ========================================================= */
-
 :root {
-  /* Apelidos dos tokens de tema.css (carregado na mesma página), para não
-     repetir valores. Só os âmbar e os raios não existem no tema.
-     Contrastes: terracota sobre creme 4,8:1. */
+
   --sbp-terracota: var(--t-terracota);
   --sbp-terracota-escuro: var(--t-terracota-esc);
   --sbp-terracota-claro: var(--t-terracota-claro);
-  --sbp-texto-claro: var(--t-creme-2);   /* texto sobre fundo escuro */
-  --sbp-ambar: #E8A33D;          /* usar só como fundo, com texto --sbp-tinta */
+  --sbp-texto-claro: var(--t-creme-2);
+  --sbp-ambar: #E8A33D;
   --sbp-ambar-escuro: #d8912c;
   --sbp-ambar-claro: var(--t-ambar-claro);
   --sbp-tinta: var(--t-tinta);
@@ -36,7 +19,6 @@
   --sbp-raio-grande: 1rem;
 }
 
-/* ---------- Base ---------- */
 *,
 *::before,
 *::after {
@@ -77,9 +59,6 @@ h1, h2, h3, h4 {
   margin: 0 0 0.5em;
 }
 
-/* Foco visível: definido em global.css (anel duplo, visível em qualquer fundo) */
-
-/* ---------- Movimento reduzido ---------- */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -90,7 +69,6 @@ h1, h2, h3, h4 {
   }
 }
 
-/* ---------- Link de pular navegação ---------- */
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -107,7 +85,6 @@ h1, h2, h3, h4 {
   left: 0;
 }
 
-/* ---------- Cabeçalho ---------- */
 .site-header {
   background-color: var(--sbp-branco);
   border-bottom: 1px solid var(--sbp-borda);
@@ -207,7 +184,6 @@ h1, h2, h3, h4 {
   text-decoration: none !important;
 }
 
-/* ---------- Botões ---------- */
 .btn-primary,
 .btn-secundario,
 .btn-terciario {
@@ -261,10 +237,6 @@ h1, h2, h3, h4 {
   opacity: 0.8;
 }
 
-/* ---------- Menu mobile ----------
-   Aprimoramento progressivo: sem JavaScript, o menu fica sempre
-   visível e o botão "Menu" some. A classe .js é adicionada no
-   <html> por um script curto no <head> de cada página. */
 .menu-toggle {
   display: none;
 }
@@ -298,7 +270,6 @@ h1, h2, h3, h4 {
   }
 }
 
-/* ---------- Rodapé ---------- */
 .site-footer {
   background-color: var(--sbp-tinta);
   color: var(--sbp-texto-claro);
@@ -346,7 +317,6 @@ h1, h2, h3, h4 {
   margin: 0;
 }
 
-/* ---------- Utilitários compartilhados ---------- */
 .selo-demo {
   display: inline-block;
   padding: 0.15rem 0.6rem;

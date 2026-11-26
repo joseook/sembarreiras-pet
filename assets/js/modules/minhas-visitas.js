@@ -23,7 +23,6 @@ async function carregar(mensagem = '', silencioso = false) {
       dados = await requestApi('/api/agendamentos?pagina=' + pagina);
     }
     const novaAssinatura = JSON.stringify(dados.agendamentos);
-    // Não remove campos em edição nem o foco quando não houve mudanças.
     if (novaAssinatura !== assinatura || !silencioso) {
       const editando = lista.contains(document.activeElement) || lista.querySelector('details[open]');
       if (silencioso && editando) {

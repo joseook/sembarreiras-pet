@@ -57,7 +57,6 @@ function card(visita) {
   if (visita.status === 'pendente') {
     const botao = elemento('button', 'Confirmar visita', 't-btn t-btn--terracota');
     botao.type = 'button';
-    // O nome acessível começa pelo texto visível (WCAG 2.5.3)
     botao.setAttribute('aria-label', `Confirmar visita: solicitação ${visita.id}, ${data} às ${visita.horario}`);
     botao.addEventListener('click', async () => {
       if (ocupado) return;

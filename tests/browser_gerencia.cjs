@@ -1,5 +1,3 @@
-/* PYTHON_EXE e PLAYWRIGHT_MODULE aceitam instalações existentes.
-   Usa SQLite em memória; nenhuma conexão ou gravação no Supabase. */
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');

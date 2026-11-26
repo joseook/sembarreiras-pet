@@ -1,4 +1,3 @@
-/** Contrato da ficha: campos opcionais ausentes não representam fatos de saúde. */
 const texto = (valor, padrao = 'Não informado') =>
   typeof valor === 'string' && valor.trim() ? valor : padrao;
 const textos = valor => Array.isArray(valor) ? valor.filter(item => typeof item === 'string') : [];

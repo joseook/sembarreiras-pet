@@ -1,11 +1,3 @@
-/* =========================================================
-   Sem Barreiras Pet — home.css
-   Landing page (index.html). Tokens, cabeçalho, botões e rodapé
-   vêm de tema.css. Prefixo .h- = exclusivo da home.
-   Mobile-first.
-   ========================================================= */
-
-/* ---------- Hero ---------- */
 .h-hero { padding: 2.5rem 0 3.5rem; }
 
 .h-hero-grade { display: grid; gap: 2.75rem; align-items: center; }
@@ -47,7 +39,6 @@
 }
 .h-numeros dt { font-size: 0.8rem; color: var(--t-suave); max-width: 8.5rem; }
 
-/* Visual do hero: foto grande + miniatura + selo flutuante */
 .h-hero-visual { position: relative; padding-bottom: 2.5rem; }
 
 .h-foto-principal {
@@ -104,7 +95,6 @@
   .h-selo-flutuante { right: -1.25rem; }
 }
 
-/* ---------- Faixa de benefícios ---------- */
 .h-faixa {
   overflow: hidden;
   border-block: 1px solid var(--t-borda);
@@ -129,8 +119,6 @@
 
 @keyframes h-rolar { to { transform: translateX(-50%); } }
 
-/* WCAG 2.2.2: a faixa pausa com o ponteiro em cima e pelo botão Pausar/Retomar
-   (o trilho não tem itens focáveis; o foco no botão não pausa para o "Retomar" funcionar na hora) */
 .h-faixa { display: flex; align-items: center; }
 .h-faixa-trilho { flex: none; }
 .h-faixa-trilho:hover,
@@ -150,14 +138,12 @@
   cursor: pointer;
 }
 
-/* Quem prefere menos movimento recebe a faixa parada, com quebra de linha */
 @media (prefers-reduced-motion: reduce) {
   .h-faixa-trilho { animation: none; width: auto; flex: 1 1 auto; min-width: 0; flex-wrap: wrap; justify-content: center; }
   .h-faixa-trilho li[aria-hidden="true"] { display: none; }
   .h-faixa-pausa { display: none; }
 }
 
-/* ---------- Pets ---------- */
 .h-pets { padding: 4rem 0; }
 
 .h-pets-topo {
@@ -224,7 +210,6 @@
   .h-pet-link:hover { transform: none; }
 }
 
-/* ---------- Acessibilidade ---------- */
 .h-acesso { padding: 4rem 0; }
 
 .h-acesso-caixa {

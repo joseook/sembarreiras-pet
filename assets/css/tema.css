@@ -1,19 +1,3 @@
-/* =========================================================
-   Sem Barreiras Pet — tema.css
-   Tema "creme + terracota" usado pela landing (index.html) e
-   pela ficha do pet (pages/pet.html): tokens, barra de aviso,
-   cabeçalho, botões, tipografia e rodapé.
-
-   Ordem de carregamento: global.css -> tema.css -> <página>.css
-   (global.css continua responsável por foco visível, skip link,
-   .sr-only e .back-link.)
-
-   Contrastes verificados (WCAG AA):
-   terracota #B4492A sobre creme #FAF3E7 = 4,8:1
-   branco sobre terracota                  = 5,3:1
-   tinta #2A211C sobre creme               = 14:1
-   ========================================================= */
-
 :root {
   --t-creme: #FAF3E7;
   --t-creme-2: #F3E9D8;
@@ -21,7 +5,7 @@
   --t-tinta: #2A211C;
   --t-tinta-2: #3A2F28;
   --t-texto: #4A3F37;
-  --t-suave: #6B5E54;           /* 5,6:1 sobre creme */
+  --t-suave: #6B5E54;
   --t-borda: #E6D9C4;
   --t-terracota: #B4492A;
   --t-terracota-esc: #96391E;
@@ -37,7 +21,6 @@
   --t-raio-pequeno: 0.75rem;
   --t-sombra: 0 1.25rem 3rem rgba(42, 33, 28, 0.18);
 
-  /* O anel de foco do global.css usa esta variável: no tema ela vira tinta escura */
   --color-brand-dark: #2A211C;
 }
 
@@ -56,7 +39,6 @@ a:hover { color: var(--t-tinta); }
 
 .t-container { width: min(100% - 2.5rem, 72rem); margin-inline: auto; }
 
-/* Palavra em destaque dentro dos títulos (itálico terracota) */
 .t-destaque { font-style: italic; color: var(--t-terracota); font-weight: 500; }
 
 .t-sobretitulo {
@@ -69,7 +51,6 @@ a:hover { color: var(--t-tinta); }
   margin-bottom: 0.9rem;
 }
 
-/* ---------- Barra de aviso (topo) ---------- */
 .t-aviso {
   background: var(--t-tinta);
   color: #F3E9D8;
@@ -79,7 +60,6 @@ a:hover { color: var(--t-tinta); }
 }
 .t-aviso strong { color: #fff; font-weight: 700; }
 
-/* ---------- Cabeçalho ---------- */
 .t-header {
   position: sticky;
   top: 0;
@@ -130,7 +110,7 @@ a:hover { color: var(--t-tinta); }
 .t-nav a:hover,
 .t-nav a[aria-current="page"] { color: var(--t-terracota-esc); text-decoration: underline; text-underline-offset: 0.25em; }
 .t-nav .t-nav-entrar { margin-left: 0.5rem; }
-/* Botões dentro do menu mantêm a cor própria (vencem a regra .t-nav a) */
+
 .t-nav a.t-btn { color: #fff; text-decoration: none; }
 .t-nav a.t-btn:hover { color: #fff; text-decoration: none; }
 
@@ -161,7 +141,6 @@ a:hover { color: var(--t-tinta); }
   .t-nav .t-nav-entrar { margin-left: 0; }
 }
 
-/* ---------- Botões ---------- */
 .t-btn {
   display: inline-flex;
   align-items: center;
@@ -184,7 +163,6 @@ a:hover { color: var(--t-tinta); }
 .t-btn--contorno:hover { border-color: var(--t-tinta); color: var(--t-tinta); }
 .t-btn--pequeno { padding: 0.5rem 1.15rem; font-size: 0.9rem; }
 
-/* Cadastro: paleta terracota e foco com duas bordas contrastantes. */
 .t-btn--cadastro {
   background: var(--t-terracota);
   color: #fff;
@@ -215,7 +193,6 @@ a:hover { color: var(--t-tinta); }
 }
 .t-link-seta:hover { color: var(--t-tinta); text-decoration: underline; text-underline-offset: 0.25em; }
 
-/* ---------- Chips ---------- */
 .t-chip {
   display: inline-flex;
   align-items: center;
@@ -229,7 +206,6 @@ a:hover { color: var(--t-tinta); }
 }
 .t-chip--terracota { background: var(--t-terracota-claro); border-color: transparent; color: var(--t-terracota-esc); }
 
-/* ---------- Rodapé ---------- */
 .t-footer { background: var(--t-tinta); color: #E9DDCB; padding: 2.5rem 0; }
 .t-footer-inner {
   width: min(100% - 2.5rem, 72rem);
@@ -242,11 +218,11 @@ a:hover { color: var(--t-tinta); }
 }
 .t-footer .t-marca { color: #fff; }
 .t-footer nav ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
-/* Todo link do rodapé escuro usa o tom claro, mesmo fora de <nav> (contraste AA) */
+
 .t-footer a { color: #E9DDCB; }
 .t-footer nav a { color: #E9DDCB; text-decoration: none; display: inline-flex; align-items: center; }
 .t-footer nav a:hover { color: #fff; text-decoration: underline; }
-/* Botão ocupado durante envio: continua focável (aria-disabled), só muda a aparência */
+
 button[aria-disabled="true"] { opacity: .7; cursor: progress; }
 .t-footer-copy { width: 100%; font-size: 0.82rem; color: #C9BBA6; }
 

@@ -8,7 +8,6 @@ if str(ROOT) not in sys.path:
 
 import unittest
 from datetime import date
-# Definido antes do import: a aplicação global também fica isolada do banco real.
 os.environ['DATABASE_URL'] = 'sqlite:///:memory:'
 os.environ['SB_AUTO_INIT_DB'] = '0'
 os.environ['SECRET_KEY'] = 'chave-aleatoria-exclusiva-dos-testes-123456'
@@ -80,7 +79,6 @@ class BackendIntegrationTest(unittest.TestCase):
         self.assertEqual(pets[0]['id'], 'nina')
 
     def test_auth_cadastro_e_login(self):
-        # Cadastro
         resp_cad = self.client.post('/api/auth/cadastro', json={
             'nome': 'João Silva',
             'email': 'joao@exemplo.com',
@@ -90,14 +88,12 @@ class BackendIntegrationTest(unittest.TestCase):
         })
         self.assertEqual(resp_cad.status_code, 201)
 
-        # Login
         resp_login = self.client.post('/api/auth/login', json={
             'email': 'joao@exemplo.com',
             'senha': 'senhaSuperSegura123'
         })
         self.assertEqual(resp_login.status_code, 200)
 
-        # Login com senha errada
         resp_fail = self.client.post('/api/auth/login', json={
             'email': 'joao@exemplo.com',
             'senha': 'senhaErrada'

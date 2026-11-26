@@ -1,6 +1,3 @@
-/* Uso: PLAYWRIGHT_MODULE e PYTHON_EXE podem apontar para instalações existentes.
-   Ex.: node tests/browser_security.cjs auth (ou xss, contact, pet, pages).
-   Servidor e dados são locais; evidências ficam numa pasta temporária do sistema. */
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');
@@ -60,7 +57,7 @@ async function statusReady(page) {
   const port = allocator.address().port;
   await new Promise(resolve => allocator.close(resolve));
   base = 'http://127.0.0.1:' + port;
-  // As tabelas são criadas explicitamente num banco em memória exclusivo do processo.
+
   const code = "import sys,os;sys.path.insert(0,os.getcwd());from app import app;from database import db;from models import Pet,PetMidia,Usuario;" +
     "ctx=app.app_context();ctx.push();db.create_all();db.session.add(Pet(id='nina',nome='Nina',especie='Cachorro',sexo='Fêmea',historia='História de teste da API.'));" +
     "gerente=Usuario(nome='Gerente de teste',email='gerente@example.test',telefone='11999999999',tipo_moradia='casa',consentimento=True);gerente.set_senha('FicticiaGerente123!');db.session.add(gerente);db.session.flush();app.config['GERENTES_IDS']=str(gerente.id);" +

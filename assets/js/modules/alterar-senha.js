@@ -13,7 +13,6 @@ form.addEventListener('submit', async evento => {
   if (form.elements.nova_senha.value !== form.elements.confirmacao.value) {
     mensagem(status, 'A nova senha e a confirmação precisam ser iguais.', { erro: true }); return;
   }
-  // aria-disabled em vez de disabled: o foco continua no botão durante o envio
   ocupar(botao, true); mensagem(status, 'Salvando nova senha…');
   try {
     const resultado = await requestApi('/api/auth/senha', { method: 'POST', body: Object.fromEntries(new FormData(form)) });

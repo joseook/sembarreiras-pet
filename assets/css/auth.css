@@ -1,26 +1,3 @@
-/* =========================================================
-   Sem Barreiras Pet — auth.css
-   Componente compartilhado das telas de login e cadastro:
-   cartão em duas colunas (painel institucional escuro +
-   formulário claro), campos, mensagens e ilustrações.
-
-   Ordem: global.css -> tema.css -> auth.css -> login.css | cadastro.css
-   Prefixo .auth- = exclusivo das telas de autenticação.
-   Mobile-first. Cores somente pelos tokens de tema.css.
-
-   Contrastes usados (WCAG AA, texto normal >= 4,5:1):
-   creme-2 sobre tinta            = 13,1:1
-   terracota-claro sobre tinta    = 11,8:1
-   verde-claro sobre tinta        = 13,4:1
-   suave sobre papel              =  6,1:1
-   terracota-esc sobre papel      =  7,0:1
-   erro sobre erro-claro          =  6,5:1
-   branco sobre terracota (botão) =  5,3:1
-   A terracota pura sobre a tinta (2,9:1) aparece só em formas
-   decorativas, nunca em texto.
-   ========================================================= */
-
-/* ---------- Página ---------- */
 .auth-pagina {
   display: flex;
   flex-direction: column;
@@ -32,7 +9,6 @@
   background: var(--t-creme);
 }
 
-/* Formas decorativas mínimas no fundo (fixas: não geram rolagem) */
 .auth-pagina::before,
 .auth-pagina::after {
   content: "";
@@ -56,7 +32,6 @@
   background: var(--t-verde-claro);
 }
 
-/* ---------- Cartão em duas colunas ---------- */
 .auth-cartao {
   display: grid;
   width: min(100%, 72rem);
@@ -68,11 +43,10 @@
 }
 
 @media (min-width: 60rem) {
-  /* 5fr + 7fr = painel com ~42% e formulário com ~58% */
+
   .auth-cartao { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
 }
 
-/* ---------- Painel institucional (escuro) ---------- */
 .auth-painel {
   position: relative;
   display: flex;
@@ -85,7 +59,6 @@
   overflow: hidden;
 }
 
-/* Círculo decorativo atrás do texto */
 .auth-painel::before {
   content: "";
   position: absolute;
@@ -113,7 +86,6 @@
 
 .auth-painel__apoio { max-width: 28rem; margin-top: 0.75rem; color: var(--t-borda); }
 
-/* Ilustração SVG: decorativa, só aparece com espaço sobrando */
 .auth-ilustracao { display: none; width: 100%; max-width: 17rem; height: auto; margin-block: 0.5rem; }
 .auth-ilustracao .ilu-fundo { fill: var(--t-tinta-2); }
 .auth-ilustracao .ilu-terracota { fill: var(--t-terracota); }
@@ -128,7 +100,6 @@
   stroke-linejoin: round;
 }
 
-/* Lista de benefícios / passos com ícone */
 .auth-lista { display: grid; gap: 0.6rem; }
 .auth-lista li {
   display: flex;
@@ -149,7 +120,6 @@
 }
 .auth-icone svg { width: 1.1rem; height: 1.1rem; }
 
-/* Links do painel: claros, sublinhados, com área de toque confortável */
 .auth-painel__link {
   display: inline-flex;
   align-items: center;
@@ -167,7 +137,6 @@
   .auth-ilustracao { display: block; }
 }
 
-/* ---------- Área do formulário (clara) ---------- */
 .auth-conteudo {
   display: flex;
   flex-direction: column;
@@ -186,7 +155,6 @@
 
 .auth-obrigatorio { color: var(--t-erro); font-weight: 700; }
 
-/* ---------- Campos ---------- */
 .auth-form { display: grid; gap: 1.15rem; container-type: inline-size; }
 .auth-form[hidden] { display: none; }
 
@@ -214,7 +182,6 @@
 
 .field__ajuda { color: var(--t-suave); font-size: 0.85rem; line-height: 1.45; }
 
-/* Estado de erro: borda mais grossa + texto "Erro:" (não depende só da cor) */
 .field input[aria-invalid="true"] { border: 2px solid var(--t-erro); }
 
 .field__erro {
@@ -230,20 +197,17 @@
   line-height: 1.4;
 }
 
-/* Linha com dois campos lado a lado quando o formulário é largo */
 .auth-form__dupla { display: grid; gap: 1.15rem; }
 @container (min-width: 30rem) {
   .auth-form__dupla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* Grupo de opções (fieldset + legend) */
 .auth-grupo { min-width: 0; margin: 0; padding: 0; border: 0; }
 .auth-grupo legend { padding: 0; margin-bottom: 0.35rem; }
 .auth-grupo .field__erro { margin-top: 0.5rem; }
 
 .auth-opcoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 0.6rem; margin-top: 0.6rem; }
 
-/* Cada opção vira um "cartão" clicável; o input nativo continua visível */
 .auth-opcao {
   position: relative;
   display: flex;
@@ -269,7 +233,6 @@
   cursor: pointer;
 }
 
-/* Checkbox e rádio nativos: tamanho confortável e cor da marca */
 .auth-pagina input[type="checkbox"],
 .auth-pagina input[type="radio"] {
   flex: none;
@@ -299,11 +262,9 @@
 }
 .field-check > :not(input):not(label) { grid-column: 2; }
 
-/* ---------- Botões e rodapé do formulário ---------- */
 .auth-form .t-btn,
 .auth-alternativa .t-btn { width: 100%; min-height: 3rem; font-size: 1rem; }
 
-/* Região de mensagens (aria-live): fica no DOM sempre, só aparece com conteúdo */
 .auth-status:not(:empty) {
   padding: 0.85rem 1rem;
   border: 1px solid var(--t-verde);
@@ -317,7 +278,6 @@
 .auth-status--erro:not(:empty) { border-color: var(--t-erro); background: var(--t-erro-claro); }
 .auth-status strong { font-weight: 700; }
 
-/* Divisor "ou" (decorativo) */
 .auth-divisor {
   display: flex;
   align-items: center;
@@ -336,7 +296,6 @@
 .auth-alternativa a:not(.t-btn) { font-weight: 700; color: var(--t-terracota-esc); text-underline-offset: 0.2em; }
 .auth-alternativa a:not(.t-btn):hover { color: var(--t-tinta); }
 
-/* ---------- Rodapé da página ---------- */
 .auth-rodape {
   width: min(100%, 72rem);
   color: var(--t-suave);
@@ -345,7 +304,6 @@
 }
 .auth-rodape p + p { margin-top: 0.35rem; }
 
-/* Alvo da âncora (ex.: nota de privacidade) recebe destaque ao ser aberto */
 .auth-rodape :target {
   padding: 0.5rem 0.75rem;
   border-radius: var(--t-raio-pequeno);
@@ -353,7 +311,6 @@
   color: var(--t-tinta);
 }
 
-/* Botão "Mostrar senha" (aria-pressed) logo abaixo do campo */
 .campo-senha__mostrar {
   align-self: flex-start;
   min-height: 2.75rem;

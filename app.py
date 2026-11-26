@@ -37,7 +37,6 @@ def create_app(config_class=Config):
                             chave == 'sembarreiras-pet-chave-secreta-dev'):
         raise RuntimeError('Configure SECRET_KEY com uma chave aleatória de pelo menos 32 caracteres.')
 
-    # Inicializa SQLAlchemy
     db.init_app(app)
 
     def eh_gerente(usuario):
@@ -56,11 +55,9 @@ def create_app(config_class=Config):
             return jsonify({'erro': 'Acesso exclusivo para gerentes autorizados.'}), 403
         return None
 
-    # Cria tabelas automaticamente e popula dados iniciais se necessário
     with app.app_context():
         try:
             from seed import inicializar_banco
-            # Testes desativam a inicialização automática antes de importar app.
             if app.config.get('AUTO_INIT_DB', os.getenv('SB_AUTO_INIT_DB', '0') == '1'):
                 inicializar_banco(app)
         except Exception as e:
@@ -74,7 +71,6 @@ def create_app(config_class=Config):
 
     @app.errorhandler(HTTPException)
     def erro_http_api(erro):
-        # Rotas /api sempre respondem JSON com a mensagem certa para o usuário final.
         if not request.path.startswith('/api/'):
             return erro
         mensagens = {
@@ -99,9 +95,6 @@ def create_app(config_class=Config):
     def excesso_tentativas():
         return jsonify({'erro': 'Muitas tentativas. Aguarde 15 minutos e tente novamente.'}), 429, {'Retry-After': '900'}
 
-    # -------------------------------------------------------------
-    # Suporte a CORS para consumo frontend independente
-    # -------------------------------------------------------------
     @app.after_request
     def adicionar_cabecalhos_cors(resposta):
         resposta.headers['Access-Control-Allow-Origin'] = '*'
@@ -136,9 +129,6 @@ def create_app(config_class=Config):
             if usuario and usuario.senha_temporaria:
                 return jsonify({'erro': 'Troque sua senha temporária antes de continuar.', 'codigo': 'TROCAR_SENHA'}), 403
     
-    # -------------------------------------------------------------
-    # Rotas de Arquivos Estáticos (mantém compatibilidade total)
-    # -------------------------------------------------------------
     @app.route('/')
     def home():
         return send_from_directory(ROOT, 'index.html')
@@ -159,13 +149,9 @@ def create_app(config_class=Config):
             return send_from_directory(ROOT, filename)
         pasta, separador, relativo = filename.partition('/')
         if pasta in {'assets', 'pages'} and separador and '\\' not in relativo:
-            # safe_join opera dentro da pasta pública, não da raiz do projeto.
             return send_from_directory(ROOT / pasta, relativo)
         abort(404)
 
-    # -------------------------------------------------------------
-    # Rotas de API - Diagnóstico e Conexão de Banco (PostgreSQL)
-    # -------------------------------------------------------------
     @app.route('/api/status', methods=['GET'])
     def status_sistema():
         """Endpoint útil para os desenvolvedores verificarem a conexão com o PostgreSQL."""
@@ -191,17 +177,11 @@ def create_app(config_class=Config):
             }
         })
 
-    # -------------------------------------------------------------
-    # Rotas de API - Política de Privacidade
-    # -------------------------------------------------------------
     @app.route('/api/privacidade', methods=['GET'])
     def obter_politica_privacidade():
         from politica import politica_atual
         return jsonify(politica_atual())
 
-    # -------------------------------------------------------------
-    # Rotas de API - Pets
-    # -------------------------------------------------------------
     @app.route('/api/pets', methods=['GET'])
     def listar_pets():
         especie = request.args.get('especie')
@@ -232,7 +212,6 @@ def create_app(config_class=Config):
             return jsonify({'erro': 'Este pet foi arquivado e não está mais na consulta pública.'}), 410
         return jsonify(pet.to_dict())
 
-    # CRUD de pets: a identidade do registro não muda quando o nome é editado.
     @app.get('/api/gerencia/pets')
     def pets_gerencia():
         erro = autorizar_gerente()
@@ -269,7 +248,6 @@ def create_app(config_class=Config):
     def aplicar_campos_pet(pet, campos):
         fotos = campos.pop('fotos', None)
         for nome, valor in campos.items():
-            # SQL NULL explícito preserva "Não informado" nos booleanos com default.
             setattr(pet, nome, null() if nome in {'castrado', 'microchip'} and valor is None else valor)
         if fotos is not None:
             if pet.midia:
@@ -328,9 +306,6 @@ def create_app(config_class=Config):
         db.session.commit()
         return jsonify({'mensagem': 'Pet excluído definitivamente.'})
 
-    # -------------------------------------------------------------
-    # Rotas de API - Autenticação e Usuários
-    # -------------------------------------------------------------
     @app.route('/api/auth/cadastro', methods=['POST'])
     def cadastrar_usuario():
         dados = request.get_json(silent=True)
@@ -389,7 +364,6 @@ def create_app(config_class=Config):
 
     @app.route('/api/auth/login', methods=['POST'])
     def login_usuario():
-        # Invalida também cópias da sessão anterior, mesmo se o novo login falhar.
         revogar_sessao()
         db.session.commit()
         dados = request.get_json(silent=True)
@@ -403,7 +377,6 @@ def create_app(config_class=Config):
             return jsonify({'erro': 'E-mail e senha são obrigatórios.'}), 400
         if len(email) > 120 or len(senha) > 128:
             return jsonify({'erro': 'Confira o e-mail e a senha informados.'}), 400
-        # Limite por e-mail + IP: um atacante não consegue travar a conta de outra pessoa.
         if limitar_acao('login', f'{email}|{ip_cliente()}'):
             return excesso_tentativas()
 
@@ -481,7 +454,6 @@ def create_app(config_class=Config):
         hash_anterior = usuario.senha_hash
         usuario.set_senha(nova)
         novo_hash = usuario.senha_hash
-        # A condição também protege contra reuso em bancos sem bloqueio por linha.
         db.session.expire(usuario, ['senha_hash'])
         alterados = Usuario.query.filter_by(id=usuario_id, senha_hash=hash_anterior).update(
             {Usuario.senha_hash: novo_hash}, synchronize_session=False
@@ -522,9 +494,6 @@ def create_app(config_class=Config):
         return jsonify({'mensagem': 'Senha alterada. As sessões anteriores foram encerradas.',
                         'usuario': dados_usuario(usuario)})
 
-    # -------------------------------------------------------------
-    # Rotas de API - Agendamento de Visita
-    # -------------------------------------------------------------
     @app.route('/api/agendamentos', methods=['POST'])
     def criar_agendamento():
         usuario = usuario_autenticado()
@@ -539,7 +508,6 @@ def create_app(config_class=Config):
         horario = dados.get('horario')
         mensagem = dados.get('mensagem')
         pet_id = dados.get('pet_id')
-        # A identidade fornecida pelo cliente nunca autoriza a operação.
         usuario_id = usuario.id
         Usuario.query.filter_by(id=usuario.id).with_for_update().one()
 
@@ -564,7 +532,6 @@ def create_app(config_class=Config):
         except ValueError as erro:
             return jsonify({'erro': str(erro)}), 400
 
-        # Serializa solicitações da mesma conta no PostgreSQL, inclusive reenvios.
         existente = Agendamento.query.filter_by(usuario_id=usuario.id, pet_id=pet_id,
             data_visita=data_visita, horario=horario).filter(Agendamento.status.in_(['pendente', 'confirmado'])).first()
         if existente:
@@ -591,9 +558,6 @@ def create_app(config_class=Config):
             app.logger.error('Falha ao registrar visita (%s).', type(e).__name__)
             return jsonify({'erro': 'Não foi possível registrar a visita. Tente novamente.'}), 500
 
-    # -------------------------------------------------------------
-    # Agenda da clínica: autorização reavaliada a cada requisição.
-    # -------------------------------------------------------------
     @app.get('/api/gerencia/agendamentos')
     def listar_agendamentos_gerencia():
         erro = autorizar_gerente()
@@ -652,7 +616,6 @@ def create_app(config_class=Config):
             validar_visita(visita.data_visita.isoformat(), visita.horario, datetime.now(BRASILIA))
         except (ValueError, TypeError):
             return jsonify({'erro': 'A visita precisa de data e horário futuros dentro do atendimento.'}), 409
-        # A condição também protege contra alterações concorrentes de status.
         alterados = Agendamento.query.filter_by(id=visita_id, status='pendente').update(
             {'status': 'confirmado'}, synchronize_session=False)
         if not alterados:
@@ -777,9 +740,6 @@ def create_app(config_class=Config):
         return jsonify({'contatos': [r.to_dict() for r in registros], 'total': query.count(),
                         'pagina': pagina, 'por_pagina': 25})
 
-    # -------------------------------------------------------------
-    # Comandos CLI para Terminal (Flask)
-    # -------------------------------------------------------------
     @app.cli.command('init-db')
     def init_db_command():
         """Cria as tabelas do banco de dados configurado no .env"""

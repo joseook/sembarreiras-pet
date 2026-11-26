@@ -55,7 +55,6 @@ def validar_visita(data_texto, horario, agora=None):
         raise ValueError('Confira a data e o horário informados.') from None
     if data.weekday() not in {1, 2, 3, 4, 5}:
         raise ValueError('O abrigo recebe visitas de terça a sábado.')
-    # Os horários da interface são sugestões. A faixa válida segue o atendimento.
     if not '09:00' <= horario <= '15:00' or '12:00' <= horario < '13:00':
         raise ValueError('Escolha um horário entre 09:00 e 15:00, exceto de 12:00 a 13:00.')
     agora = agora or datetime.now(BRASILIA)

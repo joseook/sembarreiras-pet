@@ -27,14 +27,12 @@ form.addEventListener('submit', async evento => {
     return;
   }
   if (token) dados.token = token;
-  // aria-disabled em vez de disabled: o foco continua no botão durante o envio
   ocupar(botao, true);
   mensagem(status, token ? 'Salvando nova senha…' : 'Solicitando link…');
   try {
     const rota = token ? 'redefinir-senha' : 'recuperar-senha';
     const resposta = await requestApi('/api/auth/' + rota, { method: 'POST', body: dados });
     form.reset();
-    // Ao esconder o formulário, o foco vai para a mensagem para não cair no <body>
     mensagem(status, resposta.mensagem, { focar: Boolean(token) });
     if (token) form.hidden = true;
   } catch (erro) {

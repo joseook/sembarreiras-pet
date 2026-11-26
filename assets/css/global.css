@@ -41,8 +41,6 @@ a:hover { color: var(--color-accent-dark); }
 button, input, select, textarea { font: inherit; }
 button, a, input, select { min-height: 2.75rem; }
 
-/* Anel duplo (claro + escuro) garante pelo menos 3:1 de contraste
-   em qualquer fundo do site (claro, escuro ou colorido) - WCAG 1.4.11 */
 :focus-visible {
   outline: 0.2rem solid #ffffff;
   outline-offset: 0.15rem;
@@ -66,7 +64,7 @@ button, a, input, select { min-height: 2.75rem; }
   position: absolute;
   top: 0.75rem;
   left: 0.75rem;
-  /* Acima do cabecalho sticky quando o link recebe foco. */
+
   z-index: 100;
   padding: 0.65rem 1rem;
   border-radius: var(--radius-sm);

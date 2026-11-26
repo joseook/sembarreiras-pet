@@ -16,7 +16,7 @@
   <a class="skip-link" href="#conteudo">Pular para o formulário de cadastro</a>
 
   <div class="auth-cartao">
-    <!-- Painel institucional (contexto) -->
+    
     <header class="auth-painel">
       <a class="t-marca" href="../index.html" aria-label="Sem Barreiras Pet, página inicial">
         <span class="t-marca-icone" aria-hidden="true">♥</span>
@@ -29,8 +29,7 @@
           Conte um pouco sobre você para tornar o processo de adoção mais seguro e cuidadoso.
         </p>
       </div>
-
-      <!-- Ilustração decorativa: casa, coração e pegadas chegando -->
+      
       <svg class="auth-ilustracao" viewBox="0 0 260 180" aria-hidden="true" focusable="false">
         <defs>
           <g id="pata-cadastro">
@@ -78,16 +77,13 @@
         Já tenho uma conta <span aria-hidden="true">→</span>
       </a>
     </header>
-
-    <!-- Formulário -->
+    
     <main id="conteudo" class="auth-conteudo">
       <div class="auth-conteudo-interno">
         <h1 id="titulo-cadastro">Crie sua conta</h1>
         <p class="auth-intro">Leva poucos minutos. Você poderá completar outras informações depois.</p>
         <p class="auth-legenda-obrigatorio"><span class="auth-obrigatorio" aria-hidden="true">*</span> Campo obrigatório</p>
-
-        <!-- Envio controlado pelo JavaScript. method="dialog" fora de um
-             <dialog> não envia nem recarrega; o JS mostra uma mensagem honesta. -->
+        
         <form class="auth-form" method="dialog" aria-labelledby="titulo-cadastro" data-auth-form="cadastro">
           <div class="field">
             <label for="nome">Nome <span class="auth-obrigatorio" aria-hidden="true">*</span><span class="sr-only"> (obrigatório)</span></label>

@@ -10,7 +10,6 @@ function hojeLocalISO() {
   return local.toISOString().slice(0, 10);
 }
 
-/** Todas as visitas usam o horário de Brasília, independentemente do navegador. */
 function montarDataHora(data, horario) {
   const iso = `${data}T${horario}:00-03:00`;
   return { momento: new Date(iso), iso };
@@ -44,12 +43,12 @@ export function initSchedulingForm(form) {
       for (const nome of Object.keys(campos)) if (typeof rascunho[nome] === 'string') campos[nome].value = rascunho[nome];
     }
     sessionStorage.removeItem(chaveRascunho);
-  } catch { /* Armazenamento opcional; o formulário continua utilizável. */ }
+  } catch {  }
   function salvarRascunho() {
     try {
       sessionStorage.setItem(chaveRascunho, JSON.stringify({ salvoEm: Date.now(),
         ...Object.fromEntries(Object.entries(campos).map(([nome, campo]) => [nome, campo.value])) }));
-    } catch { /* Sem armazenamento disponível. */ }
+    } catch {  }
   }
   document.addEventListener('click', evento => {
     const link = evento.target.closest('a');
@@ -77,7 +76,6 @@ export function initSchedulingForm(form) {
 
   function mostrarStatus(tipo, paragrafos, focar = false) {
     status.dataset.tipo = tipo;
-    // Erros usam role="alert"; quando não há campo para focar, o foco vai à mensagem
     status.setAttribute('role', tipo === 'erro' ? 'alert' : 'status');
     status.tabIndex = -1;
     if (focar) window.setTimeout(() => status.focus(), 0);
@@ -120,7 +118,6 @@ export function initSchedulingForm(form) {
     return nomes.length;
   }
 
-  // Remove a marcação de erro assim que a pessoa corrige o campo
   Object.entries(campos).forEach(([nome, campo]) => {
     campo.addEventListener('change', () => {
       if (campo.getAttribute('aria-invalid') === 'true') definirErro(nome, '');
@@ -148,7 +145,6 @@ export function initSchedulingForm(form) {
     const botao = botaoEnvio;
 
     try {
-      // aria-disabled em vez de disabled: o foco continua no botão durante o envio
       ocupar(botao, true, 'Enviando ao abrigo...');
 
       const resultado = await requestApi('/api/agendamentos', {
@@ -167,7 +163,7 @@ export function initSchedulingForm(form) {
         'Aguarde a confirmação da gerência antes de ir à clínica. Consulte o retorno em Minhas visitas.',
       ]);
       form.reset();
-      try { sessionStorage.removeItem(chaveRascunho); } catch { /* Opcional. */ }
+      try { sessionStorage.removeItem(chaveRascunho); } catch {  }
       const acompanhar = document.createElement('a');
       acompanhar.href = 'minhas-visitas.html'; acompanhar.textContent = 'Acompanhar minhas visitas';
       status.append(acompanhar);
@@ -186,7 +182,6 @@ export function initSchedulingForm(form) {
       ocupar(botao, false);
     }
   });
-  // Avisa logo na abertura quando é preciso entrar antes de solicitar a visita
   currentSession().then((sessao) => {
     if (sessao.autenticado) return;
     const aviso = document.createElement('p');
@@ -199,7 +194,7 @@ export function initSchedulingForm(form) {
     aviso.append(entrar, ' ou ', criar, '.');
     const titulo = form.querySelector('h2');
     if (titulo) titulo.after(aviso); else form.prepend(aviso);
-  }).catch(() => { /* Sem sessão verificável: o envio mostra o erro, se houver. */ });
+  }).catch(() => {  });
 
   if (petId) {
     const botao = form.querySelector('button[type="submit"]');

@@ -1,22 +1,11 @@
 import { currentSession, requestApi } from './modules/api.js';
 import { linkAcesso } from './modules/destino.js';
 
-/**
- * Sem Barreiras Pet — main.js
- * Ponto de entrada compartilhado pelas páginas públicas.
- *
- * - Controla o menu mobile (antes era um <script> inline na home).
- * - Carrega a configuração pública (config.js na raiz).
- * - Inicializa módulos somente nas páginas que têm os elementos
- *   correspondentes (mapa e formulário de visita).
- */
-
 const CONFIG_PADRAO = Object.freeze({
   googleMapsApiKey: '',
   googleMapsMapId: 'DEMO_MAP_ID',
 });
 
-/** Lê config.js (raiz do site); se faltar ou falhar, usa os valores padrão. */
 async function carregarConfig() {
   try {
     const modulo = await import(new URL('../../config.js', import.meta.url).href);
@@ -37,7 +26,6 @@ function iniciarMenu() {
     menuPrincipal.classList.toggle('menu-aberto', !aberto);
   });
 
-  // Esc fecha o menu e devolve o foco ao botão
   document.addEventListener('keydown', (evento) => {
     if (evento.key === 'Escape' && botaoMenu.getAttribute('aria-expanded') === 'true') {
       botaoMenu.setAttribute('aria-expanded', 'false');
@@ -55,7 +43,6 @@ async function iniciarModulos() {
     initSchedulingForm(formVisita);
   }
 
-  // Só o mapa precisa da configuração (chave do Google Maps)
   if (mapa) {
     const config = await carregarConfig();
     const { initShelterMap } = await import('./modules/maps.js');
@@ -120,7 +107,6 @@ async function atualizarNavegacaoUsuario() {
   });
 }
 
-/** WCAG 2.2.2: botão visível para pausar/retomar a faixa animada da home. */
 function iniciarPausaFaixa() {
   const faixa = document.querySelector('.h-faixa');
   if (!faixa) return;

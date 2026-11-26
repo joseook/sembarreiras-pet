@@ -1,10 +1,3 @@
-/**
- * Apoio de acessibilidade compartilhado pelos formulários.
- * - ocupar(): bloqueia o botão durante o envio sem `disabled`, para o foco não cair no <body>.
- * - mensagem(): erros viram role="alert" e recebem o foco; sucesso usa role="status".
- * - iniciarMostrarSenha(): botão "Mostrar senha" (aria-pressed) em cada campo de senha.
- */
-
 export function ocupado(botao) {
   return botao?.getAttribute('aria-disabled') === 'true';
 }
@@ -22,7 +15,6 @@ export function ocupar(botao, ativo, texto) {
   }
 }
 
-/** Escreve a mensagem; em erro, usa role="alert" e leva o foco até ela. */
 export function mensagem(elemento, texto, { erro = false, focar = erro } = {}) {
   if (!elemento) return;
   elemento.setAttribute('role', erro ? 'alert' : 'status');

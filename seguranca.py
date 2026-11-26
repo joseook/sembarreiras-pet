@@ -31,7 +31,6 @@ def iniciar_sessao(usuario):
     token = secrets.token_urlsafe(32)
     db.session.add(SessaoUsuario(token_hash=hash_token(token), usuario_id=usuario.id,
         expira_em=agora() + timedelta(hours=8)))
-    # O cookie só é emitido depois da confirmação da sessão persistente.
     db.session.commit()
     session['sid'] = token
     session['usuario_id'] = usuario.id
@@ -71,7 +70,6 @@ def ip_cliente():
 def limitar_acao(acao, identificador='', limite=10):
     """Reserva uma tentativa antes de processar; guarda somente HMACs, por 15 min."""
     desde = agora() - timedelta(minutes=15)
-    # Não confia em X-Forwarded-For fornecido pelo cliente.
     valores = [(f'{acao}:ip:{ip_cliente()}', 60)]
     if identificador:
         valores.append((f'{acao}:conta:{identificador}', limite))

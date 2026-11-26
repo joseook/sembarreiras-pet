@@ -32,7 +32,6 @@ function mensagemDeErro(campo) {
   return campo.validationMessage;
 }
 
-/** Telefone: além dos caracteres permitidos, exige de 10 a 15 dígitos (mesma regra do servidor). */
 function validarDigitos(campo) {
   if (!campo.dataset.digitos) return;
   const [minimo, maximo] = campo.dataset.digitos.split('-').map(Number);
@@ -41,7 +40,6 @@ function validarDigitos(campo) {
   campo.setCustomValidity(fora ? `Use de ${minimo} a ${maximo} dígitos, com DDD (agora são ${total}).` : '');
 }
 
-/** Rádios do mesmo grupo compartilham um único erro, ligado ao fieldset. */
 function idDoErro(campo) {
   return `${campo.type === 'radio' ? campo.name : campo.id}-erro`;
 }
@@ -86,7 +84,6 @@ function limparErro(form, campo) {
   });
 }
 
-/** Troca o texto da região viva; erros usam role="alert". Limpar antes garante novo anúncio. */
 function anunciar(status, conteudo, tipo, focar = false) {
   status.classList.toggle('auth-status--erro', tipo === 'erro');
   status.setAttribute('role', tipo === 'erro' ? 'alert' : 'status');
@@ -98,7 +95,6 @@ function anunciar(status, conteudo, tipo, focar = false) {
   }, 50);
 }
 
-/** Erros do servidor por campo (erro.campos; 409 no cadastro = e-mail já usado). */
 function errosDoServidor(form, tipo, erro) {
   const campos = { ...(erro.campos || {}) };
   if (tipo === 'cadastro' && erro.status === 409 && !campos.email) campos.email = erro.message;
@@ -146,7 +142,6 @@ function iniciarFormulario(form) {
     const dados = Object.fromEntries(new FormData(form));
     if (tipo === 'cadastro') dados.consentimento = form.elements.consentimento.checked;
 
-    // aria-disabled em vez de disabled: o botão mantém o foco durante o envio
     ocupar(botao, true, tipo === 'contato' ? 'Enviando...' : tipo === 'cadastro' ? 'Cadastrando...' : 'Entrando...');
     let concluido = false;
     try {
@@ -170,7 +165,6 @@ function iniciarFormulario(form) {
     }
   });
 
-  // Ao corrigir um campo que estava com erro, o aviso some sem esperar novo envio
   const revalidar = (evento) => {
     const campo = evento.target;
     if (campo.getAttribute('aria-invalid') !== 'true') return;

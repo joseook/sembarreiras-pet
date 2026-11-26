@@ -1,10 +1,3 @@
-/**
- * Sem Barreiras Pet — pet-ficha.js
- * Monta a ficha completa do animal (pages/pet.html?id=nina).
- *
- * Tudo é criado com createElement + textContent (nunca innerHTML com dados),
- * então um texto vindo de API no futuro não consegue injetar HTML.
- */
 import { normalizarPet } from './pet-data.js';
 
 async function carregarApiBaseUrl() {
@@ -30,7 +23,6 @@ const CONVIVENCIA = {
   'nao-informado': { texto: 'Não informado', classe: 'p-conv--talvez', simbolo: '?' },
 };
 
-/** Região rolável acessível pelo teclado (WCAG 2.1.1): focável, com papel e nome. */
 function regiaoRolavel(conteudo, rotulo) {
   const rolagem = el('div', 'p-tabela-rolagem');
   rolagem.tabIndex = 0;
@@ -40,7 +32,6 @@ function regiaoRolavel(conteudo, rotulo) {
   return rolagem;
 }
 
-/** Cria um elemento com classe e texto (opcionais). */
 function el(tag, classe, texto) {
   const no = document.createElement(tag);
   if (classe) no.className = classe;
@@ -53,7 +44,6 @@ function anexar(pai, ...filhos) {
   return pai;
 }
 
-/** "2026-03-12" -> "12/03/2026" */
 function formatarData(iso) {
   if (typeof iso !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return '—';
   const [ano, mes, dia] = iso.split('-');
@@ -73,8 +63,6 @@ function secao(id, titulo, ...conteudo) {
   h2.id = `${id}-titulo`;
   return anexar(s, h2, ...conteudo);
 }
-
-/* ---------------- Galeria ---------------- */
 
 function montarGaleria(pet) {
   const galeria = el('div', 'p-galeria');
@@ -119,8 +107,6 @@ function montarGaleria(pet) {
   return anexar(galeria, principal, miniaturas);
 }
 
-/* ---------------- Cartão lateral de ação ---------------- */
-
 function montarCartaoAcao(pet) {
   const cartao = el('aside', 'p-cartao');
   cartao.setAttribute('aria-labelledby', 'cartao-titulo');
@@ -156,14 +142,11 @@ function montarCartaoAcao(pet) {
   return anexar(cartao, titulo, resumo, agendar, conta, nota);
 }
 
-/** Artigo para frases: 'a' (a Nina) / 'o' (o Simba) conforme o sexo. */
 function artigo(pet, tipo) {
   const feminino = pet.sexo === 'Fêmea';
   if (tipo === 'a') return feminino ? 'a' : 'o';
   return feminino ? 'ela' : 'ele';
 }
-
-/* ---------------- Seções ---------------- */
 
 function montarFatos(pet) {
   const fatos = [
@@ -260,7 +243,6 @@ function montarVacinas(pet) {
   const extras = el('ul', 'p-lista');
   anexar(extras, el('li', null, pet.vermifugo), el('li', null, pet.antiparasitario));
 
-  // A tabela fica numa região rolável para telas pequenas
   const rolagem = regiaoRolavel(tabela, `Carteira de vacinação de ${pet.nome}`);
 
   return anexar(
@@ -372,8 +354,6 @@ function montarAbrigo(pet) {
   return secao('abrigo', 'Contato da equipe', aviso);
 }
 
-/* ---------------- Página ---------------- */
-
 function montarFicha(pet) {
   const raiz = el('div', 'p-ficha');
 
@@ -385,7 +365,6 @@ function montarFicha(pet) {
   pet.etiquetas.forEach((e) => etiquetas.append(el('li', 't-chip t-chip--terracota', e)));
   anexar(cabecalho, h1, linha, etiquetas);
 
-  // Navegação interna (âncoras), no estilo das abas de uma página de anúncio
   const nav = el('nav', 'p-abas');
   nav.setAttribute('aria-label', 'Seções da ficha');
   const lista = el('ul');
