@@ -1,6 +1,7 @@
 """Sessões revogáveis e limites persistentes, compartilhados entre instâncias."""
 import hashlib
 import hmac
+import os
 import secrets
 from sqlalchemy import text
 from datetime import datetime, timedelta, timezone
@@ -56,11 +57,22 @@ def chave_limite(valor):
     return hmac.new(current_app.secret_key.encode(), valor.encode(), hashlib.sha256).hexdigest()
 
 
+def ip_cliente():
+    """IP real do visitante. Na Vercel, o proxy sobrescreve X-Real-IP/X-Forwarded-For,
+    então o valor não pode ser forjado pelo cliente; fora dela usa a conexão direta."""
+    if os.getenv('VERCEL') == '1':
+        real = (request.headers.get('X-Real-IP') or '').strip()
+        encaminhado = (request.headers.get('X-Forwarded-For') or '').split(',')[0].strip()
+        if real or encaminhado:
+            return (real or encaminhado)[:64]
+    return request.remote_addr or 'desconhecido'
+
+
 def limitar_acao(acao, identificador='', limite=10):
     """Reserva uma tentativa antes de processar; guarda somente HMACs, por 15 min."""
     desde = agora() - timedelta(minutes=15)
     # Não confia em X-Forwarded-For fornecido pelo cliente.
-    valores = [(f'{acao}:ip:{request.remote_addr}', 60)]
+    valores = [(f'{acao}:ip:{ip_cliente()}', 60)]
     if identificador:
         valores.append((f'{acao}:conta:{identificador}', limite))
     if db.engine.dialect.name == 'postgresql':

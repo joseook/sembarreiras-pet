@@ -15,11 +15,13 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import joinedload
 from sqlalchemy import or_, null
 from config import Config
+from cabecalhos import CABECALHOS_SEGURANCA
 from database import db
 from models import PoliticaPrivacidade, SecaoPrivacidade, Usuario, Pet, PetMidia, Agendamento, MensagemContato, SessaoUsuario
 from pet_form import validar_pet, STATUS as STATUS_PET
-from seguranca import usuario_autenticado, iniciar_sessao, revogar_sessao, limitar_acao
-from regras import email_valido, telefone_valido, validar_visita, BRASILIA
+from seguranca import usuario_autenticado, iniciar_sessao, revogar_sessao, limitar_acao, ip_cliente
+from regras import (email_valido, telefone_valido, validar_visita, BRASILIA, problema_senha,
+                    texto_significativo, escapar_like)
 from recuperacao import email_configurado, enviar_recuperacao, serializador, versao_senha
 
 ROOT = Path(__file__).resolve().parent
@@ -107,6 +109,8 @@ def create_app(config_class=Config):
         resposta.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS'
         if request.path.startswith('/api/'):
             resposta.headers['Cache-Control'] = 'no-store'
+        for nome, valor in CABECALHOS_SEGURANCA.items():
+            resposta.headers.setdefault(nome, valor)
         return resposta
 
     @app.before_request
@@ -208,13 +212,13 @@ def create_app(config_class=Config):
         if len(busca) > 120:
             return jsonify({'erro': 'Use até 120 caracteres na busca.'}), 400
         if busca:
-            query = query.filter(or_(Pet.nome.ilike(f'%{busca}%'), Pet.raca.ilike(f'%{busca}%')))
+            query = query.filter(or_(Pet.nome.ilike(f'%{escapar_like(busca)}%', escape='\\'), Pet.raca.ilike(f'%{escapar_like(busca)}%', escape='\\')))
         if request.args.get('status'):
             query = query.filter_by(status=request.args['status'])
         if especie:
-            query = query.filter(Pet.especie.ilike(f"%{especie}%"))
+            query = query.filter(Pet.especie.ilike(f"%{escapar_like(especie)}%", escape="\\"))
         if porte:
-            query = query.filter(Pet.porte.ilike(f"%{porte}%"))
+            query = query.filter(Pet.porte.ilike(f"%{escapar_like(porte)}%", escape="\\"))
             
         pets = query.order_by(Pet.nome, Pet.id).all()
         return jsonify([pet.to_dict() for pet in pets])
@@ -245,7 +249,7 @@ def create_app(config_class=Config):
             return jsonify({'erro': 'Confira os filtros informados.'}), 400
         query = Pet.query
         if busca:
-            query = query.filter(or_(Pet.nome.ilike(f'%{busca}%'), Pet.raca.ilike(f'%{busca}%')))
+            query = query.filter(or_(Pet.nome.ilike(f'%{escapar_like(busca)}%', escape='\\'), Pet.raca.ilike(f'%{escapar_like(busca)}%', escape='\\')))
         if status != 'todos':
             query = query.filter_by(status=status)
         total = query.count()
@@ -347,17 +351,19 @@ def create_app(config_class=Config):
         if not nome or not email or not telefone or not senha:
             return jsonify({'erro': 'Todos os campos obrigatórios devem ser preenchidos.'}), 400
             
-        if len(senha) < 8:
-            return jsonify({'erro': 'A senha deve conter ao menos 8 caracteres.'}), 400
-        if len(nome) > 120 or len(senha) > 128:
-            return jsonify({'erro': 'Use até 120 caracteres no nome e até 128 na senha.'}), 400
+        if len(nome) > 120:
+            return jsonify({'erro': 'Use até 120 caracteres no nome.', 'campos': {'nome': 'Use até 120 caracteres.'}}), 400
+        erro_senha = problema_senha(senha)
+        if erro_senha:
+            return jsonify({'erro': erro_senha, 'campos': {'senha': erro_senha}}), 400
         if not email_valido(email) or not telefone_valido(telefone):
             return jsonify({'erro': 'Informe e-mail válido e telefone com DDD.'}), 400
         if limitar_acao('cadastro', email):
             return excesso_tentativas()
 
         if Usuario.query.filter_by(email=email).first():
-            return jsonify({'erro': 'Este e-mail já está cadastrado no sistema.'}), 409
+            return jsonify({'erro': 'Este e-mail já está cadastrado no sistema.',
+                            'campos': {'email': 'Este e-mail já está cadastrado. Entre ou recupere a senha.'}}), 409
 
         novo_usuario = Usuario(
             nome=nome,
@@ -397,9 +403,10 @@ def create_app(config_class=Config):
             return jsonify({'erro': 'E-mail e senha são obrigatórios.'}), 400
         if len(email) > 120 or len(senha) > 128:
             return jsonify({'erro': 'Confira o e-mail e a senha informados.'}), 400
-        if limitar_acao('login', email):
+        # Limite por e-mail + IP: um atacante não consegue travar a conta de outra pessoa.
+        if limitar_acao('login', f'{email}|{ip_cliente()}'):
             return excesso_tentativas()
-            
+
         usuario = Usuario.query.filter_by(email=email).with_for_update().first()
         if not usuario or not usuario.check_senha(senha):
             return jsonify({'erro': 'Credenciais inválidas. Verifique seu e-mail e senha.'}), 401
@@ -455,8 +462,10 @@ def create_app(config_class=Config):
                 for campo in ('token', 'nova_senha', 'confirmacao')):
             return jsonify({'erro': 'Confira os campos de senha.'}), 400
         nova = dados['nova_senha']
-        if not 8 <= len(nova) <= 128 or nova != dados['confirmacao']:
-            return jsonify({'erro': 'Use de 8 a 128 caracteres e repita a nova senha corretamente.'}), 400
+        if nova != dados['confirmacao']:
+            return jsonify({'erro': 'A nova senha e a confirmação precisam ser iguais.'}), 400
+        if problema_senha(nova):
+            return jsonify({'erro': problema_senha(nova)}), 400
         if limitar_acao('redefinir-senha'):
             return excesso_tentativas()
         invalido = jsonify({'erro': 'Este link é inválido, foi usado ou expirou. Solicite outro link.'}), 400
@@ -494,8 +503,10 @@ def create_app(config_class=Config):
                 for c in ('senha_atual', 'nova_senha', 'confirmacao')):
             return jsonify({'erro': 'Confira os campos de senha.'}), 400
         nova = dados['nova_senha']
-        if not 8 <= len(nova) <= 128 or nova != dados['confirmacao']:
-            return jsonify({'erro': 'Use de 8 a 128 caracteres e repita a nova senha corretamente.'}), 400
+        if nova != dados['confirmacao']:
+            return jsonify({'erro': 'A nova senha e a confirmação precisam ser iguais.'}), 400
+        if problema_senha(nova):
+            return jsonify({'erro': problema_senha(nova)}), 400
         if len(dados['senha_atual']) > 128:
             return jsonify({'erro': 'Confira sua senha atual.'}), 400
         if limitar_acao('trocar-senha', str(usuario.id)):
@@ -737,7 +748,8 @@ def create_app(config_class=Config):
             return jsonify({'erro': 'Confira os campos da mensagem.'}), 400
         nome, email, assunto, mensagem = [dados[c].strip() for c in ('nome', 'email', 'assunto', 'mensagem')]
         email = email.lower()
-        if not 1 <= len(nome) <= 100 or not email_valido(email, 254) or not 10 <= len(mensagem) <= 2000:
+        if (not 1 <= len(nome) <= 100 or not email_valido(email, 254)
+                or not 10 <= len(texto_significativo(mensagem)) or len(mensagem) > 2000):
             return jsonify({'erro': 'Informe nome, e-mail válido e mensagem entre 10 e 2.000 caracteres.'}), 400
         if assunto not in {'adocao', 'parceria', 'acessibilidade', 'sugestao', 'outro'}:
             return jsonify({'erro': 'Escolha um assunto válido.'}), 400
